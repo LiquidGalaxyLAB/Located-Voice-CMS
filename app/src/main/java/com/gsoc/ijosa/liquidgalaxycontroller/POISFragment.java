@@ -9,10 +9,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -132,16 +132,16 @@ public class POISFragment extends Fragment {
         poisListViewTittle = (TextView) poisView.findViewById(R.id.pois_tittle_listview);
         route = (TextView) poisView.findViewById(R.id.fragment_pois_route);//categories route
         poisfragment = (LinearLayout) poisView.findViewById(R.id.pois_xml_fragment);//content of elements representing all the fragment
-        stopButton = (android.support.design.widget.FloatingActionButton) poisView.findViewById(R.id.tour_stop);//stops tour execution on LG
+        stopButton = (FloatingActionButton) poisView.findViewById(R.id.tour_stop);//stops tour execution on LG
         categories_tittle = (TextView) poisView.findViewById(R.id.categories_textview);
 
         additionLayout = (LinearLayout) poisView.findViewById(R.id.addition_buttons_layout);//layout containging buttons to add items
-        createPOI = (android.support.design.widget.FloatingActionButton) poisView.findViewById(R.id.new_poi);
-        createCategory = (android.support.design.widget.FloatingActionButton) poisView.findViewById(R.id.new_category);
-        createTour = (android.support.design.widget.FloatingActionButton) poisView.findViewById(R.id.new_tour);
-        createPOIhere = (android.support.design.widget.FloatingActionButton) poisView.findViewById(R.id.new_poi_here);
-        createCategoryhere = (android.support.design.widget.FloatingActionButton) poisView.findViewById(R.id.new_category_here);
-        createTourhere = (android.support.design.widget.FloatingActionButton) poisView.findViewById(R.id.new_tour_here);
+        createPOI = (FloatingActionButton) poisView.findViewById(R.id.new_poi);
+        createCategory = (FloatingActionButton) poisView.findViewById(R.id.new_category);
+        createTour = (FloatingActionButton) poisView.findViewById(R.id.new_tour);
+        createPOIhere = (FloatingActionButton) poisView.findViewById(R.id.new_poi_here);
+        createCategoryhere = (FloatingActionButton) poisView.findViewById(R.id.new_category_here);
+        createTourhere = (FloatingActionButton) poisView.findViewById(R.id.new_tour_here);
 
         dialogView = getLayoutInflater(getArguments()).inflate(R.layout.dialog_item_options, null); //In the tours creation process, it lets the user add POIs. when the elements selection inside Admin section, lets edit or update them.
         dialog = getDialogByView(dialogView);
@@ -877,7 +877,7 @@ public class POISFragment extends Fragment {
         tourIsWorking = true;
     }
 
-    private void showAlert(final android.support.design.widget.FloatingActionButton stopButton, final LiquidGalaxyTourView tour){
+    private void showAlert(final FloatingActionButton stopButton, final LiquidGalaxyTourView tour){
         // prepare the alert box
         AlertDialog.Builder alertbox = new AlertDialog.Builder(getActivity());
 
@@ -913,7 +913,7 @@ public class POISFragment extends Fragment {
 
     /*------------OTHER UTILITIES------------*/
     /*The following four methods works when user decides to Edit or Delete one item or when it cancels these just mentioned operations.*/
-    private void cancelButtonTreatment(android.support.design.widget.FloatingActionButton cancel, final Dialog dialog){
+    private void cancelButtonTreatment(FloatingActionButton cancel, final Dialog dialog){
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -922,7 +922,7 @@ public class POISFragment extends Fragment {
         });
     }
 
-    private void editButtonTreatment(final String itemSelectedId, final String type, android.support.design.widget.FloatingActionButton edit, final Dialog dialog){
+    private void editButtonTreatment(final String itemSelectedId, final String type, FloatingActionButton edit, final Dialog dialog){
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

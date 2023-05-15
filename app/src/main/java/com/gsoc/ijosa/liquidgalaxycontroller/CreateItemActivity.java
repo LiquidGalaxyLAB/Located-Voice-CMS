@@ -1,10 +1,10 @@
 package com.gsoc.ijosa.liquidgalaxycontroller;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 
-public class CreateItemActivity extends ActionBarActivity {
+public class CreateItemActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

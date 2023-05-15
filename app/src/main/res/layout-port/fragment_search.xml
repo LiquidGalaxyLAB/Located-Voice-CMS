@@ -141,7 +141,7 @@
                     android:hint="@string/search_some_place"
                     android:textSize="12sp" />
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/searchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                     android:src="@drawable/ic_search_white_24dp"
                     app:backgroundTint="@color/blue" />
 
-                <android.support.design.widget.FloatingActionButton
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/btnSpeak"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

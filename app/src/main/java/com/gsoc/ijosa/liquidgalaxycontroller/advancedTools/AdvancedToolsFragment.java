@@ -1,5 +1,6 @@
 package com.gsoc.ijosa.liquidgalaxycontroller.advancedTools;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -13,14 +14,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -156,6 +157,7 @@ public class AdvancedToolsFragment extends Fragment {
         }
     }
 
+    @SuppressLint("Range")
     private LGTask getTaskData(int taskId) {
         Cursor taskCursor = LGTaskEntry.getTaskById(String.valueOf(taskId));
         LGTask lgTask = new LGTask();
@@ -299,61 +301,61 @@ public class AdvancedToolsFragment extends Fragment {
 
             Toolbar toolbarCard = (Toolbar) itemView.findViewById(R.id.taskToolbar);
             toolbarCard.inflateMenu(R.menu.menu_lgtask_cardview);
-            toolbarCard.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.editTask:
-                            showEditDialog(id);
-                            break;
-                        case R.id.launchTask:
-                            if (checkRunningTask(taskList)) {
-                                SendCommandTask sendCommandTask = new SendCommandTask(script, ip, user, password, browserUrl, false, id);
-                                sendCommandTask.execute();
-                            }
-                            break;
-                        case R.id.stopTask:
-                            SendCommandTask sendStopCommandTask = new SendCommandTask(shutdownScript, ip, user, password, browserUrl, true, id);
-                            sendStopCommandTask.execute();
-                            break;
-                        case R.id.deleteTask:
-                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-                            alert.setTitle(getResources().getString(R.string.are_you_sure));
-
-                            alert.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int whichButton) {
-                                    POIsContract.LGTaskEntry.deleteByTaskID(getActivity(), String.valueOf(id));
-                                    populateUI();
-                                }
-                            });
-
-                            alert.setNegativeButton(getResources().getString(R.string.no),
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int whichButton) {
-                                        }
-                                    });
-                            alert.show();
-                            break;
-                    }
-                    return true;
-                }
-
-                private boolean checkRunningTask(List<LGTask> taskList) {
-                    boolean isCorrect = true;
-                    for (LGTask task : taskList) {
-                        if (task.isRunning()) {
-                            isCorrect = false;
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getActivity(), getResources().getString(R.string.stopOtherTasks), Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                    }
-                    return isCorrect;
-                }
-            });
+//            toolbarCard.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+//                @Override
+//                public boolean onMenuItemClick(MenuItem item) {
+//                    switch (item.getItemId()) {
+//                        case R.id.editTask:
+//                            showEditDialog(id);
+//                            break;
+//                        case R.id.launchTask:
+//                            if (checkRunningTask(taskList)) {
+//                                SendCommandTask sendCommandTask = new SendCommandTask(script, ip, user, password, browserUrl, false, id);
+//                                sendCommandTask.execute();
+//                            }
+//                            break;
+//                        case R.id.stopTask:
+//                            SendCommandTask sendStopCommandTask = new SendCommandTask(shutdownScript, ip, user, password, browserUrl, true, id);
+//                            sendStopCommandTask.execute();
+//                            break;
+//                        case R.id.deleteTask:
+//                            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+//                            alert.setTitle(getResources().getString(R.string.are_you_sure));
+//
+//                            alert.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int whichButton) {
+//                                    POIsContract.LGTaskEntry.deleteByTaskID(getActivity(), String.valueOf(id));
+//                                    populateUI();
+//                                }
+//                            });
+//
+//                            alert.setNegativeButton(getResources().getString(R.string.no),
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int whichButton) {
+//                                        }
+//                                    });
+//                            alert.show();
+//                            break;
+//                    }
+//                    return true;
+//                }
+//
+//                private boolean checkRunningTask(List<LGTask> taskList) {
+//                    boolean isCorrect = true;
+//                    for (LGTask task : taskList) {
+//                        if (task.isRunning()) {
+//                            isCorrect = false;
+//                            getActivity().runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    Toast.makeText(getActivity(), getResources().getString(R.string.stopOtherTasks), Toast.LENGTH_LONG).show();
+//                                }
+//                            });
+//                        }
+//                    }
+//                    return isCorrect;
+//                }
+//            });
         }
 
 

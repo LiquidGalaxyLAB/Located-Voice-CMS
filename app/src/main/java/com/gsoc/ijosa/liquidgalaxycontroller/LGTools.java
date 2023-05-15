@@ -12,8 +12,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +35,7 @@ import java.io.LineNumberReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /* This class makes reference to the functionalities to apply to Liquid Galaxy. This class is the once
 *  which is able to reboot the LG, relaunch it or shut it down. It also is able to import files containing
@@ -203,7 +204,7 @@ public class LGTools extends Fragment {
     }
 
     private void openBluetoothImport() {
-        ((LGPCAdminActivity) getActivity()).mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_BEACONS);
+        ((LGPCAdminActivity) requireActivity()).mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_BEACONS);
     }
 
     @Override

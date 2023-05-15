@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -244,7 +244,8 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
         }
 
         adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+//        Vedant made a change here, used resource android in stead of resource file which was missing
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
 
@@ -376,7 +377,8 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
             }
         }
         adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+//        Vedant made a change here, used resource android in stead of resource file which was missing
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         viewHolder.fatherID.setAdapter(adapter);
 
         return itemShownName;
@@ -683,8 +685,8 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
         int INTERVAL = 4;
         EditText tourName;
         Spinner categoryID;
-        android.support.design.widget.FloatingActionButton createTOUR;
-        android.support.design.widget.FloatingActionButton updateTOUR;
+        FloatingActionButton createTOUR;
+        FloatingActionButton updateTOUR;
         ListView addedPois;
         ImageView down;
         EditText global_interval;
@@ -695,8 +697,8 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
             tourName = (EditText) rootView.findViewById(R.id.tour_name);
             switchButtonHide = (Switch) rootView.findViewById(R.id.switchButtonHide);
             categoryID = (Spinner) rootView.findViewById(R.id.categoryID_spinner);
-            createTOUR = (android.support.design.widget.FloatingActionButton) rootView.findViewById(R.id.create_tour);
-            updateTOUR = (android.support.design.widget.FloatingActionButton) rootView.findViewById(R.id.update_tour);
+            createTOUR = (FloatingActionButton) rootView.findViewById(R.id.create_tour);
+            updateTOUR = (FloatingActionButton) rootView.findViewById(R.id.update_tour);
             addedPois = (ListView) rootView.findViewById(R.id.tour_pois_listview);
             up = (ImageView) rootView.findViewById(R.id.move_up);
             down = (ImageView) rootView.findViewById(R.id.move_down);

@@ -1,14 +1,14 @@
 package com.gsoc.ijosa.liquidgalaxycontroller;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 /**
  * Created by Ivan Josa on 31/05/16.
  */
-public class AdminActivity extends ActionBarActivity {
+public class AdminActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

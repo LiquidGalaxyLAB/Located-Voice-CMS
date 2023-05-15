@@ -1,8 +1,8 @@
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v4.widget.NestedScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -22,7 +22,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="@string/task_explanation" />
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -33,9 +33,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/new_task_name"
                     android:inputType="textCapWords|textNoSuggestions" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -46,9 +46,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/new_task_description"
                     android:inputType="textCapWords|textNoSuggestions" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_script"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -68,9 +68,9 @@
                     android:text="@string/uploadExecutionFileScript" />
 
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_shutdown_script"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -89,9 +89,9 @@
                     android:layout_height="wrap_content"
                     android:text="@string/uploadShutdownScript" />
 
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_ip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -102,9 +102,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/new_task_ip"
                     android:inputType="text" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -115,9 +115,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/new_task_user"
                     android:inputType="text|textNoSuggestions" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -128,9 +128,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/new_task_password"
                     android:inputType="textVisiblePassword|textNoSuggestions" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/new_task_url_openBrowser"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/new_task_browser_URL"
                     android:inputType="textUri|textNoSuggestions" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!--logo Upload-->
             <ImageView
@@ -186,5 +186,5 @@
                 android:textColor="@android:color/white" />
             </LinearLayout>
         </LinearLayout>
-    </android.support.v4.widget.NestedScrollView>
-</android.support.design.widget.CoordinatorLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

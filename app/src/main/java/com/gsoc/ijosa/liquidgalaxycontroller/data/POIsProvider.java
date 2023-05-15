@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.gsoc.ijosa.liquidgalaxycontroller.data.POIsContract.CategoryEntry;
 import com.gsoc.ijosa.liquidgalaxycontroller.data.POIsContract.LGTaskEntry;

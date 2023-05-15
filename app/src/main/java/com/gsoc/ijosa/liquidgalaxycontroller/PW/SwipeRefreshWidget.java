@@ -20,11 +20,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ListView;
 
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 /**
- * Subclass of {@link android.support.v4.widget.SwipeRefreshLayout} that supports containing a
+ * Subclass of {@link SwipeRefreshLayout} that supports containing a
  * ViewGroup whose first child is a ListView. The ViewGroup can contain other views.
  */
-public class SwipeRefreshWidget extends android.support.v4.widget.SwipeRefreshLayout {
+public class SwipeRefreshWidget extends SwipeRefreshLayout {
 
   public SwipeRefreshWidget(Context context) {
     super(context);

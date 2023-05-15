@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 
 import com.gsoc.ijosa.liquidgalaxycontroller.data.POIsContract.POIEntry;
@@ -13,6 +13,7 @@ import com.gsoc.ijosa.liquidgalaxycontroller.data.POIsContract.TourPOIsEntry;
 import com.gsoc.ijosa.liquidgalaxycontroller.utils.LGUtils;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.poliveira.apps.parallaxrecyclerview.BuildConfig;
 
 import java.io.IOException;
 import java.util.ArrayList;

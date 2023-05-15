@@ -9,6 +9,7 @@ repositories {
 
 
 android {
+    namespace 'com.gsoc.ijosa.liquidgalaxycontroller'
     signingConfigs {
         config {
             keyAlias 'androiddebugkey'
@@ -17,12 +18,12 @@ android {
             storePassword 'android'
         }
     }
-    compileSdkVersion 24
-    buildToolsVersion '25.0.2'
+    compileSdkVersion 33
+    buildToolsVersion '30.0.3'
     defaultConfig {
         applicationId "com.gsoc.ijosa.liquidgalaxycontroller"
-        minSdkVersion 19
-        targetSdkVersion 24
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode 5
         versionName "1.2.3"
     }
@@ -36,20 +37,26 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile(name: 'uribeacon-library-release', ext: 'aar')
-    compile 'com.android.support:appcompat-v7:24.+'
-    compile 'com.android.support:design:24.+'
-    compile 'com.mcxiaoke.volley:library-aar:1.0.1'
-    compile 'com.android.support:recyclerview-v7:24.+'
-    compile 'com.android.support:cardview-v7:24.+'
-    compile 'com.google.android.gms:play-services:7.3.0'
-    compile 'com.github.kanytu:android-parallax-recyclerview:v1.7'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation(name: 'uribeacon-library-release', ext: 'aar')
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'com.mcxiaoke.volley:library-aar:1.0.1'
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'com.google.android.gms:play-services:12.0.1'
+    implementation 'com.github.kanytu:android-parallax-recyclerview:v1.7'
     /**For the tree view**/
-    compile 'com.github.bmelnychuk:atv:1.2.+'
+    implementation 'com.github.bmelnychuk:atv:1.2.+'
     /** ********************/
-    compile files('libs/jsch-0.1.53.jar')
-    compile files('libs/jzlib-1.1.1.jar')
+    implementation files('libs/jsch-0.1.53.jar')
+    implementation files('libs/jzlib-1.1.1.jar')
+
+    //    Responsive design
+    implementation 'com.intuit.sdp:sdp-android:1.1.0'
+
+    //    Responsive text
+    implementation 'com.intuit.ssp:ssp-android:1.1.0'
 }
 
 

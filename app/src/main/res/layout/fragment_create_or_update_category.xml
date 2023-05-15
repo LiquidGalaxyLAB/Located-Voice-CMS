@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/categorynameInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -28,9 +28,9 @@
                 android:layout_marginBottom="15dip"
                 android:hint="@string/name"
                 android:inputType="textNoSuggestions" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/hideInputlayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,9 +43,9 @@
                 android:hint="@string/visibility"
                 android:textOff="@string/hidden"
                 android:textOn="@string/visible" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/fatherSpinnerInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,11 +56,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="200dp" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/create_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
         android:text="@string/create_category"
         app:backgroundTint="@color/green" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/update_category"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,7 +81,7 @@
         android:visibility="gone"
         app:backgroundTint="@color/green" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/cancel_come_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,10 +1,12 @@
 package com.gsoc.ijosa.liquidgalaxycontroller;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,10 +14,15 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+
+import androidx.annotation.Nullable;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -56,7 +63,7 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     static CreateItemFragment fragment;
-    private static View rootView= null;
+    private static View rootView = null;
     private static Map<String, String> spinnerIDsAndShownNames;
     private static ArrayList<TourPOI> tourPOIS;
     private static ViewHolderTour viewHolderTour;
@@ -172,13 +179,14 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressLint("MissingPermission")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         Bundle extras = getActivity().getIntent().getExtras();
         rootView = null;
 
-        if(extras!=null){
+        if (extras != null) {
             this.creationType = extras.getString("CREATION_TYPE");
         }
 
@@ -209,17 +217,16 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
                         AddTourToDatabase addTourToDatabase = new AddTourToDatabase(tourID);
                         addTourToDatabase.execute();
 
-                    }catch (NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         Toast.makeText(getActivity(), "The duration of each POI must be in seconds (numeric type).", Toast.LENGTH_LONG).show();
-                    }catch (Exception e){
-                        if(e.getMessage() != null) {
+                    } catch (Exception e) {
+                        if (e.getMessage() != null) {
                             Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
                 }
             });
-        }
-        else{//CATEGORY
+        } else {//CATEGORY
             getActivity().setTitle(getResources().getString(R.string.new_category));
             final ViewHolderCategory viewHolder = setCategoryLayoutSettings(inflater, container);
             viewHolder.createCategory.setOnClickListener(new View.OnClickListener() {
@@ -232,6 +239,7 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
 
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //Vedant suppressed it for now
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
 
         return rootView;
@@ -244,6 +252,16 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         map.getUiSettings().setRotateGesturesEnabled(true);
         map.getUiSettings().setZoomControlsEnabled(true);
         map.getUiSettings().setMapToolbarEnabled(true);
+        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         map.setMyLocationEnabled(true);
         map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         map.setOnMapLongClickListener(this);
@@ -370,6 +388,7 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         return contentValues;
     }
 
+    @SuppressLint("Range")
     private ViewHolderPoi setPOILayoutSettings(LayoutInflater inflater, ViewGroup container){
 
         rootView = inflater.inflate(R.layout.fragment_create_or_update_poi, container, false);
@@ -409,6 +428,7 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
                 earthCategorycategoryId = POIsContract.CategoryEntry.getIdByShownName(getActivity(), "EARTH/");
 
                 //We check if category belongs to earth in order to display the map
+//                 Vedant suppressed it for now
                 if (categories.getString(categories.getColumnIndex(POIsContract.CategoryEntry.COLUMN_SHOWN_NAME)).toUpperCase().contains("EARTH")) {
                     rootView.findViewById(R.id.mapPOILayout).setVisibility(View.VISIBLE);
                 } else if (POISFragment.routeID != 0 && earthCategorycategoryId != POISFragment.routeID) {
@@ -571,7 +591,8 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+//        Vedant made a change here, used resource android in stead of resource file which was missing
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     } //Fill the spinner with all the categories.
 
@@ -599,7 +620,7 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         }
     }
 
-    private void setCancelComeBackBehaviour(android.support.design.widget.FloatingActionButton cancel){
+    private void setCancelComeBackBehaviour(FloatingActionButton cancel){
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -675,11 +696,11 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
 
     public static class ViewHolderTour {
 
-        public android.support.design.widget.FloatingActionButton cancel;
+        public FloatingActionButton cancel;
         EditText tourName;
         Spinner categoryID;
-        android.support.design.widget.FloatingActionButton createTOUR;
-        android.support.design.widget.FloatingActionButton updateTOUR;
+        FloatingActionButton createTOUR;
+        FloatingActionButton updateTOUR;
         ListView addedPois;
         EditText globalInterval;
         private Switch switchButtonHide;
@@ -689,10 +710,10 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
             tourName = (EditText) rootView.findViewById(R.id.tour_name);
             switchButtonHide = (Switch) rootView.findViewById(R.id.switchButtonHide);
             categoryID = (Spinner) rootView.findViewById(R.id.categoryID_spinner);
-            createTOUR = (android.support.design.widget.FloatingActionButton) rootView.findViewById(R.id.create_tour);
-            updateTOUR = (android.support.design.widget.FloatingActionButton) rootView.findViewById(R.id.update_tour);
+            createTOUR = (FloatingActionButton) rootView.findViewById(R.id.create_tour);
+            updateTOUR = (FloatingActionButton) rootView.findViewById(R.id.update_tour);
             addedPois = (ListView) rootView.findViewById(R.id.tour_pois_listview);
-            cancel = (android.support.design.widget.FloatingActionButton) rootView.findViewById(R.id.cancel_come_back);
+            cancel = (FloatingActionButton) rootView.findViewById(R.id.cancel_come_back);
             globalInterval = (EditText) rootView.findViewById(R.id.pois_interval);
         }
     }
