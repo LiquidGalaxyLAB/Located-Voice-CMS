@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <!-- Main theme colors -->
         <!--<item name="android:windowBackground">@color/whiteGrey</item>-->
         <!--<item name="android:textColorHint">@color/grey_700</item>-->
@@ -14,7 +14,21 @@
         <item name="android:paddingLeft">10dp</item>
         <item name="android:showDividers">middle</item>
         <item name="android:divider">@android:drawable/divider_horizontal_bright</item>
+
+        <item name="floatingActionButtonStyle">@style/FloatingActionButtonStyle</item>
     </style>
 
+    <style name="FloatingActionButtonStyle" parent="Widget.Design.FloatingActionButton">
+        <item name="shapeAppearanceOverlay">@style/FabShapeStyle</item>
+    </style>
+
+    <style name="FabShapeStyle" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+    <item name="cornerSize">20%</item>
+    </style>
+    
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+    </style>
 
 </resources>

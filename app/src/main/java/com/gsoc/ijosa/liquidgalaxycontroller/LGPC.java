@@ -1,5 +1,6 @@
 package com.gsoc.ijosa.liquidgalaxycontroller;
 
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -21,9 +22,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -49,6 +52,10 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+
+
+    private ArrayList<String> backIDs = new ArrayList<>();
+    Button SuggPOIButton;
     int numBack = 0;
 
     @Override
@@ -56,6 +63,14 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.activity_lgpc);
+////        changed layout from activity_lg to new_home
+//        SuggPOIButton=findViewById(R.id.suggpoibutton);
+//        SuggPOIButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showBottomSheet();
+//            }
+//        });
 
 
         // Set up the action bar.
@@ -99,6 +114,23 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         }
 
         showLogo();
+    }
+
+    private void showBottomSheet(){
+        final Dialog bottomsheet=new Dialog(this);
+        bottomsheet.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        bottomsheet.setContentView(R.layout.bottomsheetlayout);
+//        poisGridView = (GridView) findViewById(R.id.gridviewpois);
+//        if (POISFragment.getTourState()) {
+//            POISFragment.resetTourSettings();
+//        }
+        Bundle bundle = new Bundle();
+        bundle.putInt("some_int", 0);
+
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .add(R.id.fragmentContainerView, SearchFragment.class, bundle)
+                .commit();
     }
 
     private void showLogo() {
