@@ -63,31 +63,31 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        rootView = inflater.inflate(R.layout.fragment_search, container, false);
-        editSearch = (EditText) rootView.findViewById(R.id.search_edittext);
-        buttonSearch = (FloatingActionButton) rootView.findViewById(R.id.searchButton);
-        earth = (ImageView) rootView.findViewById(R.id.earth);
-        moon = (ImageView) rootView.findViewById(R.id.moon);
-        mars = (ImageView) rootView.findViewById(R.id.mars);
+        rootView = inflater.inflate(R.layout.newsearch_fragment, container, false);
+//        editSearch = (EditText) rootView.findViewById(R.id.search_edittext);
+//        buttonSearch = (FloatingActionButton) rootView.findViewById(R.id.searchButton);
+//        earth = (ImageView) rootView.findViewById(R.id.earth);
+//        moon = (ImageView) rootView.findViewById(R.id.moon);
+//        mars = (ImageView) rootView.findViewById(R.id.mars);
 
-        btnSpeak = (FloatingActionButton) rootView.findViewById(R.id.btnSpeak);
+//        btnSpeak = (FloatingActionButton) rootView.findViewById(R.id.btnSpeak);
 
         categoriesListView = (ListView) rootView.findViewById(R.id.categories_listview);
         backIcon = (ImageView) rootView.findViewById(R.id.back_icon);
         backStartIcon = (ImageView) rootView.findViewById(R.id.back_start_icon);//comes back to the initial category
         categorySelectorTitle = (TextView) rootView.findViewById(R.id.current_category);
 
-        btnSpeak.setOnClickListener(new View.OnClickListener() {
+//        btnSpeak.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//                promptSpeechInput();
+//            }
+//        });
 
-            @Override
-            public void onClick(View v) {
-                promptSpeechInput();
-            }
-        });
-
-        screenSizeTreatment();
-        setSearchInLGButton();
-        setPlanetsButtonsBehaviour();
+//        screenSizeTreatment();
+//        setSearchInLGButton();
+//        setPlanetsButtonsBehaviour();
 
         poisGridView = (GridView) rootView.findViewById(R.id.POISgridview);
 
@@ -160,28 +160,28 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    private void promptSpeechInput() {
-
-        Locale spanish = new Locale("es", "ES");
-        Locale catalan = new Locale("ca", "ES");
-
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, catalan);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, catalan);
-        intent.putExtra(RecognizerIntent.EXTRA_RESULTS, catalan);
-        intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, spanish);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, spanish);
-        intent.putExtra(RecognizerIntent.EXTRA_RESULTS, spanish);
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
-        try {
-            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-        } catch (ActivityNotFoundException a) {
-            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.speech_not_supported),
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
+//    private void promptSpeechInput() {
+//
+//        Locale spanish = new Locale("es", "ES");
+//        Locale catalan = new Locale("ca", "ES");
+//
+//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+//        intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, catalan);
+//        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, catalan);
+//        intent.putExtra(RecognizerIntent.EXTRA_RESULTS, catalan);
+//        intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, spanish);
+//        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, spanish);
+//        intent.putExtra(RecognizerIntent.EXTRA_RESULTS, spanish);
+//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
+//        try {
+//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
+//        } catch (ActivityNotFoundException a) {
+//            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.speech_not_supported),
+//                    Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

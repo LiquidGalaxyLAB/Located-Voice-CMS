@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/backgroundspace">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/_43sdp"
+        android:layout_height="@dimen/_34sdp"
+        android:layout_marginStart="@dimen/_14sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/newlglogo" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_17sdp"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Liquid Galaxy Controller"
+        android:textColor="#ADA9BB"
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/menufab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_17sdp"
+        android:alpha="0.85"
+        android:src="@drawable/baseline_menu_24"
+        app:backgroundTint="#451339"
+        app:menu="@menu/menu_lgpc"
+        app:fabSize="auto"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:maxImageSize="@dimen/_11sdp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_marginTop="@dimen/_68sdp"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/newearthimg" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginStart="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
+        android:fontFamily="@font/inter_semibold"
+        android:text="Earth"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_30ssp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintStart_toStartOf="@+id/imageView2" />
+
+    <Button
+        android:id="@+id/suggpoibutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:alpha="0.85"
+        android:background="@drawable/bg_suggpois"
+        android:drawableEnd="@drawable/baseline_location_on_24"
+        android:fontFamily="@font/inter"
+        android:padding="@dimen/_8sdp"
+        android:text="Suggested POIs"
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/white"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/_7ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:alpha="0.85"
+        android:background="@drawable/bg_changeplanet"
+        android:drawableEnd="@drawable/planet"
+        android:fontFamily="@font/inter"
+        android:padding="@dimen/_8sdp"
+        android:text="Change Planet"
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/white"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/_7ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/suggpoibutton"
+        app:layout_constraintEnd_toStartOf="@id/searchLayout"
+        tools:layout_editor_absoluteX="337dp" />
+
+    <LinearLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:background="@drawable/bg_searchpoi"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@id/button3"
+        app:layout_constraintEnd_toStartOf="@id/button2"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <EditText
+            android:id="@+id/search_edittext"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:layout_marginRight="@dimen/_6sdp"
+            android:layout_weight="1"
+            android:hint="Search POI" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/searchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_horizontal"
+            android:layout_margin="@dimen/_2sdp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_search_white_24dp"
+            app:backgroundTint="#461837" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnSpeak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:layout_marginLeft="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_3sdp"
+            android:layout_weight="1"
+            android:src="@drawable/baseline_mic_24"
+            app:backgroundTint="#461837" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:alpha="0.85"
+        android:background="@drawable/bg_tourbutton"
+        android:drawableEnd="@drawable/baseline_map_24"
+        android:fontFamily="@font/inter"
+        android:padding="@dimen/_10sdp"
+        android:text="Start a Tour"
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/white"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/_9ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/searchLayout"
+        app:layout_constraintTop_toBottomOf="@+id/menufab"
+        app:layout_constraintVertical_bias="1.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

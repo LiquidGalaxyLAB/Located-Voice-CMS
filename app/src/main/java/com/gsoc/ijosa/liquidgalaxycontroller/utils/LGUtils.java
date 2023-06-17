@@ -1,6 +1,7 @@
 package com.gsoc.ijosa.liquidgalaxycontroller.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -20,8 +21,8 @@ public class LGUtils {
 
     private static Session session = null;
 
-    public static Session getSession(Activity activity) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+    public static Session getSession(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String user = prefs.getString("User", "lg");
         String password = prefs.getString("Password", "lqgalaxy");
         String hostname = prefs.getString("HostName", "172.26.17.21");
@@ -49,10 +50,10 @@ public class LGUtils {
         return session;
     }
 
-    public static String setConnectionWithLiquidGalaxy(Session session, String command, Activity activity) throws JSchException, IOException {
+    public static String setConnectionWithLiquidGalaxy(Session session, String command, Context context) throws JSchException, IOException {
 
         if (session == null || !session.isConnected()) {
-            session = getSession(activity);
+            session = getSession(context);
         }
 
         ChannelExec channelssh = (ChannelExec) session.openChannel("exec");
