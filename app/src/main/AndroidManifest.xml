@@ -2,11 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.gsoc.ijosa.liquidgalaxycontroller">
 
-    <supports-screens android:smallScreens="false"
-        android:normalScreens="false"
+    <supports-screens
         android:largeScreens="true"
-        android:xlargeScreens="true"
-        android:requiresSmallestWidthDp="600" />
+        android:normalScreens="false"
+        android:requiresSmallestWidthDp="600"
+        android:smallScreens="false"
+        android:xlargeScreens="true" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -21,20 +22,25 @@
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
-    <!--Required for the kiosk mode-->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- Required for the kiosk mode -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.GET_TASKS" />
-
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/lg"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
+        <activity
+            android:name=".SplashActivity"
+            android:screenOrientation="landscape"
+            android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
         <!-- Google Maps Fragment API Key Data -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -43,71 +49,55 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-
         <provider
             android:name=".data.POIsProvider"
             android:authorities="com.gsoc.ijosa.liquidgalaxycontroller"
             android:enabled="true"
-            android:exported="true" />
-
-        <!--<uses-sdk android:minSdkVersion="21" />-->
-
+            android:exported="true" /> <!-- <uses-sdk android:minSdkVersion="21" /> -->
         <activity
-            android:name="com.gsoc.ijosa.liquidgalaxycontroller.CreateItemActivity"
+            android:name=".CreateItemActivity"
             android:label="@string/title_activity_create_item"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
-            android:name="com.gsoc.ijosa.liquidgalaxycontroller.UpdateItemActivity"
+            android:name=".UpdateItemActivity"
+            android:screenOrientation="landscape"
             android:label="@string/title_activity_update_item"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
-
-<!--        <intent-filter>-->
-<!--            <action android:name="android.intent.action.GET_CONTENT" />-->
-
-<!--            <category android:name="android.intent.category.DEFAULT" />-->
-<!--        </intent-filter>-->
-
+            android:windowSoftInputMode="adjustPan"></activity> <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.GET_CONTENT" /> -->
+        <!-- <category android:name="android.intent.category.DEFAULT" /> -->
+        <!-- </intent-filter> -->
         <activity
-            android:name="com.gsoc.ijosa.liquidgalaxycontroller.SettingsActivity"
-            android:label="@string/title_activity_settings" >
-        </activity>
+            android:name=".SettingsActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/title_activity_settings"></activity>
         <activity
-            android:name="com.gsoc.ijosa.liquidgalaxycontroller.LGPC"
-            android:label="@string/app_name"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name=".LGPC"
+            android:exported="true"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="landscape">
         </activity>
         <activity
-            android:name="com.gsoc.ijosa.liquidgalaxycontroller.LGPCAdminActivity"
-            android:theme="@style/AppTheme.WithActionBar"
-            android:label="" >
-        </activity>
+            android:name=".LGPCAdminActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.WithActionBar"></activity>
         <activity
-            android:name="com.gsoc.ijosa.liquidgalaxycontroller.InfoActivity"
-            android:label="@string/title_activity_info" >
-        </activity>
+            android:name=".InfoActivity"
+            android:screenOrientation="landscape"
+            android:label="@string/title_activity_info"></activity>
         <activity
-            android:name="com.gsoc.ijosa.liquidgalaxycontroller.Help"
-            android:label="@string/title_activity_help" >
-        </activity>
+            android:name=".Help"
+            android:screenOrientation="landscape"
+            android:label="@string/title_activity_help"></activity>
 
         <service
             android:name=".PW.UrlDeviceDiscoveryService"
             android:enabled="true"
-            android:exported="false"/>
-
-
+            android:exported="false" />
         <service
             android:name=".PW.ScreenListenerService"
             android:enabled="true"
-            android:exported="false"/>
-
+            android:exported="false" />
 
         <receiver
             android:name=".PW.AutostartPwoDiscoveryServiceReceiver"
@@ -115,33 +105,21 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </receiver>
-
-        <!-- This is required for the scan library. -->
+        </receiver> <!-- This is required for the scan library. -->
         <service
             android:name="org.uribeacon.scan.compat.ScanWakefulService"
-            android:exported="false"/>
-
+            android:exported="false" />
         <service
             android:name="org.uribeacon.config.GattService"
-            android:exported="false"/>
-
-
-        <!-- This is required for the scan library. -->
-        <receiver android:name="org.uribeacon.scan.compat.ScanWakefulBroadcastReceiver"/>
-
-        <!-- This is required for the kiosk mode. -->
-        <receiver android:name=".utils.kioskModeUtils.BootReceiver"
+            android:exported="false" /> <!-- This is required for the scan library. -->
+        <receiver android:name="org.uribeacon.scan.compat.ScanWakefulBroadcastReceiver" /> <!-- This is required for the kiosk mode. -->
+        <receiver
+            android:name=".utils.kioskModeUtils.BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
-        <!--<service-->
-        <!--android:name=".utils.kioskModeUtils.KioskService"-->
-        <!--android:exported="false" />-->
-
     </application>
 
 </manifest>

@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +26,10 @@ import androidx.appcompat.app.ActionBar;
 
 import android.speech.RecognizerIntent;
 import android.text.method.PasswordTransformationMethod;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +39,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gsoc.ijosa.liquidgalaxycontroller.utils.LGUtils;
 import com.jcraft.jsch.JSchException;
@@ -45,6 +50,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /*This is the MAIN Activity, the first that appears when the application is opened. On the
 * bar there are some Tabs corresponding on some different contents.*/
@@ -70,10 +79,13 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
 
-    private ArrayList<String> backIDs = new ArrayList<>();
+//    private ArrayList<String> backIDs = new ArrayList<>();
+    private SharedPreferences sharedPreferences;
+    private final String LOGO_STATE_KEY = "logoState";
     Button SuggPOIButton;
     FloatingActionButton menufab,btnSpeak,buttonSearch;
     EditText editSearch;
+    private BottomSheetDialog bottomSheetDialog;
     int numBack = 0;
 
     @Override
@@ -82,12 +94,25 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.new_home);
 //        changed layout from activity_lg to new_home
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SuggPOIButton=findViewById(R.id.suggpoibutton);
         menufab=findViewById(R.id.menufab);
-        BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
         btnSpeak=findViewById(R.id.btnSpeak);
         buttonSearch=findViewById(R.id.searchButton);
         editSearch = findViewById(R.id.search_edittext);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int screenWidth = displayMetrics.widthPixels;
+        if (screenWidth < 2000) {
+            menufab.setSize(FloatingActionButton.SIZE_MINI);
+            btnSpeak.setSize(FloatingActionButton.SIZE_MINI);
+            buttonSearch.setSize(FloatingActionButton.SIZE_MINI);
+        } else {
+            menufab.setSize(FloatingActionButton.SIZE_NORMAL);
+            btnSpeak.setSize(FloatingActionButton.SIZE_NORMAL);
+            buttonSearch.setSize(FloatingActionButton.SIZE_NORMAL);
+        }
+
+
         btnSpeak.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -118,7 +143,12 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         SuggPOIButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                bottomSheetFragment.show(getSupportFragmentManager(), bottomSheetFragment.getTag());
+                if (bottomSheetDialog == null) {
+                    bottomSheetDialog = new BottomSheetDialog(LGPC.this, R.style.AppBottomSheetDialogTheme);
+                    View view = LayoutInflater.from(LGPC.this).inflate(R.layout.bottomsheetlayout, findViewById(R.id.bottomsheetll));
+                    bottomSheetDialog.setContentView(view);
+                }
+                bottomSheetDialog.show();
             }
         });
 
@@ -128,6 +158,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 showMenu();
             }
         });
+
 
 
 
@@ -183,9 +214,14 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
     }
 
-    private void showMenu() {
+    private void  showMenu() {
         PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.menufab));
         popupMenu.getMenuInflater().inflate(R.menu.menu_lgpc, popupMenu.getMenu());
+
+        String machinesString = sharedPreferences.getString("Machines", "3");
+        int machines = Integer.parseInt(machinesString);
+        int slave_num = Math.floorDiv(machines, 2) + 2;
+        String slave_name = "slave_" + slave_num;
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -194,7 +230,22 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                     Intent intent = new Intent(LGPC.this, InfoActivity.class);
                     startActivity(intent);
                     return true;
-                } else if (id == R.id.action_admin) {
+                } else if (id == R.id.action_showlogo){
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    executor.submit(new SetLogosTask(slave_name, session, LGPC.this));
+                    executor.shutdown();
+                    return true;
+                } else if (id== R.id.action_hidelogo){
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    CleanLogosTask cleanLogosTask = new CleanLogosTask(slave_name, session, LGPC.this);
+                    Future<Void> future = executorService.submit(cleanLogosTask);
+                    try {
+                        future.get();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    executorService.shutdown();
+                }else if (id == R.id.action_admin) {
                     if (!POISFragment.getTourState()) {
                         showPasswordAlert();
                     } else {
@@ -461,6 +512,80 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             }
         }
     }
+
+    public class SetLogosTask implements Runnable {
+        private String slaveName;
+        private Session session;
+        private Context context;
+
+        public SetLogosTask(String slaveName, Session session, Context context) {
+            this.slaveName = slaveName;
+            this.session = session;
+            this.context = context;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Log.d("Set Logos", "SetLogosTask: Background task started");
+                String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; echo '" +
+                        "<kml xmlns=\"http://www.opengis.net/kml/2.2\"\n" +
+                        "xmlns:atom=\"http://www.w3.org/2005/Atom\" \n" +
+                        " xmlns:gx=\"http://www.google.com/kml/ext/2.2\"> \n" +
+                        " <Document>\n " +
+                        " <Folder> \n" +
+                        "<name>Logos</name> \n" +
+                        "<ScreenOverlay>\n" +
+                        "<name>Logo</name> \n" +
+                        " <Icon> \n" +
+                        "<href>https://raw.githubusercontent.com/vedantkingh/Located-Voice-CMS/master/app/src/main/res/drawable/logos.png</href> \n" +
+                        " </Icon> \n" +
+                        " <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        " <screenXY x=\"0.02\" y=\"0.95\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        " <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        " <size x=\"0.6\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        "</ScreenOverlay> \n" +
+                        " </Folder> \n" +
+                        " </Document> \n" +
+                        " </kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
+
+                LGUtils.setConnectionWithLiquidGalaxy(session, sentence, context);
+                Log.d("Set Logos", "Logos sent");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public class CleanLogosTask implements Callable<Void> {
+        private String slaveName;
+        private Session session;
+        private Context context;
+
+        public CleanLogosTask(String slaveName, Session session, Context context) {
+            this.slaveName = slaveName;
+            this.session = session;
+            this.context = context;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            try {
+                Log.d("Clean Logos", "CleanLogosTask: Background task started");
+                String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; " +
+                        "echo '' > /var/www/html/kml/"+ slaveName +".kml";
+
+                LGUtils.setConnectionWithLiquidGalaxy(session, sentence, context);
+                Log.d("Clean Logos","Logos cleaned");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 

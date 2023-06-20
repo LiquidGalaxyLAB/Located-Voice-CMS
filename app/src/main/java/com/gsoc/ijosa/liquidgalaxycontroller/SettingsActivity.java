@@ -35,6 +35,7 @@ public class SettingsActivity extends PreferenceActivity
 
         // For all preferences, attach an OnPreferenceChangeListener so the UI summary can be
         // updated when the preference changes.za
+        bindPreferenceSummaryToValue(findPreference("Machines"));
         bindPreferenceSummaryToValue(findPreference("User"));
         bindPreferenceSummaryToValue(findPreference("Password"));
         bindPreferenceSummaryToValue(findPreference("HostName"));

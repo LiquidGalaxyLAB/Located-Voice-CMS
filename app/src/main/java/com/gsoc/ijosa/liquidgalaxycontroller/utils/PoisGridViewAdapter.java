@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import androidx.core.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -79,6 +80,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 String command = buildCommand(currentPoi);
+                Log.d("Rotate","button");
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, true);
                 visitPoiTask.execute();
             }
@@ -93,7 +95,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
         ImageButton viewPoiButton = new ImageButton(context);
         paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
         paramsView.addRule(RelativeLayout.ALIGN_START);
-        viewPoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_place_black_24dp, null));
+        viewPoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.baseline_place_24, null));
         viewPoiButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
         viewPoiButton.setLayoutParams(paramsView);
         viewPoiButton.setOnClickListener(new View.OnClickListener() {
@@ -101,6 +103,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
             public void onClick(View view) {
 
                 String command = buildCommand(currentPoi);
+                Log.d("viewPOI","button");
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
                 visitPoiTask.execute();
 
@@ -141,6 +144,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
 
         poiName.setMaxLines(2);
+        poiName.setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.white, null));
         paramsText.addRule(RelativeLayout.CENTER_IN_PARENT);
 
         poiName.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +152,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
             public void onClick(View view) {
 
                 String command = buildCommand(currentPoi);
+                Log.d("POINAME","button");
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
                 visitPoiTask.execute();
 

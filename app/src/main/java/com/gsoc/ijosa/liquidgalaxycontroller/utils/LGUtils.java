@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -24,8 +25,8 @@ public class LGUtils {
     public static Session getSession(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String user = prefs.getString("User", "lg");
-        String password = prefs.getString("Password", "lqgalaxy");
-        String hostname = prefs.getString("HostName", "172.26.17.21");
+        String password = prefs.getString("Password", "lq");
+        String hostname = prefs.getString("HostName", "192.168.56.102");
         int port = Integer.parseInt(prefs.getString("Port", "22"));
 
         JSch jsch = new JSch();
@@ -63,6 +64,7 @@ public class LGUtils {
         channelssh.setOutputStream(baos);
 
         channelssh.setCommand(command);
+        Log.d("SSH","Command sent to LG");
         channelssh.connect();
         channelssh.disconnect();
 

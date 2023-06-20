@@ -7,6 +7,14 @@
         android:id="@+id/action_admin"
         android:title="@string/administration_tools"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_showlogo"
+        android:title="@string/show_logo"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_hidelogo"
+        android:title="@string/hide_logo"
+        app:showAsAction="never" />
     <item android:id="@+id/action_information_help"
         android:title="@string/help"
         app:showAsAction="never" />

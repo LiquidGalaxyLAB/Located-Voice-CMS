@@ -10,7 +10,7 @@
         <item name="android:textColorTertiary">@color/grey_700</item>
         <item name="actionOverflowMenuStyle">@style/CMOptionsMenu</item>
         <item name="floatingActionButtonStyle">@style/FloatingActionButtonStyle</item>
-
+        <item name="android:screenOrientation">landscape</item>
     </style>
 
     <style name="CMOptionsMenu" parent="Widget.AppCompat.PopupMenu.Overflow">

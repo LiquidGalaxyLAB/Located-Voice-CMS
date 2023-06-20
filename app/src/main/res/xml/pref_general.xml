@@ -1,6 +1,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
+        android:defaultValue="3"
+        android:inputType="number"
+        android:key="Machines"
+        android:singleLine="true"
+        android:title="Total machines count i.e. 3 or 5"/>
+
+    <EditTextPreference
         android:defaultValue="lg"
         android:inputType="text"
         android:key="User"

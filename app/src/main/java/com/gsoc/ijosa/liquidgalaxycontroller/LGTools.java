@@ -137,7 +137,7 @@ public class LGTools extends Fragment {
     }
 
     /*SHUT DOWN, RELAUNCH and REBOOT*/
-    private void showAlertAndExecution(final String sentence, String action) {
+    private void showAlertAndExecution(String sentence, String action) {
         // prepare the alert box
         AlertDialog.Builder alertbox = new AlertDialog.Builder(getActivity());
 

@@ -7,6 +7,8 @@
     <string name="action_resetDB">Reset Database</string>
     <string name="POIs_button">POIS</string>
     <string name="TOURs_button">TOURs</string>
+    <string name="show_logo">Show Logos</string>
+    <string name="hide_logo">Hide Logos</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="admin">Administration tools</string>
     <string name="title_activity_admin">Liquid Galaxy Tools</string>
@@ -73,7 +75,7 @@
     <string name="import_pois_dialog_fromPW">Import from Physical Web Beacon</string>
     <!--**********-->
 
-     <!--Beacons-->
+    <!--Beacons-->
     <string name="discovery_service_prefs_key">org.physical_web.physicalweb.DISCOVERY_SERVICE_PREFS</string>
     <plurals name="numFoundBeacons">
         <item quantity="one">Beacon Nearby</item>
@@ -84,7 +86,6 @@
     <string name="notification_view_more_beacons">View more beacons</string>
     <string name="empty_nearby_beacons_list_text">Searching for beacons</string>
     <string name="title_nearby_beacons">Found Physical Web Beacons</string>
-
 
 
     <string name="importingContents">Importing Contents</string>
@@ -232,10 +233,10 @@
     <!--About dialog-->
     <string name="about">About</string>
     <string name="close">Close</string>
-    <string name="aboutDocText1">This app has been developed thanks to GSOC 2016 Program as a continuation of a GSOC 2015 Project</string>
-    <string name="aboutDocText2">Developed originally by Rafa Durán Sàez(rafaduransaez@gmail.com) and continued by Ivan Josa Llovera (ivanjosallovera@gmail.com)</string>
+    <string name="aboutDocText1">This app has been developed thanks to GSOC 2016 Program as a continuation of a GSOC 2015 Project. This update is provided under GSoC 2023 Program.</string>
+    <string name="aboutDocText2">Developed originally by Rafa Durán Sàez (rafaduransaez@gmail.com) and continued by Ivan Josa Llovera (ivanjosallovera@gmail.com). Updated by Vedant Singh (vedantkingh@gmail.com).</string>
     <string name="aboutDocText3">https://github.com/LiquidGalaxyLAB/Liquid-Galaxy-POIs-Controller.git</string>
-    <string name="aboutDocText4">Developed thanks to the TIC Laboratories of the Scientific Park of Lleida, Liquid Galaxy LAB &amp; LleidaDrone LAB,  Polytechnic School of Lleida, End Point Corp (NY), Wonderama LAB from Western University (Sydney), Gigabyte, Benq, HP, Corsair, and  Hemav Academics.</string>
+    <string name="aboutDocText4">Developed thanks to the TIC Laboratories of the Scientific Park of Lleida, Liquid Galaxy LAB &amp; LleidaDrone LAB, Polytechnic School of Lleida, End Point Corp (NY), Wonderama LAB from Western University (Sydney), Gigabyte, Benq, HP, Corsair and Hemav Academics.</string>
     <string name="about_Controller_message">About Liquid Galaxy Controller</string>
     <string name="hidden">Hidden</string>
     <string name="visible">Visible</string>

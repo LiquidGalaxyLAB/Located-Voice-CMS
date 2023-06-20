@@ -17,14 +17,13 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        setStyle(STYLE_NORMAL, R.style.AppBottomSheetDialogTheme);
         return inflater.inflate(R.layout.bottomsheetlayout, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        FragmentContainerView bottomSheetContainer = view.findViewById(R.id.fragmentContainerView);
 
         if (savedInstanceState == null) {
             // Inflate your fragment inside the FragmentContainerView

@@ -1,101 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_remove_24" />
 
     <LinearLayout
-        android:id="@+id/layoutCategoriesSearch"
-        android:layout_width="350dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="50dp"
-        android:layout_weight="1"
-        android:background="@color/grey"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/layoutCategoriesSearch"
+            style="@style/CardForCategories"
+            android:layout_width="@dimen/_133sdp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+            android:layout_gravity="start"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_19sdp"
+            android:orientation="vertical">
 
-
-            <ImageView
-                android:id="@+id/back_start_icon"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <ImageView
+                    android:id="@+id/back_start_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:contentDescription="@string/back_start"
+                    android:focusable="false"
+                    android:src="@drawable/baseline_home_24" />
+
+                <ImageView
+                    android:id="@+id/back_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:contentDescription="@string/back"
+                    android:focusable="false"
+                    android:src="@drawable/baseline_reply_24" />
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/viewing_category_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:text="@string/viewing_category"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_8ssp" />
+
+
+            <TextView
+                android:id="@+id/current_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="bold|italic|normal" />
+
+
+            <ListView
+                android:id="@+id/categories_listview"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_57sdp"
                 android:layout_gravity="start"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:contentDescription="@string/back_start"
-                android:focusable="false"
-                android:src="@drawable/ic_home_black_36dp" />
+                android:layout_marginStart="@dimen/_4sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:divider="@null"
+                android:fadeScrollbars="false"
+                android:scrollbars="vertical" />
+        </LinearLayout>
 
-            <ImageView
-                android:id="@+id/back_icon"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginRight="@dimen/_8sdp">
+
+            <Button
+                android:id="@+id/nearbyplaces"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:contentDescription="@string/back"
-                android:focusable="false"
-                android:src="@drawable/ic_reply_black_36dp" />
+                android:layout_gravity="right"
+                android:background="@drawable/bg_nearme"
+                android:paddingTop="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_13sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:layout_margin="@dimen/_2sdp"
+                android:text="Nearby Places  "
+                android:drawableEnd="@drawable/baseline_near_me_24"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10ssp" />
+
+            <Button
+                android:id="@+id/soundbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@drawable/bg_nearme"
+                android:paddingTop="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_13sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:drawableEnd="@drawable/baseline_library_books_24"
+                android:layout_margin="@dimen/_2sdp"
+                android:text="Listen Description  "
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10ssp" />
+
+            <Button
+                android:id="@+id/descriptionbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableEnd="@drawable/quantum_ic_volume_up_white_36"
+                android:layout_gravity="right"
+                android:background="@drawable/bg_nearme"
+                android:paddingTop="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_8sdp"
+                android:paddingLeft="@dimen/_13sdp"
+                android:paddingRight="@dimen/_12sdp"
+                android:layout_margin="@dimen/_2sdp"
+                android:text="Play Sound  "
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10ssp" />
+
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/viewing_category_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:text="@string/viewing_category"
-            android:textSize="20sp" />
-
-
-        <TextView
-            android:id="@+id/current_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:textSize="30sp"
-            android:textStyle="bold|italic|normal" />
-
-
-        <ListView
-            android:id="@+id/categories_listview"
-            android:layout_width="wrap_content"
-            android:layout_height="150dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:divider="@null"
-            android:fadeScrollbars="false"
-            android:scrollbars="vertical" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_weight="1"
         android:gravity="center">
 
         <GridView
             android:id="@+id/POISgridview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="bottom"
-            android:columnWidth="30dp"
+            android:columnWidth="@dimen/_11sdp"
             android:gravity="center"
-            android:horizontalSpacing="10dp"
-            android:numColumns="4"
+            android:horizontalSpacing="@dimen/_4sdp"
+            android:numColumns="3"
+            android:paddingLeft="@dimen/_8sdp"
+            android:paddingTop="@dimen/_2sdp"
+            android:paddingRight="@dimen/_8sdp"
             android:scrollbars="vertical"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="15dp" />
+            android:verticalSpacing="@dimen/_6sdp" />
 
     </LinearLayout>
 </LinearLayout>
