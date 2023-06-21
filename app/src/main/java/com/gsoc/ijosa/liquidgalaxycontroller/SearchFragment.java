@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 
 public class SearchFragment extends Fragment {
@@ -88,8 +89,14 @@ public class SearchFragment extends Fragment {
 //        screenSizeTreatment();
 //        setSearchInLGButton();
 //        setPlanetsButtonsBehaviour();
-
         poisGridView = (GridView) rootView.findViewById(R.id.POISgridview);
+        if (getArguments() != null) {
+            String currentplanet = getArguments().getString("currentplanet");
+            if(Objects.equals(currentplanet, "EARTH")){Earth();}
+            else if(Objects.equals(currentplanet, "MOON")){Moon();}
+            else if(Objects.equals(currentplanet, "MARS")){Mars();};
+
+        }
 
         backStartIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -312,85 +319,70 @@ public class SearchFragment extends Fragment {
     }
 
     private void Earth() {
-        earth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String command = "echo 'planet=earth' > /tmp/query.txt";
+        String command = "echo 'planet=earth' > /tmp/query.txt";
 
-                if (!currentPlanet.equals("EARTH")) {
-                    SearchTask searchTask = new SearchTask(command, true);
-                    searchTask.execute();
-                    currentPlanet = "EARTH";
-                }
+        if (!currentPlanet.equals("EARTH")) {
+            SearchTask searchTask = new SearchTask(command, true);
+            searchTask.execute();
+            currentPlanet = "EARTH";
+        }
 
-                Category category = getCategoryByName(currentPlanet);
-                categorySelectorTitle.setText(category.getName());
+        Category category = getCategoryByName(currentPlanet);
+        categorySelectorTitle.setText(category.getName());
 
-                backIDs = new ArrayList<>();
-                backIDs.add(String.valueOf(category.getId()));
+        backIDs = new ArrayList<>();
+        backIDs.add(String.valueOf(category.getId()));
 
-                Cursor queryCursor = POIsContract.CategoryEntry.getNotHiddenCategoriesByFatherID(getActivity(), String.valueOf(category.getId()));
-                showCategoriesOnScreen(queryCursor);
+        Cursor queryCursor = POIsContract.CategoryEntry.getNotHiddenCategoriesByFatherID(getActivity(), String.valueOf(category.getId()));
+        showCategoriesOnScreen(queryCursor);
 
-                final List<POI> poisList = getPoisList(category.getId());
-                if (poisList != null) {
-                    poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
-                }
-            }
-        });
+        final List<POI> poisList = getPoisList(category.getId());
+        if (poisList != null) {
+            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+        }
     }
 
-    private void Moon() {
+    void Moon() {
 
-        moon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String command = "echo 'planet=moon' > /tmp/query.txt";
-                if (!currentPlanet.equals("MOON")) {
-                    //setConnectionWithLiquidGalaxy(command);
-                    SearchTask searchTask = new SearchTask(command, true);
-                    searchTask.execute();
-                    currentPlanet = "MOON";
-                    Category category = getCategoryByName(currentPlanet);
-                    categorySelectorTitle.setText(category.getName());
+        String command = "echo 'planet=moon' > /tmp/query.txt";
+        if (!currentPlanet.equals("MOON")) {
+            //setConnectionWithLiquidGalaxy(command);
+            SearchTask searchTask = new SearchTask(command, true);
+            searchTask.execute();
+            currentPlanet = "MOON";
+            Category category = getCategoryByName(currentPlanet);
+            categorySelectorTitle.setText(category.getName());
 
-                    backIDs = new ArrayList<>();
-                    backIDs.add(String.valueOf(category.getId()));
+            backIDs = new ArrayList<>();
+            backIDs.add(String.valueOf(category.getId()));
 
-                    Cursor queryCursor = POIsContract.CategoryEntry.getNotHiddenCategoriesByFatherID(getActivity(), String.valueOf(category.getId()));
-                    showCategoriesOnScreen(queryCursor);
+            Cursor queryCursor = POIsContract.CategoryEntry.getNotHiddenCategoriesByFatherID(getActivity(), String.valueOf(category.getId()));
+            showCategoriesOnScreen(queryCursor);
 
-                    final List<POI> poisList = getPoisList(category.getId());
-                    poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
-                }
-            }
-        });
+            final List<POI> poisList = getPoisList(category.getId());
+            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+        }
     }
 
     private void Mars() {
 
-        mars.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String command = "echo 'planet=mars' > /tmp/query.txt";
-                if (!currentPlanet.equals("MARS")) {
-                    SearchTask searchTask = new SearchTask(command, true);
-                    searchTask.execute();
-                    currentPlanet = "MARS";
-                    Category category = getCategoryByName(currentPlanet);
-                    categorySelectorTitle.setText(category.getName());
+        String command = "echo 'planet=mars' > /tmp/query.txt";
+        if (!currentPlanet.equals("MARS")) {
+            SearchTask searchTask = new SearchTask(command, true);
+            searchTask.execute();
+            currentPlanet = "MARS";
+            Category category = getCategoryByName(currentPlanet);
+            categorySelectorTitle.setText(category.getName());
 
-                    backIDs = new ArrayList<>();
-                    backIDs.add(String.valueOf(category.getId()));
+            backIDs = new ArrayList<>();
+            backIDs.add(String.valueOf(category.getId()));
 
-                    Cursor queryCursor = POIsContract.CategoryEntry.getNotHiddenCategoriesByFatherID(getActivity(), String.valueOf(category.getId()));
-                    showCategoriesOnScreen(queryCursor);
+            Cursor queryCursor = POIsContract.CategoryEntry.getNotHiddenCategoriesByFatherID(getActivity(), String.valueOf(category.getId()));
+            showCategoriesOnScreen(queryCursor);
 
-                    final List<POI> poisList = getPoisList(category.getId());
-                    poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
-                }
-            }
-        });
+            final List<POI> poisList = getPoisList(category.getId());
+            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+        }
     }
 
     private void screenSizeTreatment() {

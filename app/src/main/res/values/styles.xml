@@ -10,6 +10,7 @@
         <!--<item name="android:textColorTertiary">@color/grey_700</item>-->
         <item name="android:screenOrientation">landscape</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+        <item name="popupMenuStyle">@style/popupBGStyle</item>
     </style>
     <style name="AppTheme.WithActionBar" parent="Theme.AppCompat.Light">
         <item name="android:screenOrientation">landscape</item>
@@ -50,6 +51,10 @@
     <style name="CardForCategories"
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_suggpois</item>
+    </style>
+    
+    <style name="popupBGStyle" parent="Widget.Material3.PopupMenu">
+        <item name="background">@drawable/bg_suggpois</item>
     </style>
 
 </resources>

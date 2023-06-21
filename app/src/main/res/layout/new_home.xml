@@ -45,11 +45,11 @@
         app:menu="@menu/menu_lgpc" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/planetimg"
         android:layout_width="@dimen/_150sdp"
         android:layout_height="@dimen/_150sdp"
         android:layout_marginTop="@dimen/_68sdp"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
+        app:layout_constraintBottom_toTopOf="@+id/changeplanet"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -57,7 +57,7 @@
         app:srcCompat="@drawable/newearthimg" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/planetname"
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_3sdp"
@@ -66,8 +66,8 @@
         android:text="Earth"
         android:textColor="@color/white"
         android:textSize="@dimen/_30ssp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintStart_toStartOf="@+id/imageView2" />
+        app:layout_constraintBottom_toBottomOf="@+id/planetimg"
+        app:layout_constraintStart_toStartOf="@+id/planetimg" />
 
     <Button
         android:id="@+id/suggpoibutton"
@@ -85,13 +85,13 @@
         android:textIsSelectable="false"
         android:textSize="@dimen/_7ssp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button3"
+        app:layout_constraintEnd_toStartOf="@+id/changeplanet"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/changeplanet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_15sdp"
@@ -120,7 +120,7 @@
         android:descendantFocusability="beforeDescendants"
         android:focusableInTouchMode="true"
         android:orientation="horizontal"
-        app:layout_constraintStart_toEndOf="@id/button3"
+        app:layout_constraintStart_toEndOf="@id/changeplanet"
         app:layout_constraintEnd_toStartOf="@id/button2"
         app:layout_constraintBottom_toBottomOf="parent">
 

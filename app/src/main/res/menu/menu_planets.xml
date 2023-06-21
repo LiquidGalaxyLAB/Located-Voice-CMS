@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.gsoc.ijosa.liquidgalaxycontroller.com.gsoc.ijosa.liquidgalaxycontroller.LGPC">
+    <item
+        android:id="@+id/earthid"
+        android:title="EARTH" />
+    <item
+        android:id="@+id/moonid"
+        android:title="MOON" />
+    <item
+        android:id="@+id/marsid"
+        android:title="MARS" />
+</menu>

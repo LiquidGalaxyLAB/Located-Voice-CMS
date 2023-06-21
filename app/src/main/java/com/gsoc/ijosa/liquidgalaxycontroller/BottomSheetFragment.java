@@ -1,6 +1,7 @@
 package com.gsoc.ijosa.liquidgalaxycontroller;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +27,15 @@ public class BottomSheetFragment extends BottomSheetDialogFragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (savedInstanceState == null) {
+            // Retrieve the fragment instance with arguments
+            Bundle bundle = getArguments();
+            SearchFragment searchFragment = new SearchFragment();
+            Log.d("Check 2","");
+            searchFragment.setArguments(bundle);
+
             // Inflate your fragment inside the FragmentContainerView
             getChildFragmentManager().beginTransaction()
-                    .replace(R.id.fragmentContainerView, new SearchFragment())
+                    .replace(R.id.fragmentContainerView, searchFragment)
                     .commit();
         }
     }

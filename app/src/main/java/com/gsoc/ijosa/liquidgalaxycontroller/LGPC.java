@@ -16,7 +16,9 @@ import android.os.Debug;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
@@ -31,12 +33,15 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -82,12 +87,14 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //    private ArrayList<String> backIDs = new ArrayList<>();
     private SharedPreferences sharedPreferences;
     private final String LOGO_STATE_KEY = "logoState";
-    Button SuggPOIButton;
+    Button SuggPOIButton,changeplanet;
     FloatingActionButton menufab,btnSpeak,buttonSearch;
+    ImageView planetimg;
     EditText editSearch;
+    TextView planetname;
     private BottomSheetDialog bottomSheetDialog;
     int numBack = 0;
-
+    Bundle bundle = new Bundle();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,10 +103,13 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //        changed layout from activity_lg to new_home
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SuggPOIButton=findViewById(R.id.suggpoibutton);
+        changeplanet=findViewById(R.id.changeplanet);
         menufab=findViewById(R.id.menufab);
         btnSpeak=findViewById(R.id.btnSpeak);
         buttonSearch=findViewById(R.id.searchButton);
         editSearch = findViewById(R.id.search_edittext);
+        planetimg=findViewById(R.id.planetimg);
+        planetname=findViewById(R.id.planetname);
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int screenWidth = displayMetrics.widthPixels;
         if (screenWidth < 2000) {
@@ -139,16 +149,20 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 }
             }
         });
-
+        bundle.putString("currentplanet", "EARTH");
         SuggPOIButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bottomSheetDialog == null) {
-                    bottomSheetDialog = new BottomSheetDialog(LGPC.this, R.style.AppBottomSheetDialogTheme);
-                    View view = LayoutInflater.from(LGPC.this).inflate(R.layout.bottomsheetlayout, findViewById(R.id.bottomsheetll));
-                    bottomSheetDialog.setContentView(view);
-                }
-                bottomSheetDialog.show();
+//                if (bottomSheetDialog == null) {
+//                    bottomSheetDialog = new BottomSheetDialog(LGPC.this, R.style.AppBottomSheetDialogTheme);
+//                    View view = LayoutInflater.from(LGPC.this).inflate(R.layout.bottomsheetlayout, findViewById(R.id.bottomsheetll));
+//                    bottomSheetDialog.setContentView(view);
+//                }
+//                bottomSheetDialog.show();
+                BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
+                bottomSheetFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.AppBottomSheetDialogTheme);
+                bottomSheetFragment.setArguments(bundle);
+                bottomSheetFragment.show(getSupportFragmentManager(), "bottom_sheet_tag");
             }
         });
 
@@ -156,6 +170,13 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             @Override
             public void onClick(View v) {
                 showMenu();
+            }
+        });
+
+        changeplanet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPlanetMenu();
             }
         });
 
@@ -213,6 +234,57 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         getSupportActionBar().setLogo(R.drawable.lg_logo);
         getSupportActionBar().setDisplayUseLogoEnabled(true);
     }
+
+    public void showPlanetMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, changeplanet); // Pass the context and the view that triggers the menu
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.menu_planets, popupMenu.getMenu()); // Inflate your menu resource
+
+
+        // Set a listener for menu item clicks
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.earthid) {
+                    bundle.putString("currentplanet", "EARTH");
+                    SearchFragment fragment = new SearchFragment();
+                    fragment.setArguments(bundle);
+                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
+                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
+                        planetname.setText("EARTH");
+                    }
+                    return true;
+                } else if (itemId == R.id.moonid) {
+                    bundle.putString("currentplanet", "MOON");
+                    SearchFragment fragment = new SearchFragment();
+                    Log.d("Check1","");
+                    fragment.setArguments(bundle);
+                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
+                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
+                        planetname.setText("MOON");
+                    }
+                    return true;
+                } else if (itemId == R.id.marsid) {
+                    bundle.putString("currentplanet", "MARS");
+                    SearchFragment fragment = new SearchFragment();
+                    fragment.setArguments(bundle);
+                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
+                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
+                        planetname.setText("MARS");
+                    }
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+        });
+
+        // Show the popup menu
+        popupMenu.show();
+    }
+
 
     private void  showMenu() {
         PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.menufab));
