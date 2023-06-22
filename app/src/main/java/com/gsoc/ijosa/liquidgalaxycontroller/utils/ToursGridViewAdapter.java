@@ -8,6 +8,8 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.content.res.ResourcesCompat;
 import android.view.View;
@@ -74,14 +76,15 @@ public class ToursGridViewAdapter extends BaseAdapter {
         if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             button.setTextSize(15);
         }
+        button.setTextColor(ContextCompat.getColor(context, R.color.white));
 
-        Drawable left = ResourcesCompat.getDrawable(context.getResources(), R.drawable.politour48, null);
+        Drawable left = ResourcesCompat.getDrawable(context.getResources(), R.drawable.baseline_polyline_24, null);
         button.setCompoundDrawablesWithIntrinsicBounds(left, null, null, null);
 
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         button.setMaxLines(1);
 
-        button.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
+        button.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.bg_tourbutton, null));
         button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

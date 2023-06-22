@@ -9,7 +9,6 @@
         <!--<item name="android:textColorSecondary">@color/grey_700</item>-->
         <!--<item name="android:textColorTertiary">@color/grey_700</item>-->
         <item name="android:screenOrientation">landscape</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
         <item name="popupMenuStyle">@style/popupBGStyle</item>
     </style>
     <style name="AppTheme.WithActionBar" parent="Theme.AppCompat.Light">
@@ -39,6 +38,7 @@
         <item name="android:windowEnterAnimation">@anim/slide_in_bottom</item>
         <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
     </style>
+<!--    SuggPOI-->
     <style name="AppBottomSheetDialogTheme"
         parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
@@ -48,6 +48,20 @@
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_suggpoibottomsheet</item>
     </style>
+
+<!--    Tour-->
+    <style name="TourAppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/TourAppModalStyle</item>
+    </style>
+
+    <style name="TourAppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_tourbottomsheet</item>
+    </style>
+
+
+
     <style name="CardForCategories"
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/bg_suggpois</item>

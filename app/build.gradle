@@ -57,6 +57,7 @@ dependencies {
 
     //    Responsive text
     implementation 'com.intuit.ssp:ssp-android:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
 }
 

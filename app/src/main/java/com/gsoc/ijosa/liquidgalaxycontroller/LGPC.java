@@ -87,8 +87,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //    private ArrayList<String> backIDs = new ArrayList<>();
     private SharedPreferences sharedPreferences;
     private final String LOGO_STATE_KEY = "logoState";
-    Button SuggPOIButton,changeplanet;
-    FloatingActionButton menufab,btnSpeak,buttonSearch;
+    Button SuggPOIButton, changeplanet, tourbutton;
+    FloatingActionButton menufab, btnSpeak, buttonSearch;
     ImageView planetimg;
     EditText editSearch;
     TextView planetname;
@@ -105,6 +105,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         SuggPOIButton=findViewById(R.id.suggpoibutton);
         changeplanet=findViewById(R.id.changeplanet);
         menufab=findViewById(R.id.menufab);
+        tourbutton=findViewById(R.id.tourbutton);
         btnSpeak=findViewById(R.id.btnSpeak);
         buttonSearch=findViewById(R.id.searchButton);
         editSearch = findViewById(R.id.search_edittext);
@@ -159,7 +160,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //                    bottomSheetDialog.setContentView(view);
 //                }
 //                bottomSheetDialog.show();
-                BottomSheetFragment bottomSheetFragment = new BottomSheetFragment();
+                SuggPOIBottomSheetFragment bottomSheetFragment = new SuggPOIBottomSheetFragment();
                 bottomSheetFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.AppBottomSheetDialogTheme);
                 bottomSheetFragment.setArguments(bundle);
                 bottomSheetFragment.show(getSupportFragmentManager(), "bottom_sheet_tag");
@@ -177,6 +178,15 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             @Override
             public void onClick(View v) {
                 showPlanetMenu();
+            }
+        });
+
+        tourbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TourBottomSheetFragment bottomSheetFragment = new TourBottomSheetFragment();
+                bottomSheetFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.TourAppBottomSheetDialogTheme);
+                bottomSheetFragment.show(getSupportFragmentManager(), "bottom_sheet_tag2");
             }
         });
 

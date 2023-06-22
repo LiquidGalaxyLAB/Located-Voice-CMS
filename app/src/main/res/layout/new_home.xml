@@ -21,8 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_15sdp"
-        android:layout_marginTop="@dimen/_17sdp"
-        android:fontFamily="@font/inter_bold"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:fontFamily="@font/montserrat_medium"
         android:text="Liquid Galaxy Controller"
         android:textColor="#ADA9BB"
         android:textSize="@dimen/_14ssp"
@@ -62,7 +62,7 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_3sdp"
         android:layout_marginBottom="@dimen/_3sdp"
-        android:fontFamily="@font/inter_bold"
+        android:fontFamily="@font/montserrat_medium"
         android:text="Earth"
         android:textColor="@color/white"
         android:textSize="@dimen/_30ssp"
@@ -77,7 +77,7 @@
         android:alpha="0.85"
         android:background="@drawable/bg_suggpois"
         android:drawableEnd="@drawable/baseline_location_on_24"
-        android:fontFamily="@font/inter"
+        android:fontFamily="@font/montserrat"
         android:padding="@dimen/_8sdp"
         android:text="Suggested POIs  "
         android:textColor="@color/white"
@@ -98,7 +98,7 @@
         android:alpha="0.85"
         android:background="@drawable/bg_changeplanet"
         android:drawableEnd="@drawable/planet"
-        android:fontFamily="@font/inter"
+        android:fontFamily="@font/montserrat"
         android:padding="@dimen/_8sdp"
         android:text="Change Planet  "
         android:textColor="@color/white"
@@ -106,9 +106,8 @@
         android:textIsSelectable="false"
         android:textSize="@dimen/_7ssp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/suggpoibutton"
         app:layout_constraintEnd_toStartOf="@id/searchLayout"
-        tools:layout_editor_absoluteX="337dp" />
+        app:layout_constraintStart_toEndOf="@id/suggpoibutton" />
 
     <LinearLayout
         android:id="@+id/searchLayout"
@@ -121,7 +120,7 @@
         android:focusableInTouchMode="true"
         android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="@id/changeplanet"
-        app:layout_constraintEnd_toStartOf="@id/button2"
+        app:layout_constraintEnd_toStartOf="@id/tourbutton"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
@@ -159,14 +158,14 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/tourbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_15sdp"
         android:alpha="0.85"
         android:background="@drawable/bg_tourbutton"
         android:drawableEnd="@drawable/baseline_map_24"
-        android:fontFamily="@font/inter"
+        android:fontFamily="@font/montserrat"
         android:padding="@dimen/_10sdp"
         android:text="Start a Tour  "
         android:textColor="@color/white"
