@@ -26,6 +26,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.gsoc.ijosa.liquidgalaxycontroller.data.POIsDbHelper;
 import com.gsoc.ijosa.liquidgalaxycontroller.data.POIsProvider;
 
@@ -38,31 +40,51 @@ import java.util.Calendar;
 public class LGPCAdminActivity extends AppCompatActivity implements TabListener {
     AdminCollectionPagerAdapter mSectionsPagerAdapter;
     ViewPager mViewPager;
+    private BottomNavigationView bottomNavigationView;
 
     PendingIntent intent;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lgpcadmin);
+
+        mSectionsPagerAdapter = new AdminCollectionPagerAdapter(getSupportFragmentManager());
+        mViewPager = findViewById(R.id.pager_admin);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_action_bar));
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            int position = 0;
+            if (item.getItemId() == R.id.menu_treeview) {
+                position = AdminCollectionPagerAdapter.PAGE_TREEEVIEW;
+            } else if (item.getItemId() == R.id.menu_tours) {
+                position = AdminCollectionPagerAdapter.PAGE_TOURS;
+            } else if (item.getItemId() == R.id.menu_tools) {
+                position = AdminCollectionPagerAdapter.PAGE_TOOLS;
+            } else if (item.getItemId() == R.id.menu_tasks) {
+                position = AdminCollectionPagerAdapter.PAGE_TASKS;
+            } else if (item.getItemId() == R.id.menu_beacons) {
+                position = AdminCollectionPagerAdapter.PAGE_BEACONS;
+            }
+
+            mViewPager.setCurrentItem(position);
+            return true;
+        });
 
 
-        this.mSectionsPagerAdapter = new AdminCollectionPagerAdapter(getSupportFragmentManager());
-        this.mViewPager = (ViewPager) findViewById(R.id.pager_admin);
-        this.mViewPager.setAdapter(this.mSectionsPagerAdapter);
-        this.mViewPager.setOnPageChangeListener(new C02741(actionBar));
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+            }
+        });
 
+        bottomNavigationView.setLabelVisibilityMode(NavigationBarView.LABEL_VISIBILITY_LABELED);
 
-        for (int i = 0; i < this.mSectionsPagerAdapter.getCount(); i++) {
-            actionBar.addTab(actionBar.newTab().setText(this.mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
-        }
-
-        intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(getIntent()), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -73,6 +95,37 @@ public class LGPCAdminActivity extends AppCompatActivity implements TabListener 
                 mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_TREEEVIEW);
             }
         }
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_lgpcadmin);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_action_bar));
+//        }
+//
+//
+//        this.mSectionsPagerAdapter = new AdminCollectionPagerAdapter(getSupportFragmentManager());
+//        this.mViewPager = (ViewPager) findViewById(R.id.pager_admin);
+//        this.mViewPager.setAdapter(this.mSectionsPagerAdapter);
+//        this.mViewPager.setOnPageChangeListener(new C02741(actionBar));
+//
+//
+//        for (int i = 0; i < this.mSectionsPagerAdapter.getCount(); i++) {
+//            actionBar.addTab(actionBar.newTab().setText(this.mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
+//        }
+//
+//        intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(getIntent()), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+//
+//        Bundle extras = getIntent().getExtras();
+//        if (extras != null) {
+//            String value = extras.getString("comeFrom");
+//            if (value != null && value.equalsIgnoreCase("tours")) {
+//                mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_TOURS);
+//            } else if (value != null && value.equalsIgnoreCase("treeView")) {
+//                mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_TREEEVIEW);
+//            }
+//        }
 
     }
 
@@ -83,7 +136,11 @@ public class LGPCAdminActivity extends AppCompatActivity implements TabListener 
 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (item.getItemId() == android.R.id.home) {
+            // Handle the click event of the "up" button
+            onBackPressed(); // or perform any other desired action
+            return true;
+        }else if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
         } else if (id == R.id.reset_db) {

@@ -13,7 +13,9 @@
     </style>
     <style name="AppTheme.WithActionBar" parent="Theme.AppCompat.Light">
         <item name="android:screenOrientation">landscape</item>
-
+        <item name="colorPrimary">#363135</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
         <!-- Customize other attributes as needed -->
     </style>
 

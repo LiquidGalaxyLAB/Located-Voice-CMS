@@ -41,7 +41,7 @@ public class NewPOISList extends Fragment {
         //getRootCategories => those with father id = 0
         //foreach rootCategory => get child categories recursively
 
-        TreeNode categoriesRoot = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.ic_home_black_24dp, getResources().getString(R.string.categoriesRoot), 0, 0, false));
+        TreeNode categoriesRoot = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.baseline_home_24, getResources().getString(R.string.categoriesRoot), 0, 0, false));
 
         try (Cursor rootCategories = POIsContract.CategoryEntry.getRootCategories(getActivity())) {
             while (rootCategories.moveToNext()) {
@@ -51,18 +51,18 @@ public class NewPOISList extends Fragment {
                 switch (rootCategory.getName()) {
                     case "earth":
                     case "EARTH":
-                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.earth, rootCategory.getName(), rootCategory.getId(), 0, false);
+                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.newearthimg, rootCategory.getName(), rootCategory.getId(), 0, false);
                         break;
                     case "moon":
                     case "MOON":
-                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.moon, rootCategory.getName(), rootCategory.getId(), 0, false);
+                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.newmoon, rootCategory.getName(), rootCategory.getId(), 0, false);
                         break;
                     case "mars":
                     case "MARS":
-                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.mars, rootCategory.getName(), rootCategory.getId(), 0, false);
+                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.newmars, rootCategory.getName(), rootCategory.getId(), 0, false);
                         break;
                     default:
-                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.ic_home_black_24dp, rootCategory.getName(), rootCategory.getId(), 0, false);
+                        parentNode = new TreeItemHolder.IconTreeItem(R.drawable.baseline_home_24, rootCategory.getName(), rootCategory.getId(), 0, false);
                         break;
                 }
 
@@ -99,7 +99,7 @@ public class NewPOISList extends Fragment {
         try (Cursor poisInCategory = POIsContract.POIEntry.getPOIsByCategory(getActivity(), String.valueOf(category.getId()))) {
             while (poisInCategory.moveToNext()) {
                 POI poi = getPoiData(poisInCategory);
-                TreeNode poiNode = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.ic_place_black_24dp, poi.getName(), poi.getId(), 1, true));
+                TreeNode poiNode = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.baseline_place_24, poi.getName(), poi.getId(), 1, true));
                 parent.addChild(poiNode);
             }
             poisInCategory.close();
@@ -112,7 +112,7 @@ public class NewPOISList extends Fragment {
             while (childCategories.moveToNext()) {
                 final Category childCategory = getCategoryData(childCategories);
                 int count = POIsContract.POIEntry.countPOIsByCategory(getActivity(), String.valueOf(childCategory.getId()));
-                final TreeNode childCategoryNode = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.ic_folder_black_24dp, childCategory.getName() + " (" + count + " pois inside) ", childCategory.getId(), 0, true));
+                final TreeNode childCategoryNode = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.baseline_folder_24, childCategory.getName() + " (" + count + " pois inside) ", childCategory.getId(), 0, true));
 
                 getChildCategories(childCategory, childCategoryNode);
                 getPois(childCategory, childCategoryNode);

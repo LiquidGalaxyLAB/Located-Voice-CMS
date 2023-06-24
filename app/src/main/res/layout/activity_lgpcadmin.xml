@@ -1,11 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.viewpager.widget.ViewPager
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.viewpager.widget.ViewPager-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:id="@+id/pager_admin"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:layout_gravity="center"-->
+<!--    app:tabIndicatorColor="@android:color/white"-->
+<!--    tools:context="com.gsoc.ijosa.liquidgalaxycontroller.LGPCAdminActivity" />-->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pager_admin"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    app:tabIndicatorColor="@android:color/white"
-    tools:context="com.gsoc.ijosa.liquidgalaxycontroller.com.gsoc.ijosa.liquidgalaxycontroller.LGPCAdminActivity" />
+    app:flow_horizontalAlign="center"
+    android:background="@drawable/backgroundspace"
+    tools:actionBarNavMode="standard">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager_admin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll" />
+
+    <LinearLayout
+        android:id="@+id/ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_1sdp"
+            android:paddingTop="@dimen/_3sdp"
+            android:paddingBottom="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_bottom_nav"
+            app:itemPaddingBottom="@dimen/_9sdp"
+            app:itemBackground="@drawable/bg_selected_tab_bottomnav"
+            app:itemTextColor="@color/white"
+            app:itemActiveIndicatorStyle="@drawable/bg_searchpoi"
+            app:labelVisibilityMode="labeled"
+            app:menu="@menu/lgpc_bottom_nav_menu" />
+    </LinearLayout>
+
+
+</RelativeLayout>

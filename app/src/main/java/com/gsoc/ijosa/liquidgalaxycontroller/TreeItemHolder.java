@@ -39,11 +39,11 @@ public class TreeItemHolder extends TreeNode.BaseNodeViewHolder<TreeItemHolder.I
         tvValue = (TextView) view.findViewById(R.id.node_value);
         tvValue.setText(value.text);
 
-        if (value.type == 1) {
-            if (node.getId() % 2 == 0) {
-                view.setBackgroundColor(context.getResources().getColor(R.color.white));
-            }
-        }
+//        if (value.type == 1) {
+//            if (node.getId() % 2 == 0) {
+//                view.setBackgroundColor(context.getResources().getColor(R.color.white));
+//            }
+//        }
 
         final ImageView iconView = (ImageView) view.findViewById(R.id.imageIcon);
         iconView.setImageDrawable(context.getResources().getDrawable(value.icon));
@@ -148,7 +148,7 @@ public class TreeItemHolder extends TreeNode.BaseNodeViewHolder<TreeItemHolder.I
 
     @Override
     public void toggle(boolean active) {
-        arrowView.setImageDrawable(context.getResources().getDrawable(active ? R.drawable.ic_keyboard_arrow_down_black_36dp : R.drawable.ic_keyboard_arrow_right_black_36dp));
+        arrowView.setImageDrawable(context.getResources().getDrawable(active ? R.drawable.baseline_keyboard_arrow_down_24 : R.drawable.baseline_keyboard_arrow_right_24));
     }
 
     public static class IconTreeItem {

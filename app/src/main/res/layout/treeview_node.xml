@@ -16,7 +16,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_home_black_36dp" />
+            android:src="@drawable/baseline_home_24" />
 
         <ImageView
             android:id="@+id/arrow_icon"
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start|center_vertical"
             android:layout_weight="0"
-            android:src="@drawable/ic_keyboard_arrow_right_black_36dp" />
+            android:src="@drawable/baseline_keyboard_arrow_right_24" />
 
         <TextView
             android:id="@+id/node_value"

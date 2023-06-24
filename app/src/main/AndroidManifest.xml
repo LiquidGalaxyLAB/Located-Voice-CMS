@@ -82,6 +82,7 @@
         <activity
             android:name=".LGPCAdminActivity"
             android:screenOrientation="landscape"
+            android:label="Administration Tools"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
             android:name=".InfoActivity"
