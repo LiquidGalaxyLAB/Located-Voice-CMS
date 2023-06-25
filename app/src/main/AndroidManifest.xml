@@ -33,9 +33,6 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".TourBottomSheetFragment"
-            android:exported="false" />
-        <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:screenOrientation="landscape">

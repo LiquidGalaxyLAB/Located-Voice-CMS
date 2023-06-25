@@ -321,11 +321,11 @@ public class SearchFragment extends Fragment {
     private void Earth() {
         String command = "echo 'planet=earth' > /tmp/query.txt";
 
-        if (!currentPlanet.equals("EARTH")) {
+//        if (!currentPlanet.equals("EARTH")) {
             SearchTask searchTask = new SearchTask(command, true);
             searchTask.execute();
             currentPlanet = "EARTH";
-        }
+//        }
 
         Category category = getCategoryByName(currentPlanet);
         categorySelectorTitle.setText(category.getName());

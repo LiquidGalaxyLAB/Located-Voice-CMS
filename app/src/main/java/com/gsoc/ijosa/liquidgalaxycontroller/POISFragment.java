@@ -180,15 +180,15 @@ public class POISFragment extends Fragment {
             categories_tittle.setTextSize(28);
             route.setTextSize(28);
             poisListViewTittle.setTextSize(28);
-            backStartIcon.setImageResource(R.drawable.ic_home_black_48dp);
-            backIcon.setImageResource(R.drawable.ic_reply_black_48dp);
+            backStartIcon.setImageResource(R.drawable.baseline_home_24);
+            backIcon.setImageResource(R.drawable.baseline_reply_24);
         } else if(smallestWidth >720 && smallestWidth<1000){
             seeingOptions.setTextSize(24);
             categories_tittle.setTextSize(24);
             route.setTextSize(24);
             poisListViewTittle.setTextSize(24);
-            backStartIcon.setImageResource(R.drawable.ic_home_black_36dp);
-            backIcon.setImageResource(R.drawable.ic_reply_black_36dp);
+            backStartIcon.setImageResource(R.drawable.baseline_home_24);
+            backIcon.setImageResource(R.drawable.baseline_reply_24);
         }
         else if(smallestWidth <= 720 && smallestWidth >= 600 ){
             seeingOptions.setTextSize(22);

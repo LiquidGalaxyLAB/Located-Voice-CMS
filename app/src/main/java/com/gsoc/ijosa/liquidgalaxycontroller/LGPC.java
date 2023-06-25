@@ -86,13 +86,11 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
 //    private ArrayList<String> backIDs = new ArrayList<>();
     private SharedPreferences sharedPreferences;
-    private final String LOGO_STATE_KEY = "logoState";
     Button SuggPOIButton, changeplanet, tourbutton;
     FloatingActionButton menufab, btnSpeak, buttonSearch;
     ImageView planetimg;
     EditText editSearch;
     TextView planetname;
-    private BottomSheetDialog bottomSheetDialog;
     int numBack = 0;
     Bundle bundle = new Bundle();
     @Override
@@ -246,7 +244,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
     }
 
     public void showPlanetMenu() {
-        PopupMenu popupMenu = new PopupMenu(this, changeplanet); // Pass the context and the view that triggers the menu
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.planetpopupBGStyle);
+        PopupMenu popupMenu = new PopupMenu(wrapper, changeplanet); // Pass the context and the view that triggers the menu
         MenuInflater inflater = popupMenu.getMenuInflater();
         inflater.inflate(R.menu.menu_planets, popupMenu.getMenu()); // Inflate your menu resource
 
@@ -262,17 +261,16 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                     fragment.setArguments(bundle);
                     if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
                         planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
-                        planetname.setText("EARTH");
+                        planetname.setText("Earth");
                     }
                     return true;
                 } else if (itemId == R.id.moonid) {
                     bundle.putString("currentplanet", "MOON");
                     SearchFragment fragment = new SearchFragment();
-                    Log.d("Check1","");
                     fragment.setArguments(bundle);
                     if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
                         planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
-                        planetname.setText("MOON");
+                        planetname.setText("Moon");
                     }
                     return true;
                 } else if (itemId == R.id.marsid) {
@@ -281,7 +279,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                     fragment.setArguments(bundle);
                     if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
                         planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
-                        planetname.setText("MARS");
+                        planetname.setText("Mars");
                     }
                     return true;
                 } else {
@@ -297,7 +295,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
 
     private void  showMenu() {
-        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.menufab));
+        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.menupopupBGStyle);
+        PopupMenu popupMenu = new PopupMenu(wrapper, findViewById(R.id.menufab));
         popupMenu.getMenuInflater().inflate(R.menu.menu_lgpc, popupMenu.getMenu());
 
         String machinesString = sharedPreferences.getString("Machines", "3");

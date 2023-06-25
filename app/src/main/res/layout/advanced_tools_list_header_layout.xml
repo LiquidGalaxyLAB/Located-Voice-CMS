@@ -16,6 +16,7 @@
         android:id="@+id/lg_header_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@color/white"
         android:layout_marginBottom="10dp"
         android:contentDescription="@string/desc_lg_icon"
         android:text="@string/context_menu_launch_task"/>

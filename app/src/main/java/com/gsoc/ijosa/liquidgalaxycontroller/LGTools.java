@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,6 +15,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,7 +114,10 @@ public class LGTools extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    String sentence = "/home/lg/bin/lg-reboot > /home/lg/log.txt";
+                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                    String password = sharedPreferences.getString("Password", "lg");
+                    String sentence="echo '" + password + "' | sudo -S reboot";
+//                    String sentence = "/home/lg/bin/lg-reboot > /home/lg/log.txt";
                     showAlertAndExecution(sentence, "reboot");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
@@ -139,7 +145,7 @@ public class LGTools extends Fragment {
     /*SHUT DOWN, RELAUNCH and REBOOT*/
     private void showAlertAndExecution(String sentence, String action) {
         // prepare the alert box
-        AlertDialog.Builder alertbox = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertbox = new AlertDialog.Builder(getActivity(), R.style.BlackTextAlertDialog);
 
         // set the message to display
         alertbox.setMessage("Are you sure to " + action + " Liquid Galaxy?");
