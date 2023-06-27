@@ -9,19 +9,19 @@ repositories {
 
 
 android {
-    namespace 'com.gsoc.ijosa.liquidgalaxycontroller'
-    signingConfigs {
-        config {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('/home/lgwork/.android/debug.keystore')
-            storePassword 'android'
-        }
-    }
+    namespace 'com.gsoc.vedantsingh.locatedvoicecms'
+//    signingConfigs {
+//        config {
+//            keyAlias 'androiddebugkey'
+//            keyPassword 'android'
+//            storeFile file('/home/lgwork/.android/debug.keystore')
+//            storePassword 'android'
+//        }
+//    }
     compileSdkVersion 33
     buildToolsVersion '30.0.3'
     defaultConfig {
-        applicationId "com.gsoc.ijosa.liquidgalaxycontroller"
+        applicationId "com.gsoc.vedantsingh.locatedvoicecms"
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 5

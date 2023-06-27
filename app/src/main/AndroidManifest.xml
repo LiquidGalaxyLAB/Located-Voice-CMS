@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gsoc.ijosa.liquidgalaxycontroller">
+    package="com.gsoc.vedantsingh.locatedvoicecms">
 
     <supports-screens
         android:largeScreens="true"
@@ -51,7 +51,7 @@
 
         <provider
             android:name=".data.POIsProvider"
-            android:authorities="com.gsoc.ijosa.liquidgalaxycontroller"
+            android:authorities="com.gsoc.vedantsingh.locatedvoicecms"
             android:enabled="true"
             android:exported="true" /> <!-- <uses-sdk android:minSdkVersion="21" /> -->
         <activity

@@ -23,7 +23,7 @@
         android:layout_marginStart="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_15sdp"
         android:fontFamily="@font/montserrat_medium"
-        android:text="Liquid Galaxy Controller"
+        android:text="Located Voice CMS for Liquid Galaxy"
         android:textColor="#ADA9BB"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintStart_toEndOf="@+id/imageView"
