@@ -6,6 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/dismissButton"
+        android:layout_width="65dp"
+        android:layout_height="59dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginRight="@dimen/_2sdp"
+        android:clickable="true"
+        android:src="@drawable/baseline_cancel_24" />
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"

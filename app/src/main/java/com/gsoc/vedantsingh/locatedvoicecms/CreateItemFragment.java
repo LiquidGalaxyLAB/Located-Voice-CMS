@@ -20,6 +20,7 @@ import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -238,8 +239,8 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         }
 
 
+//        Vedant suppressed it for now
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        //Vedant suppressed it for now
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this); //You can also use LocationManager.GPS_PROVIDER and LocationManager.PASSIVE_PROVIDER
 
         return rootView;
@@ -395,7 +396,6 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         final ViewHolderPoi viewHolder = new ViewHolderPoi(rootView);
         viewHolder.updatePOI.setVisibility(View.GONE);
         viewHolder.createPOI.setVisibility(View.VISIBLE);
-
 
         //If user has clicked on Create Here, obviously, no spinner categories option will be shown.
         if (creationType.endsWith("HERE")) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFFFFF</color>
+    <color name="offwhite">#EEEEEE</color>
     <color name="whiteGrey">#f1f1f1</color>
     <color name="grey">#cccccc</color>
     <color name="grey_700">#646464</color>
@@ -14,7 +15,7 @@
     <color name="red">#F44336</color>
     <color name="green">#4CAF50</color>
     <color name="yellow">#FFEB3B</color>
-    <color name="material_grey">#9E9E9E</color>
+    <color name="material_grey">#383838</color>
     <color name="blue">#2196F3</color>
 
     <!--Beacons-->

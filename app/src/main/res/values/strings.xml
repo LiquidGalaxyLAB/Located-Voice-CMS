@@ -7,6 +7,7 @@
     <string name="action_resetDB">Reset Database</string>
     <string name="POIs_button">POIS</string>
     <string name="TOURs_button">TOURs</string>
+    <string name="show_hide_logo">Show/Hide Logos</string>
     <string name="show_logo">Show Logos</string>
     <string name="hide_logo">Hide Logos</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

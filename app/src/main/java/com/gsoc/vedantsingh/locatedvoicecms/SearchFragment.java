@@ -2,11 +2,13 @@ package com.gsoc.vedantsingh.locatedvoicecms;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -88,6 +90,7 @@ public class SearchFragment extends Fragment {
 //        setSearchInLGButton();
 //        setPlanetsButtonsBehaviour();
         poisGridView = (GridView) rootView.findViewById(R.id.POISgridview);
+
         if (getArguments() != null) {
             String currentplanet = getArguments().getString("currentplanet");
             if(Objects.equals(currentplanet, "EARTH")){Earth();}
@@ -319,11 +322,11 @@ public class SearchFragment extends Fragment {
     private void Earth() {
         String command = "echo 'planet=earth' > /tmp/query.txt";
 
-//        if (!currentPlanet.equals("EARTH")) {
+        if (!Objects.equals(getArguments().getString("currentplanet"), "EARTH")) {
             SearchTask searchTask = new SearchTask(command, true);
             searchTask.execute();
             currentPlanet = "EARTH";
-//        }
+        }
 
         Category category = getCategoryByName(currentPlanet);
         categorySelectorTitle.setText(category.getName());
@@ -539,6 +542,9 @@ public class SearchFragment extends Fragment {
         String command;
         boolean isChangingPlanet;
         private ProgressDialog dialog;
+        private Handler handler;
+        Context taskContext=getContext();
+
 
         public SearchTask(String command, boolean isChangingPlanet) {
             this.command = command;
@@ -549,7 +555,7 @@ public class SearchFragment extends Fragment {
         protected void onPreExecute() {
             super.onPreExecute();
             if (dialog == null) {
-                dialog = new ProgressDialog(getActivity());
+                dialog = new ProgressDialog(getActivity(), R.style.CustomProgressDialog);
                 if (isChangingPlanet) {
                     dialog.setMessage(getResources().getString(R.string.changingPlanet));
                 } else {
@@ -566,6 +572,17 @@ public class SearchFragment extends Fragment {
                     }
                 });
                 dialog.show();
+
+                handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dialog != null && dialog.isShowing()) {
+                            dialog.dismiss();
+                            Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, 10000); // 10 seconds (10000 milliseconds)
             }
         }
 
@@ -589,9 +606,10 @@ public class SearchFragment extends Fragment {
             if (success != null) {
                 if (dialog != null) {
                     dialog.dismiss();
+                    handler.removeCallbacksAndMessages(null);
                 }
             } else {
-                Toast.makeText(getActivity(), getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
+                Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
             }
         }
     }

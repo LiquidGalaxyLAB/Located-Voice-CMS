@@ -4,6 +4,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:paddingLeft="@dimen/_8sdp"
+    android:paddingRight="@dimen/_8sdp"
     android:orientation="vertical">
 
 
@@ -17,9 +19,10 @@
         android:id="@+id/aboutDocHeader1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:drawableStart="@drawable/baseline_info_24"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_info_black_24dp"
-        android:text="@string/aboutDocText1" />
+        android:text="@string/aboutDocText1"
+        android:textColor="@color/white" />
 
 
     <TextView
@@ -27,9 +30,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/baseline_email_24"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/ic_email_black_24dp"
-        android:text="@string/aboutDocText2" />
+        android:text="@string/aboutDocText2"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/aboutDocHeader3"
@@ -37,18 +41,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginTop="10dp"
+        android:drawableStart="@drawable/github_32_white"
         android:drawablePadding="10dp"
-        android:drawableStart="@drawable/github_32"
-        android:text="@string/aboutDocText3" />
+        android:text="@string/aboutDocText3"
+        android:textColor="@color/white" />
 
     <TextView
         android:id="@+id/aboutDocHeader4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
-        android:text="@string/aboutDocText4" />
+        android:layout_marginTop="10dp"
+        android:text="@string/aboutDocText4"
+        android:textColor="@color/white" />
 
 
     <Button
@@ -56,9 +62,10 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginEnd="5dp"
         android:layout_marginTop="5dp"
-        android:text="@string/close" />
+        android:layout_marginEnd="5dp"
+        android:text="@string/close"
+        android:textColor="@color/white" />
 
 </LinearLayout>
 

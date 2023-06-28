@@ -10,13 +10,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -83,10 +88,12 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
 //    private ArrayList<String> backIDs = new ArrayList<>();
     private SharedPreferences sharedPreferences;
+    private boolean logo_switch=true;
     Button SuggPOIButton, changeplanet, tourbutton;
     FloatingActionButton menufab, btnSpeak, buttonSearch;
     ImageView planetimg;
     EditText editSearch;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     TextView planetname;
     int numBack = 0;
     Bundle bundle = new Bundle();
@@ -106,13 +113,17 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         editSearch = findViewById(R.id.search_edittext);
         planetimg=findViewById(R.id.planetimg);
         planetname=findViewById(R.id.planetname);
+
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int screenWidth = displayMetrics.widthPixels;
-        if (screenWidth < 2000) {
+        int screenDensity = displayMetrics.densityDpi;
+
+        if (screenDensity <= DisplayMetrics.DENSITY_MEDIUM) {
+            // Small screen (low or medium density)
             menufab.setSize(FloatingActionButton.SIZE_MINI);
             btnSpeak.setSize(FloatingActionButton.SIZE_MINI);
             buttonSearch.setSize(FloatingActionButton.SIZE_MINI);
         } else {
+            // Large screen (high density or above)
             menufab.setSize(FloatingActionButton.SIZE_NORMAL);
             btnSpeak.setSize(FloatingActionButton.SIZE_NORMAL);
             buttonSearch.setSize(FloatingActionButton.SIZE_NORMAL);
@@ -308,21 +319,25 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                     Intent intent = new Intent(LGPC.this, InfoActivity.class);
                     startActivity(intent);
                     return true;
-                } else if (id == R.id.action_showlogo){
-                    ExecutorService executor = Executors.newSingleThreadExecutor();
-                    executor.submit(new SetLogosTask(slave_name, session, LGPC.this));
-                    executor.shutdown();
-                    return true;
-                } else if (id== R.id.action_hidelogo){
-                    ExecutorService executorService = Executors.newSingleThreadExecutor();
-                    CleanLogosTask cleanLogosTask = new CleanLogosTask(slave_name, session, LGPC.this);
-                    Future<Void> future = executorService.submit(cleanLogosTask);
-                    try {
-                        future.get();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                } else if (id == R.id.action_showhidelogo){
+                    if(logo_switch==true){
+                        ExecutorService executor = Executors.newSingleThreadExecutor();
+                        executor.submit(new SetLogosTask(slave_name, session, LGPC.this));
+                        executor.shutdown();
+                        logo_switch=false;
+                    }else{
+                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+                        CleanLogosTask cleanLogosTask = new CleanLogosTask(slave_name, session, LGPC.this);
+                        Future<Void> future = executorService.submit(cleanLogosTask);
+                        try {
+                            future.get();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        executorService.shutdown();
+                        logo_switch=true;
                     }
-                    executorService.shutdown();
+                    return true;
                 }else if (id == R.id.action_admin) {
                     if (!POISFragment.getTourState()) {
                         showPasswordAlert();
@@ -409,13 +424,14 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
     private void showPasswordAlert(){
         // prepare the alert box
-        final AlertDialog.Builder alertbox = new AlertDialog.Builder(LGPC.this);
+        final AlertDialog.Builder alertbox = new AlertDialog.Builder(LGPC.this,R.style.BlackTextAlertDialog);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         // set the message to display
         alertbox.setMessage("Please, enter the password:");
         final EditText input = new EditText(LGPC.this);
         input.setHint("Password");
+        input.setTextColor(Color.BLACK);
         input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -432,8 +448,19 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 String pass = input.getText().toString();
                 String correct_pass = prefs.getString("AdminPassword", "lg");
                 if(pass.equals(correct_pass)){
-                    Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
-                    startActivity(intent);
+//                    if (ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+//                            && ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        // Permission is not granted, request it
+//                        ActivityCompat.requestPermissions(LGPC.this,
+//                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+//                                LOCATION_PERMISSION_REQUEST_CODE);
+//                    } else {
+//                        // Permission is already granted, proceed with your logic
+//                        // ...
+                        Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
+                        startActivity(intent);
+//                    }
+
                 }else{
                     incorrectPasswordAlertMessage();
                 }
@@ -449,6 +476,23 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         // display box
         alertbox.show();
     }
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+//                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//                // Location permissions granted, proceed with your logic
+//                // ...
+//                Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
+//                startActivity(intent);
+//            } else {
+//                // Location permissions denied, handle accordingly (e.g., show an error message)
+//                // ...
+//            }
+//        }
+//    }
 
     private void incorrectPasswordAlertMessage() {
         // prepare the alert box

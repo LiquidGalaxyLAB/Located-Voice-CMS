@@ -27,7 +27,8 @@
                 android:layout_gravity="start"
                 android:layout_marginBottom="15dip"
                 android:hint="@string/name"
-                android:inputType="textNoSuggestions" />
+                android:inputType="textNoSuggestions"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

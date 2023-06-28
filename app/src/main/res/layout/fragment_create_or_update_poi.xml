@@ -29,7 +29,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:hint="@string/name" />
+                android:hint="@string/name"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -43,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:hint="@string/place_visit" />
+                android:hint="@string/place_visit"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -57,9 +59,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:digits="0123456789."
+                android:digits="0123456789.-"
                 android:hint="@string/longitude"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -73,9 +76,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:digits="0123456789."
+                android:digits="0123456789.-"
                 android:hint="@string/latitude"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
@@ -98,9 +102,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:digits="0123456789."
+                android:digits="0123456789.-"
                 android:hint="@string/altitude"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -114,9 +119,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:digits="0123456789."
+                android:digits="0123456789.-"
                 android:hint="@string/heading"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -130,9 +136,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:digits="0123456789."
+                android:digits="0123456789.-"
                 android:hint="@string/tilt"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:textColor="@color/black" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -146,9 +153,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:digits="0123456789."
+                android:digits="0123456789.-"
                 android:hint="@string/range"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:textColor="@color/black" />
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
@@ -193,6 +201,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:hint="@string/visibility"
+                android:textColor="@color/black"
                 android:textOff="@string/hidden"
                 android:textOn="@string/visible" />
         </com.google.android.material.textfield.TextInputLayout>

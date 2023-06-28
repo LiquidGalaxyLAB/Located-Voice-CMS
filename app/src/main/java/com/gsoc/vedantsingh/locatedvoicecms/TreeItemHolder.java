@@ -111,7 +111,7 @@ public class TreeItemHolder extends TreeNode.BaseNodeViewHolder<TreeItemHolder.I
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context,R.style.BlackTextAlertDialog);
                     alert.setTitle(context.getResources().getString(R.string.are_you_sure));
 
                     alert.setPositiveButton(context.getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {

@@ -4,12 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/bottomsheetbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/baseline_remove_24" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +18,7 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_19sdp"
+            android:paddingLeft="@dimen/_4sdp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -62,6 +57,7 @@
                 android:id="@+id/viewing_category_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/_1sdp"
                 android:layout_marginStart="@dimen/_4sdp"
                 android:text="@string/viewing_category"
                 android:textColor="@color/white"
@@ -73,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:padding="@dimen/_1sdp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_11ssp"
                 android:textStyle="bold|italic|normal" />
@@ -84,7 +81,7 @@
                 android:layout_height="@dimen/_57sdp"
                 android:layout_gravity="start"
                 android:layout_marginStart="@dimen/_4sdp"
-                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginTop="@dimen/_2sdp"
                 android:divider="@null"
                 android:fadeScrollbars="false"
                 android:scrollbars="vertical" />
@@ -133,7 +130,7 @@
                 android:id="@+id/descriptionbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableEnd="@drawable/quantum_ic_volume_up_white_36"
+                android:drawableEnd="@drawable/baseline_volume_up_24"
                 android:layout_gravity="right"
                 android:background="@drawable/bg_nearme"
                 android:paddingTop="@dimen/_8sdp"

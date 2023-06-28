@@ -8,19 +8,19 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="@dimen/_43sdp"
-        android:layout_height="@dimen/_34sdp"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_marginStart="@dimen/_14sdp"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/newlglogo" />
+        app:srcCompat="@drawable/lvc_logo" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_15sdp"
         android:fontFamily="@font/montserrat_medium"
         android:text="Located Voice CMS for Liquid Galaxy"
@@ -35,9 +35,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_17sdp"
-        android:alpha="0.85"
         android:src="@drawable/baseline_menu_24"
-        app:backgroundTint="#451339"
+        app:backgroundTint="#111111"
         app:fabSize="auto"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -64,7 +63,7 @@
         android:layout_marginBottom="@dimen/_3sdp"
         android:fontFamily="@font/montserrat_medium"
         android:text="Earth"
-        android:textColor="@color/white"
+        android:textColor="@color/offwhite"
         android:textSize="@dimen/_30ssp"
         app:layout_constraintBottom_toBottomOf="@+id/planetimg"
         app:layout_constraintStart_toStartOf="@+id/planetimg" />
@@ -74,13 +73,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_15sdp"
-        android:alpha="0.85"
         android:background="@drawable/bg_suggpois"
         android:drawableEnd="@drawable/baseline_location_on_24"
         android:fontFamily="@font/montserrat"
         android:padding="@dimen/_8sdp"
         android:text="Suggested POIs  "
-        android:textColor="@color/white"
+        android:textColor="@color/offwhite"
         android:textColorHighlight="@color/white"
         android:textIsSelectable="false"
         android:textSize="@dimen/_7ssp"
@@ -95,13 +93,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_15sdp"
-        android:alpha="0.85"
         android:background="@drawable/bg_changeplanet"
         android:drawableEnd="@drawable/planet"
         android:fontFamily="@font/montserrat"
         android:padding="@dimen/_8sdp"
         android:text="Change Planet  "
-        android:textColor="@color/white"
+        android:textColor="@color/offwhite"
         android:textColorHighlight="@color/white"
         android:textIsSelectable="false"
         android:textSize="@dimen/_7ssp"
@@ -131,6 +128,7 @@
             android:layout_marginLeft="@dimen/_6sdp"
             android:layout_marginRight="@dimen/_6sdp"
             android:layout_weight="1"
+            android:textColorHint="@color/offwhite"
             android:hint="Search POI" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -141,7 +139,7 @@
             android:layout_margin="@dimen/_2sdp"
             android:layout_weight="1"
             android:src="@drawable/ic_search_white_24dp"
-            app:backgroundTint="#461837" />
+            app:backgroundTint="#95461837" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnSpeak"
@@ -154,7 +152,7 @@
             android:layout_marginRight="@dimen/_3sdp"
             android:layout_weight="1"
             android:src="@drawable/baseline_mic_24"
-            app:backgroundTint="#461837" />
+            app:backgroundTint="#95461837" />
     </LinearLayout>
 
     <Button
@@ -162,13 +160,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_15sdp"
-        android:alpha="0.85"
         android:background="@drawable/bg_tourbutton"
         android:drawableEnd="@drawable/baseline_map_24"
         android:fontFamily="@font/montserrat"
         android:padding="@dimen/_10sdp"
         android:text="Start a Tour  "
-        android:textColor="@color/white"
+        android:textColor="@color/offwhite"
         android:textColorHighlight="@color/white"
         android:textIsSelectable="false"
         android:textSize="@dimen/_9ssp"

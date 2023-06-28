@@ -46,7 +46,7 @@
             android:background="@drawable/bg_bottom_nav"
             app:itemPaddingBottom="@dimen/_9sdp"
             app:itemBackground="@drawable/bg_selected_tab_bottomnav"
-            app:itemTextColor="@color/white"
+            app:itemTextColor="@color/offwhite"
             app:itemActiveIndicatorStyle="@drawable/bg_searchpoi"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/lgpc_bottom_nav_menu" />

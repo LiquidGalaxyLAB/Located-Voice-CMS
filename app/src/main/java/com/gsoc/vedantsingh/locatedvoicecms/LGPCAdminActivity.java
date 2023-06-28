@@ -136,8 +136,8 @@ public class LGPCAdminActivity extends AppCompatActivity implements TabListener 
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (item.getItemId() == android.R.id.home) {
-            // Handle the click event of the "up" button
-            onBackPressed(); // or perform any other desired action
+            Intent intent = new Intent(this, LGPC.class);
+            startActivity(intent);
             return true;
         }else if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));

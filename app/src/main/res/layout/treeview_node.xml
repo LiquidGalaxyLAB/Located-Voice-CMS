@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/selectableItemBackground"
@@ -51,7 +52,7 @@
                 android:layout_marginStart="15dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_create_new_folder_black_36dp"
-                android:tint="@color/green" />
+                app:tint="@color/green" />
 
             <ImageView
                 android:id="@+id/btn_addPOI"
@@ -60,7 +61,7 @@
                 android:layout_marginStart="15dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_add_location_black_36dp"
-                android:tint="@color/green" />
+                app:tint="@color/green" />
 
             <ImageView
                 android:id="@+id/btn_edit"
@@ -69,7 +70,7 @@
                 android:layout_marginStart="15dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_mode_edit_black_36dp"
-                android:tint="@color/green" />
+                app:tint="@color/green" />
 
             <ImageView
                 android:id="@+id/btn_delete"
@@ -78,7 +79,7 @@
                 android:layout_marginStart="15dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_delete_forever_white_36dp"
-                android:tint="@color/red" />
+                app:tint="@color/red" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
