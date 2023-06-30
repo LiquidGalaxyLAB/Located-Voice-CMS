@@ -94,7 +94,7 @@ public class POIsDbHelper extends SQLiteOpenHelper {
         db.execSQL(Earth());
         db.execSQL(Moon());
         db.execSQL(Mars());
-        db.execSQL(ImportedFolder());
+//        db.execSQL(ImportedFolder());
     }
 
     private String ImportedFolder() {

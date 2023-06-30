@@ -11,7 +11,4 @@
     <item
         android:id="@+id/menu_tasks"
         android:title="LG TASKS" />
-    <item
-        android:id="@+id/menu_beacons"
-        android:title="SCAN BEACON" />
 </menu>

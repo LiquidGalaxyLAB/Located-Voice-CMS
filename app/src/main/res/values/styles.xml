@@ -10,7 +10,7 @@
         <!--<item name="android:textColorTertiary">@color/grey_700</item>-->
         <item name="android:screenOrientation">landscape</item>
         <item name="android:itemBackground">@color/white</item>
-        <item name="android:popupBackground">@style/planetpopupBGStyle</item>
+<!--        <item name="android:popupBackground">@style/planetpopupBGStyle</item>-->
     </style>
     <style name="AppTheme.WithActionBar" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:screenOrientation">landscape</item>
@@ -70,23 +70,23 @@
     </style>
 
 <!--    Menu Popup-->
-    <style name="menupopupBGStyle" parent="Widget.Material3.PopupMenu.ListPopupWindow">
-        <item name="android:textColor">@color/white</item>
-        <item name="android:alpha">0.95</item>
-        <item name="android:background">@drawable/bg_searchpoi</item>
+    <style name="menupopupBGStyle" parent="Widget.Material3.PopupMenu">
+<!--        <item name="android:textColor">@color/white</item>-->
+        <item name="android:popupBackground">@drawable/bg_searchpoi</item>
     </style>
 
 <!--    Change Planet Popup-->
     <style name="planetpopupBGStyle" parent="Widget.MaterialComponents.PopupMenu">
-        <item name="android:textColor">@color/white</item>
-<!--        <item name="android:alpha">0.95</item>-->
+<!--        <item name="android:textColor">@color/white</item>-->
         <item name="android:background">@drawable/bg_planetmenu</item>
     </style>
 
 <!--    AlertDialog-->
     <style name="BlackTextAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="android:textColor">@android:color/black</item>
-        <item name="android:colorAccent">@android:color/holo_blue_light</item>
+        <item name="android:textColor">@color/offwhite</item>
+        <item name="android:textColorPrimary">@color/offwhite</item>
+        <item name="android:textColorHint">@color/offwhite</item>
+        <item name="android:windowBackground">@color/lg_black</item>
     </style>
 
 <!--    Custome Progress Dialog-->

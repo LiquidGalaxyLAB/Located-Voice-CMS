@@ -9,7 +9,6 @@ INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (11,'Soccer S
 INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (12,'Spanish Hostels',1,'EARTH/Spanish Hostels/',0);
 INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (13,'World Airports',1,'EARTH/World Airports/',0);
 INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (14,'World Bridges',1,'EARTH/World Bridges/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (15,'World Monuments',4,'PW IMPORTED/World Monuments/',0);
 INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (17,'Apollo Missions',2,'MOON/Apollo Missions/',0);
 
 /******************************************************************TOURS**************************************************************/

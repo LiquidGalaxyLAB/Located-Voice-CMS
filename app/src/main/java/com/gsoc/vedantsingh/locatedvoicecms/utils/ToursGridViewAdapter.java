@@ -84,7 +84,7 @@ public class ToursGridViewAdapter extends BaseAdapter {
         AbsListView.LayoutParams params = new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
         button.setMaxLines(1);
 
-        button.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.bg_tourbutton, null));
+        button.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_blue, null));
         button.setLayoutParams(params);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

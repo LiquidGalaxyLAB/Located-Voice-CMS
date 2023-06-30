@@ -11,7 +11,7 @@
 
         <LinearLayout
             android:id="@+id/layoutCategoriesSearch"
-            style="@style/CardForCategories"
+            android:background="@drawable/bg_cardforcategories"
             android:layout_width="@dimen/_133sdp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"

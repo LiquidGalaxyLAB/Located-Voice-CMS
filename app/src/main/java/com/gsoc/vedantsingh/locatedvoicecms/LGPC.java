@@ -431,7 +431,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         alertbox.setMessage("Please, enter the password:");
         final EditText input = new EditText(LGPC.this);
         input.setHint("Password");
-        input.setTextColor(Color.BLACK);
         input.setTransformationMethod(PasswordTransformationMethod.getInstance());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

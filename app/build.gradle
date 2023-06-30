@@ -53,6 +53,8 @@ dependencies {
     /** ********************/
     implementation files('libs/jsch-0.1.53.jar')
     implementation files('libs/jzlib-1.1.1.jar')
+    //PopupMenu
+    implementation "com.github.skydoves:powermenu:2.2.4"
 
     //    Responsive design
     implementation 'com.intuit.sdp:sdp-android:1.1.0'
