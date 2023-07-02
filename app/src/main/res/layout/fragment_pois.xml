@@ -41,6 +41,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_toEndOf="@+id/categories_textview"
                 android:text="@string/slash"
+                android:textColor="@color/offwhite"
                 android:textStyle="bold" />
 
             <ImageView

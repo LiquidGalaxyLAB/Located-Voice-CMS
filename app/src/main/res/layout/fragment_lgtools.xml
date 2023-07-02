@@ -19,28 +19,30 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/import_pois"
+            android:id="@+id/show_logos"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginBottom="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_rounded_blue"
-            android:text="@string/import_pois"
-            android:textColor="@color/black" />
+            android:text="@string/show_logo"
+            android:textColor="@color/black"
+            android:textSize= "@dimen/_8ssp" />
 
         <Button
-            android:id="@+id/relaunch"
+            android:id="@+id/hide_logos"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
-            android:layout_marginStart="5dp"
             android:layout_weight="1"
-            android:background="@drawable/button_rounded_green"
-            android:text="@string/relaunch_lg"
-            android:textColor="@color/black" />
+            android:background="@drawable/button_rounded_purple"
+            android:text="@string/hide_logo"
+            android:textColor="@color/black"
+            android:textSize= "@dimen/_8ssp" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -56,23 +58,22 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginEnd="5dp"
-            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_rounded_yellow"
             android:text="@string/reboot_lg"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize= "@dimen/_8ssp" />
 
         <Button
             android:id="@+id/shutdown"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:background="@drawable/button_rounded_red"
             android:text="@string/shutdown_lg"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize= "@dimen/_8ssp" />
 
     </LinearLayout>
 
@@ -85,15 +86,28 @@
 
         <Button
             android:id="@+id/cleanKmls"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginEnd="150dp"
-            android:layout_marginStart="150dp"
             android:layout_marginTop="5dp"
+            android:layout_weight="1"
             android:background="@drawable/button_rounded_magenta"
             android:text="@string/clean_KML"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize= "@dimen/_8ssp" />
+
+        <Button
+            android:id="@+id/relaunch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_rounded_green"
+            android:text="@string/relaunch_lg"
+            android:textColor="@color/black"
+            android:textSize= "@dimen/_8ssp" />
 
     </LinearLayout>
 

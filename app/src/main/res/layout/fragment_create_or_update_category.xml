@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/lg_black"
     tools:context=".com.gsoc.ijosa.liquidgalaxycontroller.CreateItemFragment">
 
     <LinearLayout
@@ -28,7 +29,7 @@
                 android:layout_marginBottom="15dip"
                 android:hint="@string/name"
                 android:inputType="textNoSuggestions"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -43,7 +44,8 @@
                 android:layout_height="match_parent"
                 android:hint="@string/visibility"
                 android:textOff="@string/hidden"
-                android:textOn="@string/visible" />
+                android:textOn="@string/visible"
+                android:textColor="@color/offwhite"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -56,7 +58,9 @@
             android:id="@+id/father_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="200dp" />
+            android:layout_marginBottom="200dp"
+            android:popupBackground="@color/offwhite"
+            android:background="@color/offwhite"/>
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

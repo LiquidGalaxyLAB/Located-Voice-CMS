@@ -95,5 +95,10 @@
         <item name="android:windowBackground">@color/material_grey</item>
     </style>
 
+<!--    Spinner-->
+    <style name="SpinnerTooltipStyle" parent="@android:style/Widget.Material.Light.Spinner">
+        <item name="android:textColor">@color/lg_black</item>
+    </style>
+
 
 </resources>

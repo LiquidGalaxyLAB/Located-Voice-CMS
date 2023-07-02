@@ -390,7 +390,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
     }
 
     private void showAboutDialog() {
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog = new Dialog(this, R.style.BlackTextAlertDialog);
         dialog.setContentView(R.layout.about_dialog);
         dialog.setTitle(getResources().getString(R.string.about_Controller_message));
 

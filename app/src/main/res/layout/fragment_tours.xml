@@ -61,7 +61,7 @@
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
-                        android:background="@drawable/button_rounded_blue"
+                        android:background="@drawable/button_rounded_dark_green"
                         android:text="@string/show_all"
                         android:textColor="@color/white"
                         android:textSize="@dimen/_8ssp" />

@@ -56,7 +56,7 @@
                     android:id="@+id/show_all"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_rounded_blue"
+                    android:background="@drawable/button_rounded_dark_green"
                     android:text="@string/show_all"
                     android:textSize="15sp" />
 

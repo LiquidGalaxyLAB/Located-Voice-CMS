@@ -18,6 +18,7 @@
     <color name="yellow">#FFEB3B</color>
     <color name="material_grey">#383838</color>
     <color name="blue">#2196F3</color>
+    <color name="purple">#A475f5</color>
 
     <!--Beacons-->
     <color name="header_color">#1C47C1</color>

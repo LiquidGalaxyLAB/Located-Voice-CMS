@@ -3,11 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lg_black"
     android:divider="?android:attr/dividerVertical"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     tools:context=".com.gsoc.ijosa.liquidgalaxycontroller.CreateItemFragment">
 
     <LinearLayout
@@ -38,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:hint="@string/name"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/offwhite" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -53,7 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="@string/visibility"
-                    android:textColor="@color/black"
+                    android:textColor="@color/offwhite"
                     android:textOff="@string/hidden"
                     android:textOn="@string/visible" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -79,14 +80,16 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/global_interval_tour_text"
                     android:inputType="number"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/offwhite" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
                 android:id="@+id/categoryID_spinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:popupBackground="@color/offwhite"
+                android:background="@color/offwhite" />
         </LinearLayout>
 
     </LinearLayout>
@@ -107,8 +110,7 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
-                android:background="@drawable/backgroundspace">
+                android:layout_weight="2">
 
                 <RelativeLayout
                     android:id="@+id/fragment_tour_pois"
@@ -127,6 +129,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:text="@string/tour_pois"
+                    android:textColor="@color/offwhite"
                     android:textStyle="bold" />
 
                 <ListView
@@ -161,8 +164,8 @@
             android:id="@+id/create_tour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="false"
             android:layout_alignParentStart="false"
+            android:layout_alignParentEnd="false"
             android:layout_toEndOf="@+id/cancel_come_back"
             android:gravity="bottom"
             android:src="@drawable/ic_check_white_24dp"

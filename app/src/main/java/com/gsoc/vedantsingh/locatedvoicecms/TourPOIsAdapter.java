@@ -2,6 +2,8 @@ package com.gsoc.vedantsingh.locatedvoicecms;
 
 import android.content.Context;
 import androidx.fragment.app.FragmentActivity;
+
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +55,6 @@ public class TourPOIsAdapter extends BaseAdapter {
         int heightPixels = metrics.heightPixels;
         float scaleFactor = metrics.density;
 
-
         //The size of the diagonal in inches is equal to the square root of the height in inches squared plus the width in inches squared.
         float widthDp = widthPixels / scaleFactor;
         float heightDp = heightPixels / scaleFactor;
@@ -64,8 +65,8 @@ public class TourPOIsAdapter extends BaseAdapter {
             ImageView down = (ImageView) view.findViewById(R.id.move_down);
             ImageView up = (ImageView) view.findViewById(R.id.move_up);
 
-            down.setImageResource(R.drawable.ic_keyboard_arrow_down_black_36dp);
-            up.setImageResource(R.drawable.ic_keyboard_arrow_up_black_36dp);
+            down.setImageResource(R.drawable.baseline_keyboard_arrow_down_24);
+            up.setImageResource(R.drawable.baseline_keyboard_arrow_up_24);
             poi.setTextSize(24);
         } else if (smallestWidth > 720 && smallestWidth < 1000) {
             poi.setTextSize(22);
@@ -156,6 +157,7 @@ public class TourPOIsAdapter extends BaseAdapter {
         //we get the poi name
         TextView name = (TextView) view.findViewById(R.id.poi_complete_name);
         name.setText(tourPOI.getPoiName());
+        name.setTextColor(Color.WHITE);
 
         //we get the POI field called Seconds and we set its behaviour when user types on it.
         EditText seconds = (EditText) view.findViewById(R.id.poi_seconds);

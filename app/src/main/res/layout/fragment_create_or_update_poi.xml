@@ -10,6 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/lg_black"
     tools:context=".com.gsoc.ijosa.liquidgalaxycontroller.CreateItemFragment">
 
     <LinearLayout
@@ -30,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:hint="@string/name"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -45,7 +46,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:hint="@string/place_visit"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -62,7 +63,7 @@
                 android:digits="0123456789.-"
                 android:hint="@string/longitude"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -79,7 +80,7 @@
                 android:digits="0123456789.-"
                 android:hint="@string/latitude"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
@@ -105,7 +106,7 @@
                 android:digits="0123456789.-"
                 android:hint="@string/altitude"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -122,7 +123,7 @@
                 android:digits="0123456789.-"
                 android:hint="@string/heading"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -139,7 +140,7 @@
                 android:digits="0123456789.-"
                 android:hint="@string/tilt"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -156,7 +157,7 @@
                 android:digits="0123456789.-"
                 android:hint="@string/range"
                 android:inputType="numberDecimal"
-                android:textColor="@color/black" />
+                android:textColor="@color/offwhite" />
 
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
@@ -170,22 +171,25 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/spinnerAltitudeInputLayout"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:hint="@string/altitude_prompt">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/altitude_prompt" />
+                android:text="@string/altitude_prompt"
+                android:textColor="@color/offwhite" />
 
             <Spinner
                 android:id="@+id/spinnerAltitude"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:entries="@array/altitudeMode"
-                android:prompt="@string/altitude_prompt" />
+                android:prompt="@string/altitude_prompt"
+                android:popupBackground="@color/offwhite"
+                android:background="@color/offwhite"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -201,7 +205,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:hint="@string/visibility"
-                android:textColor="@color/black"
+                android:textColor="@color/offwhite"
                 android:textOff="@string/hidden"
                 android:textOn="@string/visible" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -217,7 +221,9 @@
                 android:id="@+id/categoryID_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="start" />
+                android:layout_gravity="start"
+                android:popupBackground="@color/offwhite"
+                android:background="@color/offwhite"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 

@@ -1,11 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#15151A">
+    android:background="@color/lg_black">
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/logos" />
+        android:src="@drawable/about_logos"
+        android:layout_margin="@dimen/_8sdp"/>
 
 </RelativeLayout>

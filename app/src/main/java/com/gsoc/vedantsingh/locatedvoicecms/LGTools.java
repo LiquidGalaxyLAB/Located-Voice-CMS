@@ -45,8 +45,8 @@ import java.util.List;
 public class LGTools extends Fragment {
 
     Session session;
-    private Button importPois, relaunch, reboot, shutDown, cleanKML;
-
+    private Button showLogos, hideLogos, relaunch, reboot, shutDown, cleanKML;
+    private SharedPreferences sharedPreferences;
     public LGTools() {
     }
 
@@ -55,12 +55,15 @@ public class LGTools extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lgtools, container, false);
-        importPois = (Button) view.findViewById(R.id.import_pois);
+        showLogos = (Button) view.findViewById(R.id.show_logos);
+        hideLogos = (Button) view.findViewById(R.id.hide_logos);
         relaunch = (Button) view.findViewById(R.id.relaunch);
         reboot = (Button) view.findViewById(R.id.reboot);
         shutDown = (Button) view.findViewById(R.id.shutdown);
         cleanKML = (Button) view.findViewById(R.id.cleanKmls);
-        setImportPOIsButtonBehaviour();
+//        setImportPOIsButtonBehaviour();
+        setShowLogosButtonBehaviour();
+        setHideLogosButtonBehaviour();
         setRelaunchButtonBehaviour();
         setRebootButtonBehaviour();
         setShutDownButtonBehaviour();
@@ -68,8 +71,64 @@ public class LGTools extends Fragment {
         return view;
     }
 
-    private void setCleanKMLButtonBehaviour() {
+    private void setShowLogosButtonBehaviour() {
         cleanKML.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String machinesString = sharedPreferences.getString("Machines", "3");
+                    int machines = Integer.parseInt(machinesString);
+                    int slave_num = Math.floorDiv(machines, 2) + 2;
+                    String slaveName = "slave_" + slave_num;
+                    String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; echo '" +
+                            "<kml xmlns=\"http://www.opengis.net/kml/2.2\"\n" +
+                            "xmlns:atom=\"http://www.w3.org/2005/Atom\" \n" +
+                            " xmlns:gx=\"http://www.google.com/kml/ext/2.2\"> \n" +
+                            " <Document>\n " +
+                            " <Folder> \n" +
+                            "<name>Logos</name> \n" +
+                            "<ScreenOverlay>\n" +
+                            "<name>Logo</name> \n" +
+                            " <Icon> \n" +
+                            "<href>https://raw.githubusercontent.com/vedantkingh/Located-Voice-CMS/master/app/src/main/res/drawable/logos.png</href> \n" +
+                            " </Icon> \n" +
+                            " <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                            " <screenXY x=\"0.02\" y=\"0.95\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                            " <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                            " <size x=\"0.6\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                            "</ScreenOverlay> \n" +
+                            " </Folder> \n" +
+                            " </Document> \n" +
+                            " </kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
+                    showAlertAndExecution(sentence, "show logos");
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void setHideLogosButtonBehaviour() {
+        showLogos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    String machinesString = sharedPreferences.getString("Machines", "3");
+                    int machines = Integer.parseInt(machinesString);
+                    int slave_num = Math.floorDiv(machines, 2) + 2;
+                    String slaveName = "slave_" + slave_num;
+                    String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; " +
+                            "echo '' > /var/www/html/kml/"+ slaveName +".kml";
+                    showAlertAndExecution(sentence, "hide logos");
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    private void setCleanKMLButtonBehaviour() {
+        hideLogos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -176,37 +235,37 @@ public class LGTools extends Fragment {
 
 
     /*IMPORT POIS*/
-    private void setImportPOIsButtonBehaviour() {
-        importPois.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                final AlertDialog chooseDialog = new AlertDialog.Builder(getActivity()).create();
-                chooseDialog.setTitle(getResources().getString(R.string.import_pois_dialog_title));
-                chooseDialog.setMessage(getResources().getString(R.string.import_pois_dialog_msg));
-                chooseDialog.setButton(Dialog.BUTTON_NEGATIVE, getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        chooseDialog.dismiss();
-                    }
-                });
-
-                chooseDialog.setButton(Dialog.BUTTON_NEUTRAL, getResources().getString(R.string.import_pois_dialog_fromFile), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Complete procedure to get the file with the POIs to import
-                        selectFileToImport();
-                    }
-                });
-
-                chooseDialog.setButton(Dialog.BUTTON_POSITIVE, getResources().getString(R.string.import_pois_dialog_fromPW), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        openBluetoothImport();
-                    }
-                });
-                chooseDialog.show();
-            }
-        });
-    }
+//    private void setImportPOIsButtonBehaviour() {
+//        importPois.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//
+//                final AlertDialog chooseDialog = new AlertDialog.Builder(getActivity()).create();
+//                chooseDialog.setTitle(getResources().getString(R.string.import_pois_dialog_title));
+//                chooseDialog.setMessage(getResources().getString(R.string.import_pois_dialog_msg));
+//                chooseDialog.setButton(Dialog.BUTTON_NEGATIVE, getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        chooseDialog.dismiss();
+//                    }
+//                });
+//
+//                chooseDialog.setButton(Dialog.BUTTON_NEUTRAL, getResources().getString(R.string.import_pois_dialog_fromFile), new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        //Complete procedure to get the file with the POIs to import
+//                        selectFileToImport();
+//                    }
+//                });
+//
+//                chooseDialog.setButton(Dialog.BUTTON_POSITIVE, getResources().getString(R.string.import_pois_dialog_fromPW), new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        openBluetoothImport();
+//                    }
+//                });
+//                chooseDialog.show();
+//            }
+//        });
+//    }
 
     private void openBluetoothImport() {
         ((LGPCAdminActivity) requireActivity()).mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_BEACONS);
