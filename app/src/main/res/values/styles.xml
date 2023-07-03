@@ -87,6 +87,8 @@
         <item name="android:textColorPrimary">@color/offwhite</item>
         <item name="android:textColorHint">@color/offwhite</item>
         <item name="android:windowBackground">@color/lg_black</item>
+        <item name="android:colorBackground">@color/lg_black</item>
+        <item name="android:background">@color/lg_black</item>
     </style>
 
 <!--    Custome Progress Dialog-->

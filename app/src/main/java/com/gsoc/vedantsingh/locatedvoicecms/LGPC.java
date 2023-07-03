@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -22,6 +23,7 @@ import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -34,6 +36,7 @@ import android.speech.RecognizerIntent;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -51,6 +54,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gsoc.vedantsingh.locatedvoicecms.utils.LGUtils;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.OnMenuItemClickListener;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -173,19 +180,15 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             }
         });
 
-        menufab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMenu();
-            }
-        });
+        showMenu();
+        showPlanetMenu();
 
-        changeplanet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showPlanetMenu();
-            }
-        });
+//        changeplanet.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                showPlanetMenu();
+//            }
+//        });
 
         tourbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,109 +254,236 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         getSupportActionBar().setDisplayUseLogoEnabled(true);
     }
 
-    public void showPlanetMenu() {
-        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.planetpopupBGStyle);
-        PopupMenu popupMenu = new PopupMenu(wrapper, changeplanet); // Pass the context and the view that triggers the menu
-        MenuInflater inflater = popupMenu.getMenuInflater();
-        inflater.inflate(R.menu.menu_planets, popupMenu.getMenu()); // Inflate your menu resource
+    public void showPlanetMenu(){
+        List<PowerMenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new PowerMenuItem("EARTH"));
+        menuItems.add(new PowerMenuItem("MOON"));
+        menuItems.add(new PowerMenuItem("MARS"));
 
-
-        // Set a listener for menu item clicks
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.earthid) {
-                    bundle.putString("currentplanet", "EARTH");
-                    SearchFragment fragment = new SearchFragment();
-                    fragment.setArguments(bundle);
-                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
-                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
-                        planetname.setText("Earth");
-                    }
-                    return true;
-                } else if (itemId == R.id.moonid) {
-                    bundle.putString("currentplanet", "MOON");
-                    SearchFragment fragment = new SearchFragment();
-                    fragment.setArguments(bundle);
-                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
-                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
-                        planetname.setText("Moon");
-                    }
-                    return true;
-                } else if (itemId == R.id.marsid) {
-                    bundle.putString("currentplanet", "MARS");
-                    SearchFragment fragment = new SearchFragment();
-                    fragment.setArguments(bundle);
-                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
-                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
-                        planetname.setText("Mars");
-                    }
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-
-        });
-
-        // Show the popup menu
-        popupMenu.show();
-    }
-
-
-    private void  showMenu() {
-        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.menupopupBGStyle);
-        PopupMenu popupMenu = new PopupMenu(wrapper, findViewById(R.id.menufab));
-        popupMenu.getMenuInflater().inflate(R.menu.menu_lgpc, popupMenu.getMenu());
-
-        String machinesString = sharedPreferences.getString("Machines", "3");
-        int machines = Integer.parseInt(machinesString);
-        int slave_num = Math.floorDiv(machines, 2) + 2;
-        String slave_name = "slave_" + slave_num;
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.action_information_help) {
-                    Intent intent = new Intent(LGPC.this, InfoActivity.class);
-                    startActivity(intent);
-                    return true;
-                } else if (id == R.id.action_showhidelogo){
-                    if(logo_switch==true){
-                        ExecutorService executor = Executors.newSingleThreadExecutor();
-                        executor.submit(new SetLogosTask(slave_name, session, LGPC.this));
-                        executor.shutdown();
-                        logo_switch=false;
-                    }else{
-                        ExecutorService executorService = Executors.newSingleThreadExecutor();
-                        CleanLogosTask cleanLogosTask = new CleanLogosTask(slave_name, session, LGPC.this);
-                        Future<Void> future = executorService.submit(cleanLogosTask);
-                        try {
-                            future.get();
-                        } catch (Exception e) {
-                            e.printStackTrace();
+        PowerMenu powerMenu = new PowerMenu.Builder(this)
+                .addItemList(menuItems)
+                .setAnimation(MenuAnimation.SHOWUP_BOTTOM_LEFT)
+                .setMenuRadius(20f)
+//                .setMenuShadow(10f)
+//                .setTextColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setTextGravity(Gravity.CENTER)
+                .setTextSize(14)
+                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
+                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setMenuColor(Color.WHITE)
+                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
+                .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
+                    @Override
+                    public void onItemClick(int position, PowerMenuItem item) {
+                        switch (position) {
+                            case 0:
+                                bundle.putString("currentplanet", "EARTH");
+                                SearchFragment earthFragment = new SearchFragment();
+                                earthFragment.setArguments(bundle);
+                                if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
+                                    planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
+                                    planetname.setText("Earth");
+                                }
+                                break;
+                            case 1:
+                                bundle.putString("currentplanet", "MOON");
+                                SearchFragment moonFragment = new SearchFragment();
+                                moonFragment.setArguments(bundle);
+                                if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
+                                    planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
+                                    planetname.setText("Moon");
+                                }
+                                break;
+                            case 2:
+                                bundle.putString("currentplanet", "MARS");
+                                SearchFragment marsFragment = new SearchFragment();
+                                marsFragment.setArguments(bundle);
+                                if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
+                                    planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
+                                    planetname.setText("Mars");
+                                }
+                                break;
                         }
-                        executorService.shutdown();
-                        logo_switch=true;
                     }
-                    return true;
-                }else if (id == R.id.action_admin) {
-                    if (!POISFragment.getTourState()) {
-                        showPasswordAlert();
-                    } else {
-                        showAlert();
-                    }
-                    return true;
-                } else if (id == R.id.action_about) {
-                    showAboutDialog();
-                    return true;
-                }
-                return false;
-            }
-        });
-        popupMenu.show();
+                })
+                .build();
+
+        findViewById(R.id.changeplanet).setOnClickListener(v -> powerMenu.showAsAnchorLeftTop(v, 0, -290));
     }
+
+//    public void showPlanetMenu() {
+//        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.planetpopupBGStyle);
+//        PopupMenu popupMenu = new PopupMenu(wrapper, changeplanet); // Pass the context and the view that triggers the menu
+//        MenuInflater inflater = popupMenu.getMenuInflater();
+//        inflater.inflate(R.menu.menu_planets, popupMenu.getMenu()); // Inflate your menu resource
+//
+//
+//        // Set a listener for menu item clicks
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int itemId = item.getItemId();
+//                if (itemId == R.id.earthid) {
+//                    bundle.putString("currentplanet", "EARTH");
+//                    SearchFragment fragment = new SearchFragment();
+//                    fragment.setArguments(bundle);
+//                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
+//                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
+//                        planetname.setText("Earth");
+//                    }
+//                    return true;
+//                } else if (itemId == R.id.moonid) {
+//                    bundle.putString("currentplanet", "MOON");
+//                    SearchFragment fragment = new SearchFragment();
+//                    fragment.setArguments(bundle);
+//                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
+//                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
+//                        planetname.setText("Moon");
+//                    }
+//                    return true;
+//                } else if (itemId == R.id.marsid) {
+//                    bundle.putString("currentplanet", "MARS");
+//                    SearchFragment fragment = new SearchFragment();
+//                    fragment.setArguments(bundle);
+//                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
+//                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
+//                        planetname.setText("Mars");
+//                    }
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//
+//        });
+//
+//        // Show the popup menu
+//        popupMenu.show();
+//    }
+
+
+    private void showMenu() {
+        List<PowerMenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new PowerMenuItem("Administration Tools"));
+        menuItems.add(new PowerMenuItem("Show/Hide Logo"));
+        menuItems.add(new PowerMenuItem("Help"));
+        menuItems.add(new PowerMenuItem("About"));
+
+        PowerMenu powerMenu = new PowerMenu.Builder(this)
+                .addItemList(menuItems)
+//                .setAnimation(MenuAnimation.SHOW_UP_CENTER)
+                .setMenuRadius(20f)
+//                .setMenuShadow(10f)
+//                .setTextColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setTextGravity(Gravity.CENTER)
+                .setTextSize(13)
+                .setWidth(375)
+                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
+                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setMenuColor(Color.WHITE)
+                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
+                .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
+                    @Override
+                    public void onItemClick(int position, PowerMenuItem item) {
+                        String machinesString = sharedPreferences.getString("Machines", "3");
+                        int machines = Integer.parseInt(machinesString);
+                        int slave_num = Math.floorDiv(machines, 2) + 2;
+                        String slave_name = "slave_" + slave_num;
+                        switch (position) {
+                            case 0:
+                                if (!POISFragment.getTourState()) {
+                                    showPasswordAlert();
+                                } else {
+                                    showAlert();
+                                }
+                                break;
+                            case 1:
+                                if (logo_switch) {
+                                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                                    executor.submit(new SetLogosTask(slave_name, session, LGPC.this));
+                                    executor.shutdown();
+                                    logo_switch = false;
+                                } else {
+                                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                                    CleanLogosTask cleanLogosTask = new CleanLogosTask(slave_name, session, LGPC.this);
+                                    Future<Void> future = executorService.submit(cleanLogosTask);
+                                    try {
+                                        future.get();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                    executorService.shutdown();
+                                    logo_switch = true;
+                                }
+                                break;
+                            case 2:
+                                Intent intent = new Intent(LGPC.this, InfoActivity.class);
+                                startActivity(intent);
+                                break;
+                            case 3:
+                                showAboutDialog();
+                                break;
+                        }
+                    }
+                })
+                .build();
+
+        findViewById(R.id.menufab).setOnClickListener(v -> powerMenu.showAsDropDown(v));
+    }
+
+
+//    private void  showMenu() {
+//        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.menupopupBGStyle);
+//        PopupMenu popupMenu = new PopupMenu(wrapper, findViewById(R.id.menufab));
+//        popupMenu.getMenuInflater().inflate(R.menu.menu_lgpc, popupMenu.getMenu());
+//
+//        String machinesString = sharedPreferences.getString("Machines", "3");
+//        int machines = Integer.parseInt(machinesString);
+//        int slave_num = Math.floorDiv(machines, 2) + 2;
+//        String slave_name = "slave_" + slave_num;
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                int id = item.getItemId();
+//                if (id == R.id.action_information_help) {
+//                    Intent intent = new Intent(LGPC.this, InfoActivity.class);
+//                    startActivity(intent);
+//                    return true;
+//                } else if (id == R.id.action_showhidelogo){
+//                    if(logo_switch==true){
+//                        ExecutorService executor = Executors.newSingleThreadExecutor();
+//                        executor.submit(new SetLogosTask(slave_name, session, LGPC.this));
+//                        executor.shutdown();
+//                        logo_switch=false;
+//                    }else{
+//                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+//                        CleanLogosTask cleanLogosTask = new CleanLogosTask(slave_name, session, LGPC.this);
+//                        Future<Void> future = executorService.submit(cleanLogosTask);
+//                        try {
+//                            future.get();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        executorService.shutdown();
+//                        logo_switch=true;
+//                    }
+//                    return true;
+//                }else if (id == R.id.action_admin) {
+//                    if (!POISFragment.getTourState()) {
+//                        showPasswordAlert();
+//                    } else {
+//                        showAlert();
+//                    }
+//                    return true;
+//                } else if (id == R.id.action_about) {
+//                    showAboutDialog();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+//        popupMenu.show();
+//    }
 
 
     @Override
@@ -587,7 +717,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         protected void onPreExecute() {
             super.onPreExecute();
             if (dialog == null) {
-                dialog = new ProgressDialog(context);
+                dialog = new ProgressDialog(context, R.style.BlackTextAlertDialog);
                 if (isChangingPlanet) {
                     dialog.setMessage(getResources().getString(R.string.changingPlanet));
                 } else {
