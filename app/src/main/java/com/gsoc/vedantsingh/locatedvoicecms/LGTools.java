@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,10 @@ import java.io.LineNumberReader;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /* This class makes reference to the functionalities to apply to Liquid Galaxy. This class is the once
 *  which is able to reboot the LG, relaunch it or shut it down. It also is able to import files containing
@@ -55,6 +61,7 @@ public class LGTools extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_lgtools, container, false);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         showLogos = (Button) view.findViewById(R.id.show_logos);
         hideLogos = (Button) view.findViewById(R.id.hide_logos);
         relaunch = (Button) view.findViewById(R.id.relaunch);
@@ -72,7 +79,7 @@ public class LGTools extends Fragment {
     }
 
     private void setShowLogosButtonBehaviour() {
-        cleanKML.setOnClickListener(new View.OnClickListener() {
+        showLogos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -103,13 +110,14 @@ public class LGTools extends Fragment {
                     showAlertAndExecution(sentence, "show logos");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                    Log.d("Exception Occured", e.getMessage());
                 }
             }
         });
     }
 
     private void setHideLogosButtonBehaviour() {
-        showLogos.setOnClickListener(new View.OnClickListener() {
+        hideLogos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -122,21 +130,34 @@ public class LGTools extends Fragment {
                     showAlertAndExecution(sentence, "hide logos");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                    Log.d("Exception Occured", e.getMessage());
                 }
             }
         });
     }
 
     private void setCleanKMLButtonBehaviour() {
-        hideLogos.setOnClickListener(new View.OnClickListener() {
+        cleanKML.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     //String sentence = "rm -f /var/www/html/kmls.txt; touch /var/www/html/kmls.txt > /home/lg/log.txt";
-                    String sentence = "chmod 777 /var/www/html/kmls.txt; echo '' > /var/www/html/kmls.txt";
+//                    String sentence = "chmod 777 /var/www/html/kmls.txt; echo '' > /var/www/html/kmls.txt";
+                    String machinesString = sharedPreferences.getString("Machines", "3");
+                    String sentence = null;
+                    for (int i = 2; i <= Integer.parseInt(machinesString); i++){
+                        if( i == 2 ){
+                            sentence = "chmod 777 /var/www/html/kml/slave_" + i + ".kml; " +
+                                    "echo '' > /var/www/html/kml/slave_"+ i +".kml";
+                        }else{
+                            sentence += "; chmod 777 /var/www/html/kml/slave_" + i + ".kml; " +
+                                    "echo '' > /var/www/html/kml/slave_"+ i +".kml";
+                        }
+                    }
                     showAlertAndExecution(sentence, "clean kml files");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                    Log.d("Exception Occured", e.getMessage());
                 }
             }
         });
@@ -156,10 +177,22 @@ public class LGTools extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    String sentence = "/home/lg/bin/lg-poweroff > /home/lg/log.txt";
+//                    String sentence = "/home/lg/bin/lg-poweroff > /home/lg/log.txt";
+//                    String sentence = "sshpass -p lg ssh -t lg1 \"echo lg | sudo -S poweroff\"";
+                    String password = sharedPreferences.getString("Password", "lg");
+                    String machinesString = sharedPreferences.getString("Machines", "3");
+                    String sentence = null;
+                    for (int i = Integer.parseInt(machinesString); i >= 1; i--){
+                        if( i == Integer.parseInt(machinesString) ){
+                            sentence = "sshpass -p " + password + " ssh -t lg" + i + " \"echo " + password + " | sudo -S poweroff\"";
+                        }else{
+                            sentence += "; sshpass -p " + password + " ssh -t lg" + i + " \"echo " + password + " | sudo -S poweroff\"";
+                        }
+                    }
                     showAlertAndExecution(sentence, "shut down");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                    Log.d("Exception Occured", e.getMessage());
                 }
             }
         });
@@ -172,13 +205,26 @@ public class LGTools extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    String password = sharedPreferences.getString("Password", "lg");
-                    String sentence="echo '" + password + "' | sudo -S reboot";
+//                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//                    String password = sharedPreferences.getString("Password", "lg");
+//                    String sentence = "echo '" + password + "'  | /home/lg/bin/lg-reboot > /home/lg/log.txt";
+//                    String sentence="echo '" + password + "' | sudo -S reboot";
 //                    String sentence = "/home/lg/bin/lg-reboot > /home/lg/log.txt";
+//                    String sentence = "sshpass -p lg ssh -t lg1 \"echo lg | sudo -S reboot\"";
+                    String password = sharedPreferences.getString("Password", "lg");
+                    String machinesString = sharedPreferences.getString("Machines", "3");
+                    String sentence = null;
+                    for (int i = Integer.parseInt(machinesString); i >= 1; i--){
+                        if( i == Integer.parseInt(machinesString) ){
+                            sentence = "sshpass -p " + password + " ssh -t lg" + i + " \"echo " + password + " | sudo -S reboot\"";
+                        }else{
+                            sentence += "; sshpass -p " + password + " ssh -t lg" + i + " \"echo " + password + " | sudo -S reboot\"";
+                        }
+                    }
                     showAlertAndExecution(sentence, "reboot");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                    Log.d("Exception Occured", e.getMessage());
                 }
             }
         });
@@ -191,10 +237,32 @@ public class LGTools extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    String sentence = "chmod 777 /home/lg/log.txt; chmod 777 /home/lg/bin/lg-relaunch; /home/lg/bin/lg-relaunch > /home/lg/log.txt";
+//                    String sentence = "chmod 777 /home/lg/bin/lg-relaunch; /home/lg/bin/lg-relaunch > /home/lg/log.txt";
+//                    String sentence = "'/home/lg/bin/lg-relaunch' > /home/lg/log.txt";
+//                    String sentence = "/home/lg/bin/lg-relaunch > /home/lg/log.txt";
+//                    String sentence = "lg-relaunch";
+//                    String sentence = "sshpass -p lg ssh -t lg1 \"echo lg | sudo -S lg-relaunch\"";
+                    String user = sharedPreferences.getString("User", "lg");
+                    String password = sharedPreferences.getString("Password", "lg");
+                    String sentence = "/home/" + user + "/bin/lg-relaunch > /home/" + user + "/log.txt;\n " +
+                                    "RELAUNCH_CMD=\"\\\n" +
+                                    "if [ -f /etc/init/lxdm.conf ]; then\n" +
+                                    "  export SERVICE=lxdm\n" +
+                                    "elif [ -f /etc/init/lightdm.conf ]; then\n" +
+                                    "  export SERVICE=lightdm\n" +
+                                    "else\n" +
+                                    "  exit 1\n" +
+                                    "fi\n" +
+                                    "if  [[ \\$(service \\$SERVICE status) =~ 'stop' ]]; then\n" +
+                                    "  echo " + password + " | sudo -S service \\${SERVICE} start\n" +
+                                    "else\n" +
+                                    "  echo " + password + " | sudo -S service \\${SERVICE} restart\n" +
+                                    "fi\n" +
+                                    "\" && sshpass -p " + password + " ssh -x -t lg@lg1 \"$RELAUNCH_CMD\"";
                     showAlertAndExecution(sentence, "relaunch");
                 } catch (Exception e) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                    Log.d("Exception Occured", e.getMessage());
                 }
             }
         });
@@ -213,13 +281,17 @@ public class LGTools extends Fragment {
 
             // When button is clicked
             public void onClick(DialogInterface arg0, int arg1) {
-                try {
-                    LGUtils.setConnectionWithLiquidGalaxy(session, sentence, getActivity());
-                } catch (JSchException e) {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    LGUtils.setConnectionWithLiquidGalaxy(session, sentence, getActivity());
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    LGTools.SendLGCommands cleanLogosTask = new LGTools.SendLGCommands(sentence, session, getActivity());
+                    Future<Void> future = executorService.submit(cleanLogosTask);
+//                } catch (JSchException e) {
+//                    Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+//                    Log.d("JScH exception", e.getMessage());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 
@@ -233,6 +305,27 @@ public class LGTools extends Fragment {
         alertbox.show();
     }
 
+    public class SendLGCommands implements Callable<Void> {
+        private String sentence;
+        private Session session;
+        private Context context;
+
+        public SendLGCommands(String sentence, Session session, Context context) {
+            this.sentence = sentence;
+            this.session = session;
+            this.context = context;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            try {
+                LGUtils.setConnectionWithLiquidGalaxy(session, sentence, context);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
 
     /*IMPORT POIS*/
 //    private void setImportPOIsButtonBehaviour() {

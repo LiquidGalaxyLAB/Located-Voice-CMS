@@ -63,6 +63,7 @@ public class LGUtils {
         channelssh.setOutputStream(baos);
 
         channelssh.setCommand(command);
+        Log.d("Command built", command);
         channelssh.connect();
         Log.d("SSH","Command sent to LG");
         channelssh.disconnect();

@@ -717,7 +717,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         protected void onPreExecute() {
             super.onPreExecute();
             if (dialog == null) {
-                dialog = new ProgressDialog(context, R.style.BlackTextAlertDialog);
+                dialog = new ProgressDialog(context, R.style.CustomProgressDialog);
                 if (isChangingPlanet) {
                     dialog.setMessage(getResources().getString(R.string.changingPlanet));
                 } else {

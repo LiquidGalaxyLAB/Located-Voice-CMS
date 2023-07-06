@@ -87,14 +87,12 @@
         <item name="android:textColorPrimary">@color/offwhite</item>
         <item name="android:textColorHint">@color/offwhite</item>
         <item name="android:windowBackground">@color/lg_black</item>
-        <item name="android:colorBackground">@color/lg_black</item>
-        <item name="android:background">@color/lg_black</item>
     </style>
 
-<!--    Custome Progress Dialog-->
+<!--    Custom Progress Dialog-->
     <style name="CustomProgressDialog" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:textColor">#EEEEEE</item>
-        <item name="android:windowBackground">@color/material_grey</item>
+        <item name="android:textColor">@color/offwhite</item>
+        <item name="android:windowBackground">@color/lg_black</item>
     </style>
 
 <!--    Spinner-->
