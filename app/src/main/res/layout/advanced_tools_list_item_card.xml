@@ -2,12 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/_26sdp"
-    android:layout_margin="@dimen/_2sdp">
+    android:layout_margin="@dimen/_2sdp"
+    app:cardBackgroundColor="#00FFFFFF">
 
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/file_photo"
@@ -27,7 +27,7 @@
             android:layout_marginTop="@dimen/_2sdp"
             android:layout_toEndOf="@+id/file_photo"
             android:maxLines="2"
-            android:textColor="@color/black"
+            android:textColor="@color/offwhite"
             android:textSize="@dimen/_8ssp"
             android:textStyle="bold" />
 
@@ -39,7 +39,7 @@
             android:layout_below="@+id/task_title"
             android:layout_toEndOf="@+id/file_photo"
             android:maxLines="2"
-            android:textColor="@color/black"
+            android:textColor="@color/offwhite"
             android:textSize="15sp"
             android:textStyle="italic" />
 
@@ -55,8 +55,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_marginEnd="@dimen/_2sdp"
-                android:background="@color/white"
-                app:popupTheme="@style/Theme.AppCompat.Light" />
+                app:popupTheme="@style/AppTheme.WithActionBar" />
         </LinearLayout>
 
     </RelativeLayout>

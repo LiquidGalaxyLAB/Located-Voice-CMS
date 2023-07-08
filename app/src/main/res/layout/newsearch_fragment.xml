@@ -33,9 +33,9 @@
                     android:id="@+id/back_start_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="start"
+                    android:layout_gravity="start|bottom"
                     android:layout_marginEnd="@dimen/_4sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:contentDescription="@string/back_start"
                     android:focusable="false"
                     android:src="@drawable/baseline_home_24" />
@@ -44,9 +44,9 @@
                     android:id="@+id/back_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
+                    android:layout_gravity="end|bottom"
                     android:layout_marginEnd="@dimen/_4sdp"
-                    android:layout_marginBottom="@dimen/_4sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:contentDescription="@string/back"
                     android:focusable="false"
                     android:src="@drawable/baseline_reply_24" />
@@ -57,7 +57,6 @@
                 android:id="@+id/viewing_category_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/_1sdp"
                 android:layout_marginStart="@dimen/_4sdp"
                 android:text="@string/viewing_category"
                 android:textColor="@color/white"
@@ -81,7 +80,7 @@
                 android:layout_height="@dimen/_57sdp"
                 android:layout_gravity="start"
                 android:layout_marginStart="@dimen/_4sdp"
-                android:layout_marginTop="@dimen/_2sdp"
+                android:paddingBottom="@dimen/_2sdp"
                 android:divider="@null"
                 android:fadeScrollbars="false"
                 android:scrollbars="vertical" />
@@ -111,7 +110,7 @@
                 android:textSize="@dimen/_10ssp" />
 
             <Button
-                android:id="@+id/soundbtn"
+                android:id="@+id/listen_desc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -127,7 +126,7 @@
                 android:textSize="@dimen/_10ssp" />
 
             <Button
-                android:id="@+id/descriptionbtn"
+                android:id="@+id/sound_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:drawableEnd="@drawable/baseline_volume_up_24"

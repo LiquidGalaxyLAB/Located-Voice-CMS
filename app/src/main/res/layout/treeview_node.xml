@@ -52,7 +52,7 @@
                 android:layout_marginStart="15dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_create_new_folder_black_36dp"
-                app:tint="@color/green" />
+                app:tint="#329F5B" />
 
             <ImageView
                 android:id="@+id/btn_addPOI"

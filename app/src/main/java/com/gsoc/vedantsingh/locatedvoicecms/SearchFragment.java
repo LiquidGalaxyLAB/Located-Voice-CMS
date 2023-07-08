@@ -5,19 +5,23 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import androidx.annotation.Nullable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -38,6 +42,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 public class SearchFragment extends Fragment {
@@ -52,9 +60,11 @@ public class SearchFragment extends Fragment {
     private String currentPlanet = "EARTH";
     private FloatingActionButton btnSpeak;
     private ListView categoriesListView;
+    private Button nearbyplaces, listen_desc, sound_btn;
     private CategoriesAdapter adapter;
     private TextView categorySelectorTitle;
     private ImageView backIcon, backStartIcon;
+    SharedPreferences sharedPreferences;
     private ArrayList<String> backIDs = new ArrayList<>();
 
     public SearchFragment() {
@@ -73,7 +83,11 @@ public class SearchFragment extends Fragment {
 
 //        btnSpeak = (FloatingActionButton) rootView.findViewById(R.id.btnSpeak);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         categoriesListView = (ListView) rootView.findViewById(R.id.categories_listview);
+        nearbyplaces = rootView.findViewById(R.id.nearbyplaces);
+        listen_desc = rootView.findViewById(R.id.listen_desc);
+        sound_btn = rootView.findViewById(R.id.sound_btn);
         backIcon = (ImageView) rootView.findViewById(R.id.back_icon);
         backStartIcon = (ImageView) rootView.findViewById(R.id.back_start_icon);//comes back to the initial category
         categorySelectorTitle = (TextView) rootView.findViewById(R.id.current_category);
@@ -117,6 +131,25 @@ public class SearchFragment extends Fragment {
                     backIDs.remove(0);
                 }
                 showPoisByCategory();
+            }
+        });
+
+        nearbyplaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String machinesString = sharedPreferences.getString("Machines", "3");
+                int machines = Integer.parseInt(machinesString);
+                int slave_num = Math.floorDiv(machines, 2) + 1;
+                String slave_name = "slave_" + slave_num;
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext());
+                Future<Void> future = executorService.submit(nearbyPlacesTask);
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                executorService.shutdown();
             }
         });
 
@@ -483,6 +516,60 @@ public class SearchFragment extends Fragment {
             earth.requestLayout();
             moon.requestLayout();
             mars.requestLayout();
+        }
+    }
+
+    public class NearbyPlacesTask implements Callable<Void> {
+        private String slaveName;
+        private Session session;
+        private Context context;
+
+        public NearbyPlacesTask(String slaveName, Session session, Context context) {
+            this.slaveName = slaveName;
+            this.session = session;
+            this.context = context;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            try {
+                String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; echo '" +
+                        "<kml xmlns=\"http://www.opengis.net/kml/2.2\"\n" +
+                        "xmlns:atom=\"http://www.w3.org/2005/Atom\" \n" +
+                        " xmlns:gx=\"http://www.google.com/kml/ext/2.2\"> \n" +
+                        " <Document>\n " +
+                        " <Folder> \n" +
+                        "<name>Logos</name> \n" +
+                        "<ScreenOverlay>\n" +
+                        "<name>Nearby Places</name> \n" +
+                        " <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        " <screenXY x=\"0.02\" y=\"0.95\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        " <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        " <size x=\"0.6\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        "<drawOrder>1</drawOrder>\n" +
+                        "<color>99000000</color>\n" +
+                        "<description><![CDATA[" +
+                        "<div style=\"color: #FFFFFF;\">" +
+                        "<b>Place 1:</b> <br>" +
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br><br>" +
+                        "<b>Place 2:</b> <br>" +
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br><br>" +
+                        "<b>Place 3:</b> <br>" +
+                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
+                        "</div>" +
+                        "]]></description>" +
+                        "</ScreenOverlay> \n" +
+                        " </Folder> \n" +
+                        " </Document> \n" +
+                        " </kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
+
+
+
+                LGUtils.setConnectionWithLiquidGalaxy(session, sentence, context);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 

@@ -20,7 +20,7 @@
             android:paddingLeft="@dimen/_21sdp"
             android:text="Start a Tour"
             android:textAllCaps="true"
-            android:textColor="@color/black"
+            android:textColor="@color/lg_black"
             android:textSize="@dimen/_12ssp"
             android:textStyle="bold" />
 
@@ -32,7 +32,8 @@
             android:layout_marginTop="@dimen/_1sdp"
             android:layout_marginRight="@dimen/_1sdp"
             android:clickable="true"
-            android:src="@drawable/baseline_cancel_24" />
+            android:src="@drawable/baseline_close_24"
+            app:tint="@color/lg_black" />
 
     </LinearLayout>
 

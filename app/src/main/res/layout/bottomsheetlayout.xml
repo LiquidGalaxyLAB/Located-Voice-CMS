@@ -32,7 +32,8 @@
             android:layout_marginTop="@dimen/_1sdp"
             android:layout_marginRight="@dimen/_1sdp"
             android:clickable="true"
-            android:src="@drawable/baseline_cancel_24" />
+            android:src="@drawable/baseline_close_24"
+            app:tint="#0F1527" />
 
     </LinearLayout>
 

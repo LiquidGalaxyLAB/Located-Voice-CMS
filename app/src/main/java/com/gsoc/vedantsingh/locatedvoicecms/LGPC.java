@@ -269,9 +269,10 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //                .setTextGravity(Gravity.CENTER)
                 .setTextSize(14)
                 .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
-                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
-//                .setMenuColor(Color.WHITE)
-                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
+                .setTextColor(ContextCompat.getColor(this, R.color.offwhite))
+                .setMenuColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
                     @Override
                     public void onItemClick(int position, PowerMenuItem item) {
@@ -379,9 +380,10 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 .setTextSize(13)
                 .setWidth(375)
                 .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
-                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
-//                .setMenuColor(Color.WHITE)
-                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
+                .setTextColor(ContextCompat.getColor(this, R.color.offwhite))
+                .setMenuColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
                     @Override
                     public void onItemClick(int position, PowerMenuItem item) {
