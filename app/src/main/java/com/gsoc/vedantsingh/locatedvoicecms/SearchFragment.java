@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -51,6 +52,9 @@ import java.util.concurrent.Future;
 public class SearchFragment extends Fragment {
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private String Audio_Path = "";
+    private boolean isPlaying = false;
+    private MediaPlayer mediaPlayer = new MediaPlayer();
     View rootView;
     GridView poisGridView;
     Session session;
@@ -119,7 +123,8 @@ public class SearchFragment extends Fragment {
                 backIDs.clear();
                 Category category = getCategoryByName(currentPlanet);
                 backIDs.add(String.valueOf(category.getId()));
-
+                mediaPlayer.stop();
+                Audio_Path = "";
                 showPoisByCategory();
             }
         });
@@ -129,6 +134,8 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 if (backIDs.size() > 1) {
                     backIDs.remove(0);
+                    mediaPlayer.stop();
+                    Audio_Path = "";
                 }
                 showPoisByCategory();
             }
@@ -153,7 +160,42 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+
+        sound_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!Audio_Path.isEmpty()) {
+                    if (isPlaying) {
+                        // If audio is already playing, stop it
+                        mediaPlayer.stop();
+                        mediaPlayer.reset();
+                        isPlaying = false;
+                    } else {
+                        // Start playing the audio from the beginning
+                        try {
+                            mediaPlayer.setDataSource(Audio_Path);
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
+                            isPlaying = true;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }else{
+                    Toast.makeText(getContext(), "Audio not set", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         return rootView;
+    }
+
+    private void setAudioFile(){
+        String audioFilePath = POIsContract.CategoryEntry.getAudioPathByID(getActivity(), Integer.parseInt(backIDs.get(0)));
+        if(audioFilePath != null){
+            Audio_Path = audioFilePath;
+        }
     }
 
     private void showPoisByCategory() {
@@ -193,6 +235,7 @@ public class SearchFragment extends Fragment {
                         //this method is call to see AGAIN the categories list. However, the view will
                         //correspond to the categories inside the current category just clicked.
                         showPoisByCategory();
+                        setAudioFile();
                     }
                 }
             });
@@ -534,34 +577,52 @@ public class SearchFragment extends Fragment {
         public Void call() throws Exception {
             try {
                 String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; echo '" +
-                        "<kml xmlns=\"http://www.opengis.net/kml/2.2\"\n" +
-                        "xmlns:atom=\"http://www.w3.org/2005/Atom\" \n" +
-                        " xmlns:gx=\"http://www.google.com/kml/ext/2.2\"> \n" +
-                        " <Document>\n " +
-                        " <Folder> \n" +
-                        "<name>Logos</name> \n" +
-                        "<ScreenOverlay>\n" +
-                        "<name>Nearby Places</name> \n" +
-                        " <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
-                        " <screenXY x=\"0.02\" y=\"0.95\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
-                        " <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
-                        " <size x=\"0.6\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
-                        "<drawOrder>1</drawOrder>\n" +
-                        "<color>99000000</color>\n" +
-                        "<description><![CDATA[" +
-                        "<div style=\"color: #FFFFFF;\">" +
-                        "<b>Place 1:</b> <br>" +
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br><br>" +
-                        "<b>Place 2:</b> <br>" +
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br><br>" +
-                        "<b>Place 3:</b> <br>" +
-                        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat." +
-                        "</div>" +
-                        "]]></description>" +
-                        "</ScreenOverlay> \n" +
-                        " </Folder> \n" +
-                        " </Document> \n" +
-                        " </kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
+                        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                        "<kml xmlns=\"http://www.opengis.net/kml/2.2\" xmlns:gx=\"http://www.google.com/kml/ext/2.2\" xmlns:kml=\"http://www.opengis.net/kml/2.2\" xmlns:atom=\"http://www.w3.org/2005/Atom\">\n" +
+                        "  <Document>\n" +
+                        "    <name>historic.kml</name>\n" +
+                        "    <ScreenOverlay>\n" +
+                        "      <name><![CDATA[<div style=\"text-align: center; font-size: 20px; font-weight: bold; vertical-align: middle;\">Nearby Places</div>]]></name>\n" +
+                        "      <description><![CDATA[\n" +
+                        "        <html>\n" +
+                        "          <body>\n" +
+                        "            <table width=\"400\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\" style=\"font-size: 14px;\" border=1 frame=void rules=rows>\n" +
+                        "              <tr>\n" +
+                        "                <td colspan=\"2\" align=\"center\">\n" +
+                        "                  <p><b>Place 1:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
+                        "                </td>\n" +
+                        "              </tr>\n" +
+                        "              <tr>\n" +
+                        "                <td colspan=\"2\" align=\"center\">\n" +
+                        "                  <p><b>Place 2:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
+                        "                </td>\n" +
+                        "              </tr>\n" +
+                        "              <tr>\n" +
+                        "                <td colspan=\"2\" align=\"center\">\n" +
+                        "                  <p><b>Place 3:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
+                        "                </td>\n" +
+                        "              </tr>\n" +
+                        "              <tr>\n" +
+                        "                <td colspan=\"2\" align=\"center\">\n" +
+                        "                  <p><b>Place 4:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
+                        "                </td>\n" +
+                        "              </tr>\n" +
+                        "              <tr>\n" +
+                        "                <td colspan=\"2\" align=\"center\">\n" +
+                        "                  <p><b>Place 5:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
+                        "                </td>\n" +
+                        "              </tr>\n" +
+                        "            </table>\n" +
+                        "          </body>\n" +
+                        "        </html>\n" +
+                        "      ]]></description>\n" +
+                        "      <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <size x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "    </ScreenOverlay>\n" +
+                        "  </Document>\n" +
+                        "</kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
 
 
 

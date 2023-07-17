@@ -1,13 +1,23 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +69,9 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
     private String updateType, newShownName;
     private Cursor queryCursor;
     private ArrayAdapter<String> adapter;
+    private static final int REQUEST_FILE_PICKER = 1;
+    ViewHolderCategory viewHolderCategory;
+
 
     public UpdateItemFragment() {
         tourPois = new ArrayList<>();
@@ -176,8 +189,9 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
                 break;
             default: {//CATEGORY
                 getActivity().setTitle(getResources().getString(R.string.update_category));
-                ViewHolderCategory viewHolder = setCategoryLayoutSettings(inflater, container);
-                updateCategory(viewHolder);
+                viewHolderCategory = setCategoryLayoutSettings(inflater, container);
+                updateCategory(viewHolderCategory);
+                AudioPathBehaviour(viewHolderCategory);
                 break;
             }
         }
@@ -185,6 +199,113 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
 
         return rootView;
     }
+
+    public void AudioPathBehaviour(ViewHolderCategory viewHolder){
+        viewHolder.categoryAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.setType("*/*"); // Set the MIME type to filter the files
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(intent, REQUEST_FILE_PICKER);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_FILE_PICKER && resultCode == RESULT_OK) {
+            if (data != null) {
+                Uri selectedFileUri = data.getData();
+                viewHolderCategory.categoryAudio.setText(getPathFromUri(selectedFileUri));
+            }
+        }
+    }
+
+    private String getPathFromUri(Uri uri) {
+        String filePath = null;
+        if (uri != null) {
+            if (DocumentsContract.isDocumentUri(getContext(), uri)) {
+                // Handle document URI
+                if (isExternalStorageDocument(uri)) {
+                    // Handle external storage document
+                    final String documentId = DocumentsContract.getDocumentId(uri);
+                    final String[] split = documentId.split(":");
+                    final String type = split[0];
+
+                    if ("primary".equalsIgnoreCase(type)) {
+                        filePath = Environment.getExternalStorageDirectory() + "/" + split[1];
+                    }
+                } else if (isDownloadsDocument(uri)) {
+                    // Handle downloads document
+                    final String documentId = DocumentsContract.getDocumentId(uri);
+                    final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.parseLong(documentId));
+                    filePath = getDataColumn(getContext(), contentUri, null, null);
+                } else if (isMediaDocument(uri)) {
+                    // Handle media document
+                    final String documentId = DocumentsContract.getDocumentId(uri);
+                    final String[] split = documentId.split(":");
+                    final String type = split[0];
+
+                    Uri contentUri = null;
+                    if ("image".equals(type)) {
+                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                    } else if ("video".equals(type)) {
+                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                    } else if ("audio".equals(type)) {
+                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                    }
+
+                    final String selection = "_id=?";
+                    final String[] selectionArgs = new String[]{split[1]};
+                    filePath = getDataColumn(getContext(), contentUri, selection, selectionArgs);
+                }
+            } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+                // Handle content URI
+                filePath = getDataColumn(getContext(), uri, null, null);
+            } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+                // Handle file URI
+                filePath = uri.getPath();
+            }
+        }
+        return filePath;
+    }
+
+    private String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+        String filePath = null;
+        final String column = "_data";
+        final String[] projection = {column};
+        Cursor cursor = null;
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(column);
+                filePath = cursor.getString(columnIndex);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return filePath;
+    }
+
+    private boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    private boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    private boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -407,6 +528,7 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
                 contentValues.put(POIsContract.CategoryEntry.COLUMN_FATHER_ID, fatherID);
                 contentValues.put(POIsContract.CategoryEntry.COLUMN_SHOWN_NAME, correctShownName);
                 contentValues.put(POIsContract.CategoryEntry.COLUMN_HIDE, hideValue);
+//               Update data entry here
 
                 int updatedRows = POIsContract.CategoryEntry.updateByID(getActivity(), contentValues, itemSelectedID);
                 if (updatedRows <= 0) {
@@ -457,6 +579,7 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
         String fatherShownName = POIsContract.CategoryEntry.getShownNameByID(getActivity(), query.getInt(viewHolder.FATHER_ID));
         if (query.moveToFirst()) {
             viewHolder.categoryName.setText(query.getString(viewHolder.NAME));
+            viewHolder.categoryAudio.setText(query.getString(viewHolder.AUDIOFILEPATH));
             viewHolder.fatherID.setSelection(adapter.getPosition(fatherShownName));
             if (query.getString(viewHolder.HIDE).equals("0")) {
                 viewHolder.switchButtonHide.setChecked(true);
@@ -710,7 +833,7 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
     public static class ViewHolderCategory {
 
         public FloatingActionButton cancel;
-        EditText categoryName;
+        EditText categoryName, categoryAudio;
         Spinner fatherID;
         FloatingActionButton createCategory;
         FloatingActionButton updateCategory;
@@ -718,10 +841,12 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
         private int FATHER_ID = 2;
         private int SHOWN_NAME = 3;
         private int HIDE = 4;
+        private int AUDIOFILEPATH = 5;
         private Switch switchButtonHide;
 
         ViewHolderCategory(View rootView) {
             categoryName = (EditText) rootView.findViewById(R.id.category_name);
+            categoryAudio = (EditText) rootView.findViewById(R.id.category_audio);
             switchButtonHide = (Switch) rootView.findViewById(R.id.switchButtonHide);
             fatherID = (Spinner) rootView.findViewById(R.id.father_spinner);
             createCategory = (FloatingActionButton) rootView.findViewById(R.id.create_category);

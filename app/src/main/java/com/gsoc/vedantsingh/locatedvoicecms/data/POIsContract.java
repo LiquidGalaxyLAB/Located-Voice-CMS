@@ -5,9 +5,19 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.BaseColumns;
+import android.util.Log;
+
 import androidx.fragment.app.FragmentActivity;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
 /**
  * Created by RAFA on 18/05/2015.
@@ -184,6 +194,7 @@ public class POIsContract {
         public static final String COLUMN_FATHER_ID = "Father_ID";
         public static final String COLUMN_SHOWN_NAME = "Shown_Name";
         public static final String COLUMN_HIDE = "Hide";
+        public static final String COLUMN_AUDIO_PATH = "AudioFilePath";
 
         public static Uri buildCategoryUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -223,6 +234,78 @@ public class POIsContract {
                     COLUMN_FATHER_ID + " = ? AND " + COLUMN_HIDE + " = 0",
                     new String[]{fatherID},
                     null);
+        }
+
+        public static void saveAudioToDevice(Context context){
+            ArrayList<Integer> columnCategories = new ArrayList<>();
+            Log.d("Check 1", "audio");
+            Cursor cursor = context.getContentResolver().query(
+                    CONTENT_URI,
+                    new String[]{_ID},
+                    null,
+                    null,
+                    null);
+            if (cursor.moveToFirst()) {
+                do {
+                    int data = cursor.getInt(cursor.getColumnIndex("_id"));
+                    Log.d("Check 2",Integer.toString(data));
+                    columnCategories.add(data);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+
+            for (int categoryId : columnCategories) {
+                String audioFileName = getNameById(context, categoryId) + ".mp3"; // Generate the audio file name based on the category ID or any other logic
+                String destinationFilePath = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC) + "/" + audioFileName;
+                Log.d("Check 3",destinationFilePath);
+
+                try {
+                    int audioResourceId = context.getResources().getIdentifier("category" + categoryId, "raw", context.getPackageName());
+                    if (audioResourceId != 0) {
+                        InputStream inputStream = context.getResources().openRawResource(audioResourceId); // Replace with the appropriate raw resource ID or file name
+                        OutputStream outputStream = new FileOutputStream(destinationFilePath);
+
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+
+                        outputStream.close();
+                        inputStream.close();
+
+                        Log.d("Check 4", "Files Saved");
+
+                        // Save the audio file path in the database
+                        ContentValues values = new ContentValues();
+                        values.put(COLUMN_AUDIO_PATH, destinationFilePath);
+                        context.getContentResolver().update(
+                                CONTENT_URI,
+                                values,
+                                _ID + "= ?",
+                                new String[]{String.valueOf(categoryId)});
+                        Log.d("Check 5", "DB Updated");
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        public static String getAudioPathByID(FragmentActivity fragmentActivity, int id){
+            Cursor queryCursor = fragmentActivity.getContentResolver().query(
+                CONTENT_URI,
+                new String[]{COLUMN_AUDIO_PATH},
+                _ID + " = ?",
+                new String[]{String.valueOf(id)},
+                null);
+            if (queryCursor.getCount() > 0){
+                queryCursor.moveToNext();
+                return queryCursor.getString(0);
+            }
+            return "NULL";
         }
 
         public static Cursor getCategoriesForRefreshing(FragmentActivity fragmentActivity, String whereClause) {

@@ -11,16 +11,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -36,10 +32,8 @@ import android.speech.RecognizerIntent;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -91,9 +85,11 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
     Session session;
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
+    private static final int REQUEST_PERMISSION_CODE = 123;
 
 
-//    private ArrayList<String> backIDs = new ArrayList<>();
+
+    //    private ArrayList<String> backIDs = new ArrayList<>();
     private SharedPreferences sharedPreferences;
     private boolean logo_switch=true;
     Button SuggPOIButton, changeplanet, tourbutton;
@@ -199,6 +195,21 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             }
         });
 
+        // Check if the permission is already granted
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted, request it
+            ActivityCompat.requestPermissions(this, new String[]{
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    },
+                    REQUEST_PERMISSION_CODE);
+            Log.d("Permission Storage", "part 1");
+        } else {
+            // Permission is already granted, proceed with your operations
+            Log.d("Permission Storage", "part 2");
+        }
 
 
 
@@ -245,6 +256,19 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //
 //        showLogo();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission is granted, proceed with your operations
+            } else {
+                // Permission is denied, handle accordingly (e.g., show an error message or disable features that require the permission)
+            }
+        }
+    }
+
 
 
     private void showLogo() {

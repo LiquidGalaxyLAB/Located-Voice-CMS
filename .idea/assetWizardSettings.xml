@@ -33,9 +33,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="baseline_edit_48" />
-                            <entry key="sourceFile" value="C:\Users\vedan\Downloads\Group 1 (1).svg" />
+                            <entry key="outputName" value="lvc_logo" />
+                            <entry key="sourceFile" value="C:\Users\vedan\Downloads\locatedvoicecms-logogsoc (1) 1.svg" />
                           </map>
                         </option>
                       </PersistentState>

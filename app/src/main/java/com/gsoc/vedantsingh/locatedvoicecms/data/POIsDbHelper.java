@@ -1,17 +1,37 @@
 package com.gsoc.vedantsingh.locatedvoicecms.data;
 
+
+
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.util.ArrayList;
 
 public class POIsDbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "poi_controller.db";
     private static final int DATABASE_VERSION = 33;
+    private static final int REQUEST_PERMISSION_CODE = 1;
+    private static final String[] PERMISSIONS = {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
     private Context context;
 
     POIsDbHelper(Context context) {
@@ -28,7 +48,44 @@ public class POIsDbHelper extends SQLiteOpenHelper {
         createBaseCategories(db);
         createDefaultLgTasks(db);
         insertDefaultData(db);
+        Log.d("Permission Storage", "Database initiated");
+
+//        if (hasPermissions()) {
+//            saveAudioToDevice(db);
+//            Log.d("Permission Storage", "Database done");
+//        } else {
+//
+//            ActivityCompat.requestPermissions((Activity) context, PERMISSIONS, REQUEST_PERMISSION_CODE);
+//            Log.d("Permission Storage", "Not done");
+//        }
     }
+
+//    private boolean hasPermissions() {
+//        for (String permission : PERMISSIONS) {
+//            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
+//   @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        if (requestCode == REQUEST_PERMISSION_CODE) {
+//            boolean permissionsGranted = true;
+//            for (int grantResult : grantResults) {
+//                if (grantResult != PackageManager.PERMISSION_GRANTED) {
+//                    permissionsGranted = false;
+//                    break;
+//                }
+//            }
+//            if (permissionsGranted) {
+//                saveAudioToDevice(getWritableDatabase());
+//            } else {
+//                // Handle permission denied case
+//            }
+//        }
+//    }
 
     private void insertDefaultData(SQLiteDatabase db) {
         try {
@@ -42,6 +99,55 @@ public class POIsDbHelper extends SQLiteOpenHelper {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveAudioToDevice(SQLiteDatabase db){
+        ArrayList<Integer> columnCategories = new ArrayList<>();
+        Log.d("Check 1", "audio");
+        Cursor cursor = db.query("category", new String[]{"_id"}, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                int data = cursor.getInt(cursor.getColumnIndex("_id"));
+                Log.d("Check 2",Integer.toString(data));
+                columnCategories.add(data);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+
+        for (int categoryId : columnCategories) {
+            String audioFileName = "category" + categoryId + ".mp3"; // Generate the audio file name based on the category ID or any other logic
+            String destinationFilePath = context.getExternalFilesDir(Environment.DIRECTORY_MUSIC) + "/" + audioFileName;
+            Log.d("Check 3",destinationFilePath);
+
+            try {
+                int audioResourceId = context.getResources().getIdentifier("category_" + categoryId, "raw", context.getPackageName());
+                if (audioResourceId != 0) {
+                    InputStream inputStream = context.getResources().openRawResource(audioResourceId); // Replace with the appropriate raw resource ID or file name
+                    OutputStream outputStream = new FileOutputStream(destinationFilePath);
+
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        outputStream.write(buffer, 0, bytesRead);
+                    }
+
+                    outputStream.close();
+                    inputStream.close();
+
+                    Log.d("Check 4", "Files Saved");
+
+                    // Save the audio file path in the database
+                    ContentValues values = new ContentValues();
+                    values.put("AudioFilePath", destinationFilePath);
+                    db.update("category", values, "_id=?", new String[]{String.valueOf(categoryId)});
+                    Log.d("Check 5", "DB Updated");
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -118,7 +224,7 @@ public class POIsDbHelper extends SQLiteOpenHelper {
     }
 
     private String createCategoryEntryTable() {
-        return "CREATE TABLE category (_id INTEGER PRIMARY KEY AUTOINCREMENT,Name TEXT NOT NULL, Father_ID INTEGER NOT NULL, Shown_Name TEXT UNIQUE NOT NULL, Hide INTEGER NOT NULL  );";
+        return "CREATE TABLE category (_id INTEGER PRIMARY KEY AUTOINCREMENT,Name TEXT NOT NULL, Father_ID INTEGER NOT NULL, Shown_Name TEXT UNIQUE NOT NULL, Hide INTEGER NOT NULL, AudioFilePath TEXT  );";
     }
 
     private String createTourEntryTable() {

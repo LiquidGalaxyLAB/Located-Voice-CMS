@@ -1,15 +1,15 @@
 /******************************************************************CATEGORIES**************************************************************/
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (5,'Biggest World Cathedrals',1,'EARTH/Biggest World Cathedrals/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (6,'Catalan Blue Flagged Ports',1,'EARTH/Catalan Blue Flagged Ports/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (7,'Monuments Of Lleida',1,'EARTH/Monuments Of Lleida/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (8,'Monuments Of Spain',1,'EARTH/Monuments Of Spain/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (9,'Presidential Buildings',1,'EARTH/Presidential Buildings/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (10,'Route66 Cities',1,'EARTH/Route66 Cities/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (11,'Soccer Stadiums',1,'EARTH/Soccer Stadiums/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (12,'Spanish Hostels',1,'EARTH/Spanish Hostels/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (13,'World Airports',1,'EARTH/World Airports/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (14,'World Bridges',1,'EARTH/World Bridges/',0);
-INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide) VALUES (17,'Apollo Missions',2,'MOON/Apollo Missions/',0);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (5,'Biggest World Cathedrals',1,'EARTH/Biggest World Cathedrals/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (6,'Catalan Blue Flagged Ports',1,'EARTH/Catalan Blue Flagged Ports/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (7,'Monuments Of Lleida',1,'EARTH/Monuments Of Lleida/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (8,'Monuments Of Spain',1,'EARTH/Monuments Of Spain/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (9,'Presidential Buildings',1,'EARTH/Presidential Buildings/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (10,'Route66 Cities',1,'EARTH/Route66 Cities/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (11,'Soccer Stadiums',1,'EARTH/Soccer Stadiums/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (12,'Spanish Hostels',1,'EARTH/Spanish Hostels/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (13,'World Airports',1,'EARTH/World Airports/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (14,'World Bridges',1,'EARTH/World Bridges/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (17,'Apollo Missions',2,'MOON/Apollo Missions/',0,NULL);
 
 /******************************************************************TOURS**************************************************************/
 INSERT INTO `tour` (_id,Name,Category,Hide,Interval_of_time) VALUES (1,'Biggest Cathedrals',1,0,15);

@@ -1,12 +1,18 @@
 package com.gsoc.vedantsingh.locatedvoicecms.data;
 
+import android.app.ActivityManager;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract.CategoryEntry;
@@ -14,6 +20,13 @@ import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract.LGTaskEntry;
 import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract.POIEntry;
 import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract.TourEntry;
 import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract.TourPOIsEntry;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class POIsProvider extends ContentProvider {
     static final int ALL_CATEGORIES = 300;
@@ -90,6 +103,15 @@ public class POIsProvider extends ContentProvider {
 
     public boolean onCreate() {
         mOpenHelper = new POIsDbHelper(getContext());
+        ActivityManager activityManager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(1);
+            if (!runningTasks.isEmpty()) {
+                String topActivity = runningTasks.get(0).topActivity.getClassName();
+                Log.d("Database created", "Top Activity: " + topActivity);
+            }
+        }
+        Toast.makeText(getContext(), "Now", Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -302,6 +324,5 @@ public class POIsProvider extends ContentProvider {
         mOpenHelper = new POIsDbHelper(getContext());
         mOpenHelper.resetDatabase(mOpenHelper.getWritableDatabase());
     }
-
 
 }
