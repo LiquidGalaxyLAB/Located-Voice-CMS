@@ -31,6 +31,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.FileList;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.Category;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.POI;
 import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract;
@@ -40,6 +42,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -65,6 +68,7 @@ public class SearchFragment extends Fragment {
     private FloatingActionButton btnSpeak;
     private ListView categoriesListView;
     private Button nearbyplaces, listen_desc, sound_btn;
+    private DriveServiceHelper driveServiceHelper;
     private CategoriesAdapter adapter;
     private TextView categorySelectorTitle;
     private ImageView backIcon, backStartIcon;
@@ -107,6 +111,7 @@ public class SearchFragment extends Fragment {
 //        screenSizeTreatment();
 //        setSearchInLGButton();
 //        setPlanetsButtonsBehaviour();
+
         poisGridView = (GridView) rootView.findViewById(R.id.POISgridview);
 
         if (getArguments() != null) {
@@ -123,7 +128,11 @@ public class SearchFragment extends Fragment {
                 backIDs.clear();
                 Category category = getCategoryByName(currentPlanet);
                 backIDs.add(String.valueOf(category.getId()));
-                mediaPlayer.stop();
+                if(isPlaying){
+                    mediaPlayer.stop();
+                    sound_btn.setText("Play Sound  ");
+                    sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
+                }
                 Audio_Path = "";
                 showPoisByCategory();
             }
@@ -134,7 +143,11 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 if (backIDs.size() > 1) {
                     backIDs.remove(0);
-                    mediaPlayer.stop();
+                    if(isPlaying){
+                        mediaPlayer.stop();
+                        sound_btn.setText("Play Sound  ");
+                        sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
+                    }
                     Audio_Path = "";
                 }
                 showPoisByCategory();
@@ -160,7 +173,14 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+        if (!isAudioSaved(sharedPreferences)) {
+            POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+
+            // Store the updated value of audioSaved in shared preferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("audioSaved", true);
+            editor.apply();
+        }
 
         sound_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +190,8 @@ public class SearchFragment extends Fragment {
                         // If audio is already playing, stop it
                         mediaPlayer.stop();
                         mediaPlayer.reset();
+                        sound_btn.setText("Play Sound  ");
+                        sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
                         isPlaying = false;
                     } else {
                         // Start playing the audio from the beginning
@@ -177,6 +199,8 @@ public class SearchFragment extends Fragment {
                             mediaPlayer.setDataSource(Audio_Path);
                             mediaPlayer.prepare();
                             mediaPlayer.start();
+                            sound_btn.setText("Stop Sound  ");
+                            sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
                             isPlaying = true;
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -188,7 +212,50 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        listen_desc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         return rootView;
+    }
+
+    private void navigateFoldersAndFindAudioFile(String folderName) {
+        try {
+            String folderId = driveServiceHelper.getFolderIdByName(folderName);
+            if (folderId != null) {
+                List<File> files = driveServiceHelper.listFilesInFolder(folderId);
+                for (File file : files) {
+                    if (file.getMimeType().startsWith("audio/") && file.getName().equals("desired_audio_file.mp3")) {
+                        playAudioFile(file);
+                        return;
+                    }
+                }
+            } else {
+                // Handle case when the specified folder name does not exist
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Handle error during navigation or file retrieval
+        }
+    }
+
+    public String getFolderIdByName(String folderName) throws IOException {
+        String query = "mimeType='application/vnd.google-apps.folder' and name='" + folderName + "'";
+        FileList fileList = drive.files().list().setQ(query).execute();
+        List<File> folders = fileList.getFiles();
+        if (folders != null && !folders.isEmpty()) {
+            return folders.get(0).getId(); // Return the ID of the first matching folder
+        }
+        return null; // Return null if the specified folder name does not exist
+    }
+
+
+
+    public static boolean isAudioSaved(SharedPreferences sharedPrefs) {
+        return sharedPrefs.getBoolean("audioSaved", false);
     }
 
     private void setAudioFile(){

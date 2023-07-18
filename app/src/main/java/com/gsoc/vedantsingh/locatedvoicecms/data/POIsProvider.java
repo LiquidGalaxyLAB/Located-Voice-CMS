@@ -103,15 +103,6 @@ public class POIsProvider extends ContentProvider {
 
     public boolean onCreate() {
         mOpenHelper = new POIsDbHelper(getContext());
-        ActivityManager activityManager = (ActivityManager) getContext().getSystemService(Context.ACTIVITY_SERVICE);
-        if (activityManager != null) {
-            List<ActivityManager.RunningTaskInfo> runningTasks = activityManager.getRunningTasks(1);
-            if (!runningTasks.isEmpty()) {
-                String topActivity = runningTasks.get(0).topActivity.getClassName();
-                Log.d("Database created", "Top Activity: " + topActivity);
-            }
-        }
-        Toast.makeText(getContext(), "Now", Toast.LENGTH_SHORT).show();
         return true;
     }
 

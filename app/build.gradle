@@ -65,6 +65,20 @@ dependencies {
     implementation 'com.intuit.ssp:ssp-android:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+//    Google drive API
+    implementation 'com.google.api-client:google-api-client:1.31.1'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.31.5'
+    implementation 'com.google.oauth-client:google-oauth-client-java6:1.31.5'
+    implementation 'com.google.api-client:google-api-client-android:1.31.1'
+    implementation 'com.google.apis:google-api-services-drive:v3-rev347-1.25.0'
+
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.google.http-client:google-http-client-gson:1.26.0'
+    implementation('com.google.api-client:google-api-client-android:1.26.0')
+    implementation('com.google.apis:google-api-services-drive:v3-rev136-1.25.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+
 }
 
 

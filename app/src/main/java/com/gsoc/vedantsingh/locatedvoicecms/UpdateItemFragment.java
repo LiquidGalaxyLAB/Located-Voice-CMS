@@ -6,6 +6,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
@@ -189,6 +191,16 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
                 break;
             default: {//CATEGORY
                 getActivity().setTitle(getResources().getString(R.string.update_category));
+                // Save audio to device if not already saved
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                if (!SearchFragment.isAudioSaved(sharedPreferences)) {
+                    POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+
+                    // Store the updated value of audioSaved in shared preferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("audioSaved", true);
+                    editor.apply();
+                }
                 viewHolderCategory = setCategoryLayoutSettings(inflater, container);
                 updateCategory(viewHolderCategory);
                 AudioPathBehaviour(viewHolderCategory);
@@ -521,6 +533,7 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
                 final int hideValue = getHideValueFromInputForm(viewHolder.switchButtonHide);
                 String shownNameSelected = getShownNameValueFromInputForm(viewHolder.fatherID);
                 final int fatherID = getFatherIDValueFromInputForm(shownNameSelected);
+                final String categoryAudio = viewHolder.categoryAudio.getText().toString();
                 final String correctShownName = shownNameSelected + viewHolder.categoryName.getText().toString() + "/";
                 newShownName = correctShownName;
 
@@ -528,7 +541,7 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
                 contentValues.put(POIsContract.CategoryEntry.COLUMN_FATHER_ID, fatherID);
                 contentValues.put(POIsContract.CategoryEntry.COLUMN_SHOWN_NAME, correctShownName);
                 contentValues.put(POIsContract.CategoryEntry.COLUMN_HIDE, hideValue);
-//               Update data entry here
+                contentValues.put(POIsContract.CategoryEntry.COLUMN_AUDIO_PATH, categoryAudio);
 
                 int updatedRows = POIsContract.CategoryEntry.updateByID(getActivity(), contentValues, itemSelectedID);
                 if (updatedRows <= 0) {

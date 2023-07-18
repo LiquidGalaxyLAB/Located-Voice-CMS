@@ -1,12 +1,16 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.gsoc.vedantsingh.locatedvoicecms.PW.NearbyBeaconsFragment;
 import com.gsoc.vedantsingh.locatedvoicecms.advancedTools.AdvancedToolsFragment;
+import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract;
 
 public class AdminCollectionPagerAdapter extends FragmentStatePagerAdapter {
 

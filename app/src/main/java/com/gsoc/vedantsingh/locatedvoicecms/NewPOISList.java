@@ -1,9 +1,12 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +45,16 @@ public class NewPOISList extends Fragment {
         //foreach rootCategory => get child categories recursively
 
         TreeNode categoriesRoot = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.baseline_home_24, getResources().getString(R.string.categoriesRoot), 0, 0, false));
+        // Save audio to device if not already saved
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        if (!SearchFragment.isAudioSaved(sharedPreferences)) {
+            POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+
+            // Store the updated value of audioSaved in shared preferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("audioSaved", true);
+            editor.apply();
+        }
 
         try (Cursor rootCategories = POIsContract.CategoryEntry.getRootCategories(getActivity())) {
             while (rootCategories.moveToNext()) {
