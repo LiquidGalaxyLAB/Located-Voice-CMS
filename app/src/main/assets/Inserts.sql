@@ -10,6 +10,27 @@ INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES
 INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (13,'World Airports',1,'EARTH/World Airports/',0,NULL);
 INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (14,'World Bridges',1,'EARTH/World Bridges/',0,NULL);
 INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (17,'Apollo Missions',2,'MOON/Apollo Missions/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (18,'Natural Wonders in the United States',1,'EARTH/Natural Wonders in the United States/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (19,'Historic Landmarks in Italy',1,'EARTH/Historic Landmarks in Italy/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (20,'Iconic Landmarks in France',1,'EARTH/Iconic Landmarks in France/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (21,'Cultural Sites in India',1,'EARTH/Cultural Sites in India/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (22,'Ancient Ruins in Greece',1,'EARTH/Ancient Ruins in Greece/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (23,'National Parks in Canada',1,'EARTH/National Parks in Canada/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (24,'Cultural Landmarks in Japan',1,'EARTH/Cultural Landmarks in Japan/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (25,'Landmarks in Egypt',1,'EARTH/Landmarks in Egypt/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (26,'Ancient Sites in Egypt',1,'EARTH/Ancient Sites in Egypt/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (27,'Natural Wonders in Australia',1,'EARTH/Natural Wonders in Australia/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (28,'Natural Wonders in New Zealand',1,'EARTH/Natural Wonders in New Zealand/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (29,'Historical Sites in China',1,'EARTH/Historical Sites in China/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (30,'Historical Landmarks in Germany',1,'EARTH/Historical Landmarks in Germany/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (31,'Natural Wonders in South America',1,'EARTH/Natural Wonders in South America/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (32,'Cultural Sites in Mexico',1,'EARTH/NCultural Sites in Mexico/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (33,'Architectural Marvels in the United Arab Emirates',1,'EARTH/Architectural Marvels in the United Arab Emirates/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (34,'Iconic Landmarks in Russia',1,'EARTH/Iconic Landmarks in Russia/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (35,'National Parks in the United States',1,'EARTH/National Parks in the United States/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (36,'National Parks in South Africa',1,'EARTH/National Parks in South Africa/',0,NULL);
+INSERT INTO `category` (_id,Name,Father_ID,Shown_Name,Hide,AudioFilePath) VALUES (37,'Historic Sites in England',1,'EARTH/Historic Sites in England/',0,NULL);
+
 
 /******************************************************************TOURS**************************************************************/
 INSERT INTO `tour` (_id,Name,Category,Hide,Interval_of_time) VALUES (1,'Biggest Cathedrals',1,0,15);
@@ -268,7 +289,7 @@ INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Ti
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (281,'Kremlin','Kremlin',37.6171918787585,55.7513245255866,0.0,79.0,62.0,500.0,'relativeToSeaFloor',0,9);
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (282,'The White House','The White House',-77.0365420703183,38.8979119518442,0.0,79.0,62.0,500.0,'relativeToSeaFloor',0,9);
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (283,'National Palace','National Palace',-99.1320316941162,19.4326141277854,0.0,79.0,62.0,500.0,'relativeToSeaFloor',0,9);
-INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (284,'Garzas Palace','Garzas Palace',-79.5344538307548,8.95393300190272,0.0,79.0,62.0,500.0,'relativeToSeaFloor',0,9);
+INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (284,'Garzas Palace','Garzas Palace',-79.5344538307548,8.95393300190272,0.0,79.0,62.0,5    00.0,'relativeToSeaFloor',0,9);
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (285,'Carondelet Palace','Carondelet Palace',-78.512550415432,-0.219823438009298,0.0,79.0,62.0,500.0,'relativeToSeaFloor',0,9);
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (286,'Pizarro''s House','Pizarro''s House',-77.0300255862288,-12.0451255115817,0.0,79.0,62.0,500.0,'relativeToSeaFloor',0,9);
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (287,'Planalto Palace','Planalto Palace',-47.8608150964806,-15.7991173148349,0.0,79.0,62.0,500.0,'relativeToSeaFloor',0,9);
@@ -385,6 +406,8 @@ INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Ti
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (439,'Tycho Crater','Tycho Crater',-10.8383855238043,-43.3056164044095,0.0,-17.307171340787,49.0581365393275,46288.7242890355,'relativeToSeaFloor',0,2);
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (440,'LCROSS Impact Site','LCROSS Impact Site',-42.5181115370408,-84.9040957966228,0.0,1.51480125331895,48.3964999683305,75311.2248110708,'relativeToSeaFloor',0,2);
 INSERT INTO `poi` (_id,Name,Visited_Place,Longitude,Latitude,Altitude,Heading,Tilt,Range,Altitude_Mode,Hide,Category) VALUES (441,'Mangrove Forest','Mangrove Forest',-91.86373298836202,18.52106283679075,10.41094381533852,-54.31631895884751,76.59342733665744,1250.0,'relativeToSeaFloor',0,1);
+
+
 
 
 
