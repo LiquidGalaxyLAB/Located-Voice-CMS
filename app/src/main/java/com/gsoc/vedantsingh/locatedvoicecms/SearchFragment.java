@@ -1,5 +1,6 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +15,12 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.fragment.app.Fragment;
 import android.util.DisplayMetrics;
@@ -31,6 +38,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.FileList;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.Category;
@@ -44,6 +56,7 @@ import com.jcraft.jsch.Session;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
@@ -56,8 +69,8 @@ public class SearchFragment extends Fragment {
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String Audio_Path = "";
-    private boolean isPlaying = false;
-    private MediaPlayer mediaPlayer = new MediaPlayer();
+    private static boolean isPlaying = false;
+    private static MediaPlayer mediaPlayer = new MediaPlayer();
     View rootView;
     GridView poisGridView;
     Session session;
@@ -67,13 +80,23 @@ public class SearchFragment extends Fragment {
     private String currentPlanet = "EARTH";
     private FloatingActionButton btnSpeak;
     private ListView categoriesListView;
-    private Button nearbyplaces, listen_desc, sound_btn;
-    private DriveServiceHelper driveServiceHelper;
+    private Button nearbyplaces, sound_btn;
+    public static Button listen_desc;
+//    private DriveServiceHelper driveServiceHelper;
     private CategoriesAdapter adapter;
     private TextView categorySelectorTitle;
     private ImageView backIcon, backStartIcon;
     SharedPreferences sharedPreferences;
-    private ArrayList<String> backIDs = new ArrayList<>();
+    private static ArrayList<String> backIDs = new ArrayList<>();
+
+    private static final String TAG = "SearchFragment";
+
+    private static final int REQUEST_CODE_SIGN_IN = 1;
+    public static DriveServiceHelper mDriveServiceHelper;
+    public static String recentPOI;
+    public static int CategoryIdForVoice;
+    String DRIVE_FOLDER_ID = "1IqFDdaIRWhqv580G2uknYaFgGQmEVQ8P";
+
 
     public SearchFragment() {
         // Required empty public constructor
@@ -101,7 +124,7 @@ public class SearchFragment extends Fragment {
         categorySelectorTitle = (TextView) rootView.findViewById(R.id.current_category);
 
 //        btnSpeak.setOnClickListener(new View.OnClickListener() {
-//
+
 //            @Override
 //            public void onClick(View v) {
 //                promptSpeechInput();
@@ -111,6 +134,11 @@ public class SearchFragment extends Fragment {
 //        screenSizeTreatment();
 //        setSearchInLGButton();
 //        setPlanetsButtonsBehaviour();
+
+//        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE));
+//        credential.setSelectedAccount(new Account(userAccount, "com.google"));
+//        Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), new GsonFactory(), credential).build();
+
 
         poisGridView = (GridView) rootView.findViewById(R.id.POISgridview);
 
@@ -198,6 +226,13 @@ public class SearchFragment extends Fragment {
                         try {
                             mediaPlayer.setDataSource(Audio_Path);
                             mediaPlayer.prepare();
+                            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                                @Override
+                                public void onCompletion(MediaPlayer mp) {
+                                    sound_btn.setText("Play Sound  ");
+                                    sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
+                                }
+                            });
                             mediaPlayer.start();
                             sound_btn.setText("Stop Sound  ");
                             sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
@@ -212,50 +247,139 @@ public class SearchFragment extends Fragment {
             }
         });
 
+//        driveServiceHelper = new DriveServiceHelper();
+
         listen_desc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+//                try {
+//                    DriveServiceHelper.testMethod(getContext());
+//                } catch (IOException e) {
+//                    Log.d("Here is the problem",e.getMessage());
+//                    throw new RuntimeException(e);
+//                } catch (GeneralSecurityException e) {
+//                    throw new RuntimeException(e);
+//                }
+                if(listen_desc.getText().toString().equals("Listen Description  ")){
+                    requestSignIn();
+                } else {
+                    mDriveServiceHelper.stopVoicePlayer();
+                    listenDescButtonResetState();
+                }
             }
         });
 
         return rootView;
     }
 
-    private void navigateFoldersAndFindAudioFile(String folderName) {
-        try {
-            String folderId = driveServiceHelper.getFolderIdByName(folderName);
-            if (folderId != null) {
-                List<File> files = driveServiceHelper.listFilesInFolder(folderId);
-                for (File file : files) {
-                    if (file.getMimeType().startsWith("audio/") && file.getName().equals("desired_audio_file.mp3")) {
-                        playAudioFile(file);
-                        return;
-                    }
-                }
-            } else {
-                // Handle case when the specified folder name does not exist
+    public static void listenDescButtonResetState(){
+        listen_desc.setText("Listen Description  ");
+        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_library_books_24, 0);
+    }
+
+    public static void listenDescButtonPlayState(){
+        listen_desc.setText("Stop Listening to Description  ");
+        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
+    }
+
+    private void requestSignIn() {
+        Log.d(TAG, "Requesting sign-in");
+
+        GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
+        if (lastSignedInAccount != null) {
+            // User is already signed in, handle the signed-in account
+            handleSignInResult(lastSignedInAccount);
+        } else {
+            // User is not signed in, initiate the sign-in process
+            GoogleSignInOptions signInOptions =
+                    new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestEmail()
+                            .requestScopes(new Scope(DriveScopes.DRIVE_READONLY))
+                            .build();
+            GoogleSignInClient client = GoogleSignIn.getClient(getContext(), signInOptions);
+
+            // The result of the sign-in Intent is handled in onActivityResult.
+            startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
+        }
+    }
+
+    private void handleSignInResult(GoogleSignInAccount googleAccount) {
+        if(googleAccount != null){
+            Log.d(TAG, "Signed in as " + googleAccount.getEmail());
+
+            // Use the authenticated account to sign in to the Drive service.
+            GoogleAccountCredential credential =
+                    GoogleAccountCredential.usingOAuth2(
+                            getContext(), Collections.singleton(DriveScopes.DRIVE_FILE));
+            credential.setSelectedAccount(googleAccount.getAccount());
+            Drive googleDriveService =
+                    new Drive.Builder(
+                            AndroidHttp.newCompatibleTransport(),
+                            new GsonFactory(),
+                            credential)
+                            .setApplicationName("Located Voice CMS")
+                            .build();
+
+            // The DriveServiceHelper encapsulates all REST API and SAF functionality.
+            // Its instantiation is required before handling any onClick actions.
+            mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+            if(recentPOI != null){
+                mDriveServiceHelper.playAudioFileInFolder(DRIVE_FOLDER_ID, POIsContract.CategoryEntry.getNameById(getContext(), CategoryIdForVoice), recentPOI +".mp3");
+            }else{
+                Toast.makeText(getContext(), "Please select a POI to listen to its description", Toast.LENGTH_SHORT).show();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            // Handle error during navigation or file retrieval
+            Log.d("Sign In", "Completed");
+        } else {
+            Log.e(TAG, "Unable to sign in.");
         }
     }
 
-    public String getFolderIdByName(String folderName) throws IOException {
-        String query = "mimeType='application/vnd.google-apps.folder' and name='" + folderName + "'";
-        FileList fileList = drive.files().list().setQ(query).execute();
-        List<File> folders = fileList.getFiles();
-        if (folders != null && !folders.isEmpty()) {
-            return folders.get(0).getId(); // Return the ID of the first matching folder
-        }
-        return null; // Return null if the specified folder name does not exist
-    }
+    public static void setCategoryForVoice(){
+        CategoryIdForVoice = Integer.parseInt(backIDs.get(0));
+    };
 
 
+//    private void navigateFoldersAndFindAudioFile(String folderName) {
+//        try {
+//            String folderId = driveServiceHelper.getFolderIdByName(folderName);
+//            if (folderId != null) {
+//                List<File> files = driveServiceHelper.listFilesInFolder(folderId);
+//                for (File file : files) {
+//                    if (file.getMimeType().startsWith("audio/") && file.getName().equals("desired_audio_file.mp3")) {
+//                        playAudioFile(file);
+//                        return;
+//                    }
+//                }
+//            } else {
+//                // Handle case when the specified folder name does not exist
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            // Handle error during navigation or file retrieval
+//        }
+//    }
+//
+//    private void playAudioFile(File audioFile) {
+//        // Use MediaPlayer or your chosen audio playback library to play the file
+//        String audioFileUrl = audioFile.getWebContentLink();
+//        // Configure MediaPlayer or library to play the audioFileUrl
+//        // ...
+//    }
+
+//    public static Context getSearchFragmentContext() {
+//        return this.getContext();
+//    }
 
     public static boolean isAudioSaved(SharedPreferences sharedPrefs) {
         return sharedPrefs.getBoolean("audioSaved", false);
+    }
+
+    public static void audioPlayerStop(){
+        if(isPlaying){
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            isPlaying = false;
+        }
     }
 
     private void setAudioFile(){
@@ -356,6 +480,14 @@ public class SearchFragment extends Fragment {
                 }
                 break;
             }
+            case REQUEST_CODE_SIGN_IN:
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    GoogleSignIn.getSignedInAccountFromIntent(data)
+                            .addOnSuccessListener(googleSignInAccount -> {
+                                handleSignInResult(googleSignInAccount);
+                            });
+                }
+                break;
         }
     }
 

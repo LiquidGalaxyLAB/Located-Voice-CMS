@@ -48,6 +48,8 @@ public class SuggPOIBottomSheetFragment extends BottomSheetDialogFragment {
         dismissButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SearchFragment.audioPlayerStop();
+                SearchFragment.mDriveServiceHelper.stopVoicePlayer();
                 dismiss(); // Dismiss the BottomSheet
             }
         });

@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gsoc.vedantsingh.locatedvoicecms.R;
+import com.gsoc.vedantsingh.locatedvoicecms.SearchFragment;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.POI;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -81,6 +82,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
             public void onClick(View view) {
                 String command = buildCommand(currentPoi);
                 Log.d("Rotate","button");
+                SearchFragment.recentPOI = currentPoi.getName();
+                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, true);
                 visitPoiTask.execute();
             }
@@ -104,6 +107,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
                 String command = buildCommand(currentPoi);
                 Log.d("viewPOI","button");
+                SearchFragment.recentPOI = currentPoi.getName();
+                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
                 visitPoiTask.execute();
 
@@ -153,6 +158,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
                 String command = buildCommand(currentPoi);
                 Log.d("POINAME","button");
+                SearchFragment.recentPOI = currentPoi.getName();
+                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
                 visitPoiTask.execute();
 
