@@ -240,13 +240,17 @@ public class CreateItemFragment extends Fragment implements OnMapReadyCallback, 
         } else {//CATEGORY
             getActivity().setTitle(getResources().getString(R.string.new_category));
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            if (!SearchFragment.isAudioSaved(sharedPreferences)) {
-                POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+            if(SearchFragment.isPermissionGranted(sharedPreferences)){
+                if (!SearchFragment.isAudioSaved(sharedPreferences)) {
+                    POIsContract.CategoryEntry.saveAudioToDevice(getContext());
 
-                // Store the updated value of audioSaved in shared preferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("audioSaved", true);
-                editor.apply();
+                    // Store the updated value of audioSaved in shared preferences
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("audioSaved", true);
+                    editor.apply();
+                }
+            } else {
+                Toast.makeText(getContext(), "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT).show();
             }
             viewHolderCategory = setCategoryLayoutSettings(inflater, container);
             AudioPathBehaviour(viewHolderCategory);

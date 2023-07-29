@@ -32,6 +32,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".NearbyPlacesActivity"
+            android:exported="false" />
+        <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:screenOrientation="landscape">
@@ -77,8 +80,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".LGPCAdminActivity"
-            android:screenOrientation="landscape"
             android:label="Administration Tools"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.WithActionBar" />
         <activity
             android:name=".InfoActivity"

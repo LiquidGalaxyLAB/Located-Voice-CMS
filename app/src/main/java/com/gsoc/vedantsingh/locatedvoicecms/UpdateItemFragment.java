@@ -193,13 +193,17 @@ public class UpdateItemFragment extends Fragment implements OnMapReadyCallback, 
                 getActivity().setTitle(getResources().getString(R.string.update_category));
                 // Save audio to device if not already saved
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-                if (!SearchFragment.isAudioSaved(sharedPreferences)) {
-                    POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+                if(SearchFragment.isPermissionGranted(sharedPreferences)){
+                    if (!SearchFragment.isAudioSaved(sharedPreferences)) {
+                        POIsContract.CategoryEntry.saveAudioToDevice(getContext());
 
-                    // Store the updated value of audioSaved in shared preferences
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putBoolean("audioSaved", true);
-                    editor.apply();
+                        // Store the updated value of audioSaved in shared preferences
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("audioSaved", true);
+                        editor.apply();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT).show();
                 }
                 viewHolderCategory = setCategoryLayoutSettings(inflater, container);
                 updateCategory(viewHolderCategory);

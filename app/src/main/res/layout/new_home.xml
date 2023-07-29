@@ -57,7 +57,7 @@
 
     <TextView
         android:id="@+id/planetname"
-        android:layout_width="@dimen/_100sdp"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/_40sdp"
         android:layout_marginStart="@dimen/_3sdp"
         android:layout_marginBottom="@dimen/_3sdp"

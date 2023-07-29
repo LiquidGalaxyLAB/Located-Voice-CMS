@@ -1,13 +1,6 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
 import android.app.Activity;
-import android.content.Intent;
-
-import androidx.core.util.Pair;
-
-import com.google.android.gms.drive.DriveContents;
-import com.google.android.gms.drive.DriveFolder;
-import com.google.android.gms.drive.Metadata;
 import com.google.api.services.drive.model.File;
 
 import android.content.ContentResolver;

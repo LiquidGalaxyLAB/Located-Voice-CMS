@@ -92,7 +92,7 @@ public class SearchFragment extends Fragment {
     private static final String TAG = "SearchFragment";
 
     private static final int REQUEST_CODE_SIGN_IN = 1;
-    public static DriveServiceHelper mDriveServiceHelper;
+    public static DriveServiceHelper mDriveServiceHelper = null;
     public static String recentPOI;
     public static int CategoryIdForVoice;
     String DRIVE_FOLDER_ID = "1IqFDdaIRWhqv580G2uknYaFgGQmEVQ8P";
@@ -185,29 +185,36 @@ public class SearchFragment extends Fragment {
         nearbyplaces.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String machinesString = sharedPreferences.getString("Machines", "3");
-                int machines = Integer.parseInt(machinesString);
-                int slave_num = Math.floorDiv(machines, 2) + 1;
-                String slave_name = "slave_" + slave_num;
-                ExecutorService executorService = Executors.newSingleThreadExecutor();
-                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext());
-                Future<Void> future = executorService.submit(nearbyPlacesTask);
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                executorService.shutdown();
+////                Displaying the Balloon on the rightmost part of the LG
+//                String machinesString = sharedPreferences.getString("Machines", "3");
+//                int machines = Integer.parseInt(machinesString);
+//                int slave_num = Math.floorDiv(machines, 2) + 1;
+//                String slave_name = "slave_" + slave_num;
+//                ExecutorService executorService = Executors.newSingleThreadExecutor();
+//                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext());
+//                Future<Void> future = executorService.submit(nearbyPlacesTask);
+//                try {
+//                    future.get();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                executorService.shutdown();
+
+
             }
         });
 
-        if (!isAudioSaved(sharedPreferences)) {
-            POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+        if(isPermissionGranted(sharedPreferences)){
+            if (!isAudioSaved(sharedPreferences)) {
+                POIsContract.CategoryEntry.saveAudioToDevice(getContext());
 
-            // Store the updated value of audioSaved in shared preferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("audioSaved", true);
-            editor.apply();
+                // Store the updated value of audioSaved in shared preferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("audioSaved", true);
+                editor.apply();
+            }
+        } else {
+            Toast.makeText(getContext(), "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT).show();
         }
 
         sound_btn.setOnClickListener(new View.OnClickListener() {
@@ -372,6 +379,10 @@ public class SearchFragment extends Fragment {
 
     public static boolean isAudioSaved(SharedPreferences sharedPrefs) {
         return sharedPrefs.getBoolean("audioSaved", false);
+    }
+
+    public static boolean isPermissionGranted(SharedPreferences sharedPrefs){
+        return sharedPrefs.getBoolean("permissionGranted", false);
     }
 
     public static void audioPlayerStop(){
@@ -832,6 +843,8 @@ public class SearchFragment extends Fragment {
             return null;
         }
     }
+
+
 
     private void setSearchInLGButton() {
 

@@ -263,8 +263,12 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         if (requestCode == REQUEST_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted, proceed with your operations
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("permissionGranted", true);
+                editor.apply();
             } else {
                 // Permission is denied, handle accordingly (e.g., show an error message or disable features that require the permission)
+                sharedPreferences.getBoolean("permissionGranted", false);
             }
         }
     }
@@ -333,7 +337,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 })
                 .build();
 
-        findViewById(R.id.changeplanet).setOnClickListener(v -> powerMenu.showAsAnchorLeftTop(v, 0, -290));
+        findViewById(R.id.changeplanet).setOnClickListener(powerMenu::showAsAnchorLeftTop);
     }
 
 //    public void showPlanetMenu() {
@@ -454,7 +458,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 })
                 .build();
 
-        findViewById(R.id.menufab).setOnClickListener(v -> powerMenu.showAsDropDown(v));
+        findViewById(R.id.menufab).setOnClickListener(powerMenu::showAsDropDown);
     }
 
 

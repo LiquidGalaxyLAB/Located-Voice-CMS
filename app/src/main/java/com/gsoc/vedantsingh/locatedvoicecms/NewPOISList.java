@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.gsoc.vedantsingh.locatedvoicecms.beans.Category;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.POI;
@@ -47,13 +48,17 @@ public class NewPOISList extends Fragment {
         TreeNode categoriesRoot = new TreeNode(new TreeItemHolder.IconTreeItem(R.drawable.baseline_home_24, getResources().getString(R.string.categoriesRoot), 0, 0, false));
         // Save audio to device if not already saved
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        if (!SearchFragment.isAudioSaved(sharedPreferences)) {
-            POIsContract.CategoryEntry.saveAudioToDevice(getContext());
+        if(SearchFragment.isPermissionGranted(sharedPreferences)){
+            if (!SearchFragment.isAudioSaved(sharedPreferences)) {
+                POIsContract.CategoryEntry.saveAudioToDevice(getContext());
 
-            // Store the updated value of audioSaved in shared preferences
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("audioSaved", true);
-            editor.apply();
+                // Store the updated value of audioSaved in shared preferences
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("audioSaved", true);
+                editor.apply();
+            }
+        } else {
+            Toast.makeText(getContext(), "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT).show();
         }
 
         try (Cursor rootCategories = POIsContract.CategoryEntry.getRootCategories(getActivity())) {
