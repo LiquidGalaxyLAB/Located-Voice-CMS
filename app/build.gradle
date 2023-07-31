@@ -10,14 +10,14 @@ repositories {
 
 android {
     namespace 'com.gsoc.vedantsingh.locatedvoicecms'
-    signingConfigs {
-        config {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('C:/Users/vedan/Documents/git-demo/debug.keystore')
-            storePassword 'android'
-        }
-    }
+//    signingConfigs {
+//        config {
+//            keyAlias 'androiddebugkey'
+//            keyPassword 'android'
+//            storeFile file('C:/Users/vedan/Documents/git-demo/debug.keystore')
+//            storePassword 'android'
+//        }
+//    }
     compileSdkVersion 33
     buildToolsVersion '30.0.3'
     defaultConfig {
