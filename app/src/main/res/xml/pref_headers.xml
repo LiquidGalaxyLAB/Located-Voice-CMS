@@ -3,7 +3,6 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
-        android:fragment="com.gsoc.vedantsingh.locatedvoicecms.SettingsActivity$GeneralPreferenceFragment"
         android:title="@string/pref_header_general" />
 
 

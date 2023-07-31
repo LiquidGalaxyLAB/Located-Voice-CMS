@@ -12,7 +12,8 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
-          java-version: 17
+	  distribution: 'zulu'
+          java-version: '17'
       - name: Build application
         run: mvn clean install
       - name: Create APK

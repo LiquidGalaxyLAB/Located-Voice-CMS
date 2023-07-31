@@ -190,10 +190,10 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         showMenu();
         showPlanetMenu();
 ////        Check LG Connection
-//        Handler handler = new Handler(Looper.getMainLooper());
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
                 ExecutorService executorService = Executors.newSingleThreadExecutor();
                 CheckConnectionStatus checkConnectionStatus = new CheckConnectionStatus(session, LGPC.this);
                 Future<Void> future = executorService.submit(checkConnectionStatus);
@@ -203,8 +203,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                     e.printStackTrace();
                 }
                 executorService.shutdown();
-//            }
-//        }, 3000);
+            }
+        }, 500);
 
 //        changeplanet.setOnClickListener(new View.OnClickListener() {
 //            @Override
