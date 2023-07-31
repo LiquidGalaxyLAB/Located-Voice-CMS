@@ -14,7 +14,7 @@ android {
         config {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('C:/Users/vedan/Documents/git-demo/Located-Voice-CMS/debug.keystore')
+            storeFile file('C:/Users/vedan/Documents/git-demo/debug.keystore')
             storePassword 'android'
         }
     }
