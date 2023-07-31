@@ -3,7 +3,7 @@ name: Build Android App
 on:
   push:
     branches:
-      - main  # Adjust this to match your main branch name
+      - master  # Adjust this to match your main branch name
 
 jobs:
   build:
