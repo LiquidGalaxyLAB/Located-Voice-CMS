@@ -15,7 +15,7 @@
         android:title="Liquid Galaxy connection User" />
 
     <EditTextPreference
-        android:defaultValue="lqgalaxy"
+        android:defaultValue="lg"
         android:inputType="textPassword"
         android:key="Password"
         android:password="true"

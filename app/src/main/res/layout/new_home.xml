@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:fontFamily="@font/montserrat_medium"
         android:text="Located Voice CMS for Liquid Galaxy"
         android:textColor="#ADA9BB"
@@ -174,5 +174,27 @@
         app:layout_constraintStart_toEndOf="@+id/searchLayout"
         app:layout_constraintTop_toBottomOf="@+id/menufab"
         app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/ssh_conn_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:srcCompat="@drawable/baseline_circle_24"
+        app:tint="@color/red" />
+
+    <TextView
+        android:id="@+id/ssh_conn_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:text="Disconnected"
+        android:fontFamily="@font/montserrat_medium"
+        android:textColor="@color/red"
+        android:textSize="@dimen/_6ssp"
+        app:layout_constraintStart_toEndOf="@+id/ssh_conn_dot"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

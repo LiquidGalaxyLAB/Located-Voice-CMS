@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/stop/baseline_stop_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/circle/baseline_circle_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -34,8 +34,8 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="baseline_stop_24" />
-                            <entry key="sourceFile" value="C:\Users\vedan\Downloads\locatedvoicecms-logogsoc (1) 1.svg" />
+                            <entry key="outputName" value="baseline_circle_24" />
+                            <entry key="sourceFile" value="C:\Users\vedan\Downloads\8665352_eye_slash_icon.svg" />
                           </map>
                         </option>
                       </PersistentState>

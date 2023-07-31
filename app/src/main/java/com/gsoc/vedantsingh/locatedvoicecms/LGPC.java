@@ -1,6 +1,7 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -11,8 +12,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 
 import androidx.annotation.NonNull;
@@ -33,12 +38,15 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -82,7 +90,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
-    Session session;
+    Session session = null;
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private static final int REQUEST_PERMISSION_CODE = 123;
@@ -94,10 +102,10 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
     private boolean logo_switch=true;
     Button SuggPOIButton, changeplanet, tourbutton;
     FloatingActionButton menufab, btnSpeak, buttonSearch;
-    ImageView planetimg;
+    ImageView planetimg, sshConnDot;
     EditText editSearch;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
-    TextView planetname;
+    TextView planetname, sshConnText;
     int numBack = 0;
     Bundle bundle = new Bundle();
     @Override
@@ -116,6 +124,9 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         editSearch = findViewById(R.id.search_edittext);
         planetimg=findViewById(R.id.planetimg);
         planetname=findViewById(R.id.planetname);
+
+        sshConnDot = findViewById(R.id.ssh_conn_dot);
+        sshConnText = findViewById(R.id.ssh_conn_text);
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int screenDensity = displayMetrics.densityDpi;
@@ -178,6 +189,22 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         showMenu();
         showPlanetMenu();
+////        Check LG Connection
+//        Handler handler = new Handler(Looper.getMainLooper());
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                CheckConnectionStatus checkConnectionStatus = new CheckConnectionStatus(session, LGPC.this);
+                Future<Void> future = executorService.submit(checkConnectionStatus);
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                executorService.shutdown();
+//            }
+//        }, 3000);
 
 //        changeplanet.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -270,6 +297,65 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 // Permission is denied, handle accordingly (e.g., show an error message or disable features that require the permission)
                 sharedPreferences.getBoolean("permissionGranted", false);
             }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        CheckConnectionStatus checkConnectionStatus = new CheckConnectionStatus(session, LGPC.this);
+        Future<Void> future = executorService.submit(checkConnectionStatus);
+        try {
+            future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        executorService.shutdown();
+    }
+
+//    public void checkConnectionStatus(Session session){
+//        LGPC.GetSessionTask getSessionTask = new GetSessionTask(LGPC.this);
+//        getSessionTask.execute();
+//        if(session != null || session.isConnected()){
+//            sshConnDot.setColorFilter(getResources().getColor(R.color.green));
+//            sshConnText.setText("Connected");
+//            sshConnText.setTextColor(getResources().getColor(R.color.green));
+//        }else{
+//            sshConnDot.setColorFilter(getResources().getColor(R.color.red));
+//            sshConnText.setText("Disconnected");
+//            sshConnText.setTextColor(getResources().getColor(R.color.red));
+//        }
+//    }
+
+    public class CheckConnectionStatus implements Callable<Void> {
+//        private String slaveName;
+        private Session session1;
+        private Context context;
+
+        public CheckConnectionStatus(Session session1, Context context) {
+//            this.slaveName = slaveName;
+            this.session1 = session1;
+            this.context = context;
+        }
+
+        @Override
+        public Void call() throws Exception {
+            try {
+                session1 = LGUtils.checkConnectionStatus(session1, context);
+                if(session1 == null || !session1.isConnected()){
+                    sshConnDot.setColorFilter(getResources().getColor(R.color.red));
+                    sshConnText.setTextColor(getResources().getColor(R.color.red));
+                    sshConnText.setText("Disconnected");
+                }else{
+                    sshConnDot.setColorFilter(getResources().getColor(R.color.green));
+                    sshConnText.setTextColor(getResources().getColor(R.color.green));
+                    sshConnText.setText("Connected");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
@@ -584,26 +670,84 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
     private void showPasswordAlert(){
         // prepare the alert box
-        final AlertDialog.Builder alertbox = new AlertDialog.Builder(LGPC.this,R.style.BlackTextAlertDialog);
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//        final AlertDialog.Builder alertbox = new AlertDialog.Builder(LGPC.this,R.style.BlackTextAlertDialog);
+//        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//
+//        // set the message to display
+//        alertbox.setMessage("Please, enter the password:");
+//        final EditText input = new EditText(LGPC.this);
+//        input.setHint("Password");
+//        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+//                LinearLayout.LayoutParams.MATCH_PARENT,
+//                LinearLayout.LayoutParams.MATCH_PARENT);
+//        input.setLayoutParams(lp);
+////        Show/Hide password visibilty
+//        Drawable eyeIcon = ContextCompat.getDrawable(LGPC.this, R.drawable.eye_show_pw);
+//        eyeIcon.setBounds(0, 0, eyeIcon.getIntrinsicWidth(), eyeIcon.getIntrinsicHeight());
+//        int eyeIconWidth = eyeIcon.getIntrinsicWidth();
+//        int eyeIconHeight = eyeIcon.getIntrinsicHeight();
+//        Rect eyeIconBounds = new Rect(0, 0, eyeIconWidth, eyeIconHeight);
+//        eyeIcon.setBounds(eyeIconBounds);
+//        input.setCompoundDrawables(null, null, eyeIcon, null);
+//        input.setOnTouchListener((v, event) -> {
+//            final int DRAWABLE_RIGHT = 2;
+//            if (event.getAction() == MotionEvent.ACTION_UP) {
+//                if (event.getRawX() >= (input.getRight() - input.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+//                    // Toggle password visibility
+//                    if (input.getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
+//                        Drawable eyeHideIcon = ContextCompat.getDrawable(LGPC.this, R.drawable.eye_hide_pw);
+//                        eyeHideIcon.setBounds(0, 0, eyeHideIcon.getIntrinsicWidth(), eyeHideIcon.getIntrinsicHeight());
+//                        input.setCompoundDrawables(null, null, eyeHideIcon, null);
+//                        input.setTransformationMethod(null);
+//                    } else {
+//                        input.setCompoundDrawables(null, null, eyeIcon, null);
+//                        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+//                    }
+//                    // Move cursor to the end of the text
+//                    input.setSelection(input.getText().length());
+//                    return true;
+//                }
+//            }
+//            return false;
+//        });
+        LayoutInflater inflater = LayoutInflater.from(LGPC.this);
+        View customView = inflater.inflate(R.layout.password_alert, null);
+        final EditText input = customView.findViewById(R.id.passwordInput);
+        final ImageButton togglePasswordVisibilityButton = customView.findViewById(R.id.togglePasswordVisibility);
 
-        // set the message to display
-        alertbox.setMessage("Please, enter the password:");
-        final EditText input = new EditText(LGPC.this);
-        input.setHint("Password");
+        // Set the transformation method for the password EditText
         input.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT);
-        input.setLayoutParams(lp);
-        alertbox.setView(input);
 
-        // set a positive/yes button and create a listener
+        // Set the click listener for the eye button to toggle password visibility
+        togglePasswordVisibilityButton.setOnClickListener(new View.OnClickListener() {
+            private boolean passwordVisible = false;
+
+            @Override
+            public void onClick(View v) {
+                passwordVisible = !passwordVisible;
+                if (passwordVisible) {
+                    // Show password
+                    input.setTransformationMethod(null);
+                    togglePasswordVisibilityButton.setImageResource(R.drawable.eye_hide_pw);
+                } else {
+                    // Hide password
+                    input.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    togglePasswordVisibilityButton.setImageResource(R.drawable.eye_show_pw);
+                }
+                // Move the cursor to the end of the text
+                input.setSelection(input.getText().length());
+            }
+        });
+
+        // Build the alert dialog
+        final AlertDialog.Builder alertbox = new AlertDialog.Builder(LGPC.this, R.style.BlackTextAlertDialog);
+        alertbox.setMessage("Please, enter the password:");
+        alertbox.setView(customView);
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         alertbox.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-
-            // When button is clicked
             public void onClick(DialogInterface arg0, int arg1) {
-
                 String pass = input.getText().toString();
                 String correct_pass = prefs.getString("AdminPassword", "lg");
                 if(pass.equals(correct_pass)){
@@ -616,24 +760,65 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //                    } else {
 //                        // Permission is already granted, proceed with your logic
 //                        // ...
-                        Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
-                        startActivity(intent);
+                    Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
+                    startActivity(intent);
 //                    }
 
                 }else{
                     incorrectPasswordAlertMessage();
                 }
+
             }
         });
 
-        // set a negative/no button and create a listener
         alertbox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            // When button is clicked
             public void onClick(DialogInterface arg0, int arg1) {
+                // Your existing code for cancel button
+                // ...
             }
         });
-        // display box
+
         alertbox.show();
+
+
+    //        alertbox.setView(input);
+    //
+    //        // set a positive/yes button and create a listener
+    //        alertbox.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+    //
+    //            // When button is clicked
+    //            public void onClick(DialogInterface arg0, int arg1) {
+    //
+    //                String pass = input.getText().toString();
+    //                String correct_pass = prefs.getString("AdminPassword", "lg");
+    //                if(pass.equals(correct_pass)){
+    ////                    if (ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+    ////                            && ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    ////                        // Permission is not granted, request it
+    ////                        ActivityCompat.requestPermissions(LGPC.this,
+    ////                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
+    ////                                LOCATION_PERMISSION_REQUEST_CODE);
+    ////                    } else {
+    ////                        // Permission is already granted, proceed with your logic
+    ////                        // ...
+    //                        Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
+    //                        startActivity(intent);
+    ////                    }
+    //
+    //                }else{
+    //                    incorrectPasswordAlertMessage();
+    //                }
+    //            }
+    //        });
+    //
+    //        // set a negative/no button and create a listener
+    //        alertbox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+    //            // When button is clicked
+    //            public void onClick(DialogInterface arg0, int arg1) {
+    //            }
+    //        });
+    //        // display box
+    //        alertbox.show();
     }
 
 //    @Override

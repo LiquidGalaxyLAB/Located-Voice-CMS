@@ -13,6 +13,10 @@ import com.jcraft.jsch.Session;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Ivan Josa on 7/07/16.
@@ -24,8 +28,8 @@ public class LGUtils {
     public static Session getSession(Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String user = prefs.getString("User", "lg");
-        String password = prefs.getString("Password", "lq");
-        String hostname = prefs.getString("HostName", "192.168.56.102");
+        String password = prefs.getString("Password", "lg");
+        String hostname = prefs.getString("HostName", "172.26.17.21");
         int port = Integer.parseInt(prefs.getString("Port", "22"));
 
         JSch jsch = new JSch();
@@ -71,5 +75,25 @@ public class LGUtils {
         return baos.toString();
     }
 
+    public static Session checkConnectionStatus(Session session, Context context){
+        if (session == null || !session.isConnected()) {
+            ExecutorService executor = Executors.newSingleThreadExecutor();
+            Future<Session> future = executor.submit(() -> {
+                return getSession(context);
+            });
 
+            try {
+                // Wait for 5 seconds to get the result from getSession
+                session = future.get(5, TimeUnit.SECONDS);
+            } catch (Exception e) {
+                // Handle any exceptions that may occur during getSession
+                e.printStackTrace();
+            } finally {
+                // Shutdown the executor
+                executor.shutdown();
+            }
+        }
+
+        return session;
+    }
 }

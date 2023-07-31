@@ -146,8 +146,7 @@ public class SearchFragment extends Fragment {
             String currentplanet = getArguments().getString("currentplanet");
             if(Objects.equals(currentplanet, "EARTH")){Earth();}
             else if(Objects.equals(currentplanet, "MOON")){Moon();}
-            else if(Objects.equals(currentplanet, "MARS")){Mars();};
-
+            else if(Objects.equals(currentplanet, "MARS")){Mars();}
         }
 
         backStartIcon.setOnClickListener(new View.OnClickListener() {

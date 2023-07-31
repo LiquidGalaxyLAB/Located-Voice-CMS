@@ -1,0 +1,35 @@
+name: Build Android App
+
+on:
+  push:
+    branches:
+      - main  # Adjust this to match your main branch name
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Java
+      uses: actions/setup-java@v2
+      with:
+        java-version: '20'  # Change this to your desired Java version
+
+    - name: Download Gradle Wrapper
+      run: wget https://services.gradle.org/distributions/gradle-8.1.0-bin.zip -O gradle.zip && unzip -q gradle.zip
+
+    - name: Build Android App
+      run: ./gradle-8.1.0/bin/gradle assembleRelease 
+
+    # - name: Run tests
+    #   run: ./gradle-8.1.0/bin/gradle test
+
+    # - name: Create a Release APK
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: release-apk
+    #     path: app/release/app-release-via-github.apk  # Adjust the path for the release APK if needed
