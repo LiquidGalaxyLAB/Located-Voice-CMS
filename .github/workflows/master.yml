@@ -23,7 +23,7 @@ jobs:
       run: wget https://services.gradle.org/distributions/gradle-8.1.0-bin.zip -O gradle.zip && unzip -q gradle.zip
 
     - name: Build Android App
-      run: ./gradle-8.1.0/bin/gradle assembleDebug
+      run: ./gradle-8.1.0/bin/gradle assembleRelease --distribution=${{ env.DISTRIBUTION }}
 
     # - name: Run tests
     #   run: ./gradle-8.1.0/bin/gradle test
@@ -32,4 +32,4 @@ jobs:
     #   uses: actions/upload-artifact@v2
     #   with:
     #     name: release-apk
-    #     path: app/build/outputs/apk/debug/app-debug-via-github.apk  # Adjust the path for the release APK if needed
+    #     path: app/build/outputs/apk/release/app-release-via-github.apk  # Adjust the path for the release APK if needed
