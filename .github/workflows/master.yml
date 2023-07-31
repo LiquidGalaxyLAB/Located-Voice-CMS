@@ -16,6 +16,6 @@ jobs:
           java-version: '17'
 
       - name: Run Test
-        run: ./gradlew assembleRelease
+        run: ./gradlew test
       - name: Create APK
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleDebug
