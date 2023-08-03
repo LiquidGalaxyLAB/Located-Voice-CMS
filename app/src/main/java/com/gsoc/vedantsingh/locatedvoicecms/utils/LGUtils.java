@@ -2,8 +2,11 @@ package com.gsoc.vedantsingh.locatedvoicecms.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
@@ -17,6 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Ivan Josa on 7/07/16.
@@ -85,7 +89,11 @@ public class LGUtils {
             try {
                 // Wait for 5 seconds to get the result from getSession
                 session = future.get(5, TimeUnit.SECONDS);
-            } catch (Exception e) {
+            } catch (TimeoutException e) {
+                // Timeout occurred, handle the timeout case (skip it, for example)
+                e.printStackTrace();
+                session = null;
+            }catch (Exception e) {
                 // Handle any exceptions that may occur during getSession
                 e.printStackTrace();
             } finally {
@@ -95,5 +103,44 @@ public class LGUtils {
         }
 
         return session;
+    }
+
+    public static byte[] executeAudioCommandWithResponse(Session session, String command, Context context) throws JSchException, IOException {
+        if (session == null || !session.isConnected()) {
+            session = LGUtils.getSession(context);
+        }
+
+        ChannelExec channelssh = (ChannelExec) session.openChannel("exec");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+        channelssh.setOutputStream(baos);
+
+        channelssh.setCommand(command);
+        Log.d("Audio Command built", command);
+        channelssh.connect();
+        Log.d("SSH","Command sent to LG");
+
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                // This code will run on the main thread
+                Toast.makeText(context, "Audio Generation initiated, please wait...", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Wait for the command to complete
+        while (!channelssh.isClosed()) {
+            try {
+                Thread.sleep(100); // Add some delay between checks
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        channelssh.disconnect();
+
+        return baos.toByteArray();
     }
 }

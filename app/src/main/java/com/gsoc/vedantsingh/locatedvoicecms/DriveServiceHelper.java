@@ -213,10 +213,10 @@ public class DriveServiceHelper extends Activity {
             mediaPlayer.prepare();
             mediaPlayer.setOnCompletionListener(mp -> {
                 mediaPlayer.release();
-                changeListenDescButtonState(true);
+//                changeListenDescButtonState(true);
             });
             mediaPlayer.start();
-            changeListenDescButtonState(false);
+//            changeListenDescButtonState(false);
 
 //            SearchFragment.listen_desc.setText("Stop Listening to description  ");
 //            SearchFragment.listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
@@ -226,18 +226,18 @@ public class DriveServiceHelper extends Activity {
         }
     }
 
-    private void changeListenDescButtonState(boolean state) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(state){
-                    SearchFragment.listenDescButtonResetState();
-                } else {
-                    SearchFragment.listenDescButtonPlayState();
-                }
-            }
-        });
-    }
+//    private void changeListenDescButtonState(boolean state) {
+//        runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if(state){
+//                    SearchFragment.listenDescButtonResetState();
+//                } else {
+//                    SearchFragment.listenDescButtonPlayState();
+//                }
+//            }
+//        });
+//    }
 
     public void stopVoicePlayer(){
         if (mediaPlayer.isPlaying()){

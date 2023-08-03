@@ -5,10 +5,20 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
+import android.os.Build;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -20,11 +30,36 @@ import android.widget.Toast;
 
 import com.gsoc.vedantsingh.locatedvoicecms.R;
 import com.gsoc.vedantsingh.locatedvoicecms.SearchFragment;
+import com.gsoc.vedantsingh.locatedvoicecms.WikipediaResponse;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.POI;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import com.skydoves.powermenu.MenuAnimation;
+import com.skydoves.powermenu.OnMenuItemClickListener;
+import com.skydoves.powermenu.PowerMenu;
+import com.skydoves.powermenu.PowerMenuItem;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 /**
  * Created by Ivan Josa on 7/07/16.
@@ -35,11 +70,18 @@ public class PoisGridViewAdapter extends BaseAdapter {
     private Context context;
     private Activity activity;
     private Session session;
+    private SignInListener signInListener;
+    interface WikiPediaService{
+        @GET("/w/rest.php/v1/search/title")
+        Call<WikipediaResponse> getQuery(@Query("q") String query, @Query("limit") int limit);
+    }
 
-    public PoisGridViewAdapter(List<POI> poiList, Context context, Activity activity) {
+
+    public PoisGridViewAdapter(List<POI> poiList, Context context, Activity activity, SignInListener listener) {
         this.poiList = poiList;
         this.context = context;
         this.activity = activity;
+        this.signInListener = listener;
 
         GetSessionTask getSessionTask = new GetSessionTask();
         getSessionTask.execute();
@@ -82,8 +124,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
             public void onClick(View view) {
                 String command = buildCommand(currentPoi);
                 Log.d("Rotate","button");
-                SearchFragment.recentPOI = currentPoi.getName();
-                SearchFragment.setCategoryForVoice();
+//                SearchFragment.recentPOI = currentPoi.getName();
+//                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, true);
                 visitPoiTask.execute();
             }
@@ -98,32 +140,34 @@ public class PoisGridViewAdapter extends BaseAdapter {
         ImageButton viewPoiButton = new ImageButton(context);
         paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
         paramsView.addRule(RelativeLayout.ALIGN_START);
-        viewPoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.baseline_place_24, null));
+        viewPoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.vertical_dot_menu, null));
         viewPoiButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
         viewPoiButton.setLayoutParams(paramsView);
-        viewPoiButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        showVoiceMenu(viewPoiButton, currentPoi.getName());
+//        viewPoiButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showVoiceMenu(view, currentPoi.getName());
 
-                String command = buildCommand(currentPoi);
-                Log.d("viewPOI","button");
-                SearchFragment.recentPOI = currentPoi.getName();
-                SearchFragment.setCategoryForVoice();
-                VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
-                visitPoiTask.execute();
-
-                disableOtherRotateButtons(viewGroup);
-
-                try {
-                    Thread.sleep(10000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                rotatePoiButton.setEnabled(true);
-                rotatePoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_autorenew_black_36dp, null));
-            }
-        });
+//                String command = buildCommand(currentPoi);
+//                Log.d("viewPOI","button");
+//                SearchFragment.recentPOI = currentPoi.getName();
+//                SearchFragment.setCategoryForVoice();
+//                VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
+//                visitPoiTask.execute();
+//
+//                disableOtherRotateButtons(viewGroup);
+//
+//                try {
+//                    Thread.sleep(10000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                rotatePoiButton.setEnabled(true);
+//                rotatePoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_autorenew_black_36dp, null));
+//            }
+//        });
 
         layout.addView(viewPoiButton);
 
@@ -158,8 +202,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
                 String command = buildCommand(currentPoi);
                 Log.d("POINAME","button");
-                SearchFragment.recentPOI = currentPoi.getName();
-                SearchFragment.setCategoryForVoice();
+//                SearchFragment.recentPOI = currentPoi.getName();
+//                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
                 visitPoiTask.execute();
 
@@ -183,6 +227,315 @@ public class PoisGridViewAdapter extends BaseAdapter {
         rotatePoiButton.setLayoutParams(paramsRotate);
 
         return layout;
+    }
+
+    private void showVoiceMenu(View view, String POIName){
+        List<PowerMenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new PowerMenuItem("Artificial Intelligence Voice"));
+        menuItems.add(new PowerMenuItem("Artificial Intelligence Context"));
+
+        PowerMenu powerMenu = new PowerMenu.Builder(context)
+                .addItemList(menuItems)
+                .setAnimation(MenuAnimation.SHOWUP_BOTTOM_LEFT)
+                .setMenuRadius(20f)
+//                .setMenuShadow(10f)
+//                .setTextColor(ContextCompat.getColor(this, R.color.lg_black))
+//                .setTextGravity(Gravity.CENTER)
+                .setTextSize(15)
+                .setWidth(500)
+                .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT)
+                .setAutoDismiss(true)
+//                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
+//                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
+                .setTextColor(ContextCompat.getColor(context, R.color.offwhite))
+                .setMenuColor(ContextCompat.getColor(context, R.color.suggpoi_blue))
+//                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
+                .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
+                    @Override
+                    public void onItemClick(int position, PowerMenuItem item) {
+                        switch (position) {
+                            case 0:
+                                requestSignIn(POIName);
+                                Toast.makeText(context, "AIVOICE", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                Retrofit retrofit = new Retrofit.Builder()
+                                        .baseUrl("https://en.wikipedia.org")
+                                        .addConverterFactory(GsonConverterFactory.create())
+                                        .build();
+
+                                WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
+                                wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
+                                    @Override
+                                    public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
+                                        if (response.isSuccessful() && response.body() != null) {
+                                            String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription());
+                                            Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
+//                                            Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
+                                            playBarkAudioFromText(context, fullSentence);
+                                        }
+                                    }
+                                    @Override
+                                    public void onFailure(Call<WikipediaResponse> call, Throwable t) {
+                                        Log.d("Wikipedia Response", "Failure");
+                                    }
+                                });
+                                break;
+                        }
+                    }
+                })
+                .build();
+
+        view.setOnClickListener(powerMenu::showAsAnchorLeftTop);
+    }
+
+//    private void showVoiceDropdownMenu(View v, String POIName) {
+//        PopupMenu popupMenu = new PopupMenu(v.getContext(), v, R.style.menupopupBGStyle);
+//        popupMenu.getMenuInflater().inflate(R.menu.voice_dropdown, popupMenu.getMenu());
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl("https://en.wikipedia.org")
+//                .addConverterFactory(GsonConverterFactory.create())
+//                        .build();
+//
+//        // Handle menu item clicks
+//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+//                if (item.getItemId() == R.id.ai_voice) {
+//                    // Handle Option 1 click
+//                    requestSignIn(POIName);
+////                    Toast.makeText(context, "AIVOICE", Toast.LENGTH_SHORT).show();
+//                    return true;
+//                } else if (item.getItemId() == R.id.voice_normal) {
+//                    // Handle Sub Option 1 click
+//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
+//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
+//                        @Override
+//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
+//                            if (response.isSuccessful() && response.body() != null) {
+//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription());
+//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
+////                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
+//                                playBarkAudioFromText(context, fullSentence);
+//                            }
+//                        }
+//                        @Override
+//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
+//                            Log.d("Wikipedia Response", "Failure");
+//                        }
+//                    });
+//                    Toast.makeText(context, "Voice normal", Toast.LENGTH_SHORT).show();
+//                    return true;
+//                } else if (item.getItemId() == R.id.voice_laughter) {
+//                    // Handle Sub Option 2 click
+//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
+//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
+//                        @Override
+//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
+//                            if (response.isSuccessful() && response.body() != null) {
+//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription());
+//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
+//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
+//                                playBarkAudioFromText(context, fullSentence);
+//                            }
+//                        }
+//                        @Override
+//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
+//                            Log.d("Wikipedia Response", "Failure");
+//                        }
+//                    });
+//                    return true;
+//                } else if (item.getItemId() == R.id.voice_sigh) {
+//                    // Handle Option 3 click
+//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
+//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
+//                        @Override
+//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
+//                            if (response.isSuccessful() && response.body() != null) {
+//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription(), "[sighs]");
+//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
+//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
+//                                playBarkAudioFromText(context, fullSentence);
+//                            }
+//                        }
+//                        @Override
+//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
+//                            Log.d("Wikipedia Response", "Failure");
+//                        }
+//                    });
+//                    return true;
+//                } else if (item.getItemId() == R.id.voice_music) {
+//                    // Handle Option 3 click
+//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
+//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
+//                        @Override
+//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
+//                            if (response.isSuccessful() && response.body() != null) {
+//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription(), "[music]");
+//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
+//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
+//                                playBarkAudioFromText(context, fullSentence);
+//                            }
+//                        }
+//                        @Override
+//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
+//                            Log.d("Wikipedia Response", "Failure");
+//                        }
+//                    });
+//                    return true;
+//                } else if (item.getItemId() == R.id.voice_gasp) {
+//                    // Handle Option 3 click
+//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
+//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
+//                        @Override
+//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
+//                            if (response.isSuccessful() && response.body() != null) {
+//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription(), "[gasps]");
+//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
+//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
+//                                playBarkAudioFromText(context, fullSentence);
+//                            }
+//                        }
+//                        @Override
+//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
+//                            Log.d("Wikipedia Response", "Failure");
+//                        }
+//                    });
+//                    return true;
+//                } else {
+//                    return false;
+//                }
+//            }
+//        });
+//        popupMenu.show();
+//    }
+
+//  Play the Audio received by Bark from the AI server
+    public static void playBarkAudioFromText(final Context context, final String text) {
+        Executor executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+                // Create a new session if it is null or not connected
+                Session session = LGUtils.getSession(context);
+
+                Log.d("BARK", "playBarkAudioFromText");
+
+                // Send the API request to the server and get the audio file
+                String command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"text\":\"" + text + "\"}' " + "http://172.28.26.84:5000/synthesize";
+                byte[] response = LGUtils.executeAudioCommandWithResponse(session, command, context);
+                File audioFile = saveAudioFile(context, response);
+//                if (audioFile != null) {
+//                    playAudio(context, audioFile);
+//                }
+                if (audioFile != null && audioFile.exists() && audioFile.length() > 0) {
+                    playAudio(context, audioFile);
+                } else {
+                    // Handle the case when the audio file is not ready yet
+                    Log.d("BARK", "Audio file is not ready yet.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+//    Save Audio to Temp file
+private static File saveAudioFile(Context context, byte[] audioData) throws IOException {
+    Log.d("BARK", "saveAudioFile 1");
+    File tempFile = File.createTempFile("lg_audio_", ".wav", context.getExternalCacheDir());
+    FileOutputStream fos = new FileOutputStream(tempFile);
+
+    // Use ByteArrayInputStream to read audioData byte array
+    ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
+
+    byte[] buffer = new byte[1024];
+    int bytesRead;
+    while ((bytesRead = bais.read(buffer)) != -1) {
+        fos.write(buffer, 0, bytesRead);
+    }
+
+    Log.d("BARK", "saveAudioFile 2");
+    fos.close();
+    return tempFile;
+}
+
+//    Play the Audio file via MediaPlayer
+private static void playAudio(Context context, File audioFile) {
+    MediaPlayer mediaPlayer = new MediaPlayer();
+
+    try {
+        mediaPlayer.setDataSource(audioFile.getAbsolutePath());
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+            mediaPlayer.setAudioAttributes(audioAttributes);
+        } else {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
+
+        mediaPlayer.prepare();
+        mediaPlayer.start();
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                mediaPlayer.release();
+            }
+        });
+    } catch (IOException e) {
+        e.printStackTrace();
+        mediaPlayer.release();
+    }
+}
+
+//   Making proper sentence for description returned by the wikipedia API
+    private String makeSentence(String POIName, String description){
+        String fullSentence;
+        char firstChar = description.charAt(0);
+        if (Character.isLetter(firstChar)) {
+            if (isVowel(firstChar)) {
+                // If the description starts with a vowel, use "an" before the description
+                fullSentence = String.format("You have clicked on " + POIName + ". " + POIName + " is an " + Character.toLowerCase(firstChar) + description.substring(1));
+            } else {
+                // If the description starts with a consonant, use "a" before the description
+                fullSentence = String.format("You have clicked on " + POIName + ". " + POIName + " is a " + Character.toLowerCase(firstChar) + description.substring(1));
+            }
+        } else {
+            // If the first character is not a letter, use "the" before the description
+            fullSentence = String.format("You have clicked on " + POIName + ". " + POIName + " is the " + Character.toLowerCase(firstChar) + description.substring(1));
+        }
+        return fullSentence;
+    }
+
+    private boolean isVowel(char ch) {
+        // Check if the character is a vowel (ignoring case)
+        return "AEIOUaeiou".indexOf(ch) != -1;
+    }
+
+//    private String parseExcerptFromHtml(String htmlExcerpt) {
+//        Document doc = Jsoup.parse(htmlExcerpt);
+//        Element spanTag = doc.select("span.searchmatch").first();
+//        return spanTag != null ? spanTag.text() : "";
+//    }
+//private String parseExcerptFromHtml(String htmlExcerpt) {
+//    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//        return Html.fromHtml(htmlExcerpt, Html.FROM_HTML_MODE_LEGACY).toString();
+//    } else {
+//        return Html.fromHtml(htmlExcerpt).toString();
+//    }
+//}
+
+    public interface SignInListener {
+        void onSignInRequested(String poiName);
+    }
+
+    private void requestSignIn(String poiName) {
+        if (signInListener != null) {
+            signInListener.onSignInRequested(poiName);
+        }
     }
 
     private void disableOtherRotateButtons(ViewGroup viewGroup) {
@@ -251,7 +604,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
         protected void onPreExecute() {
             super.onPreExecute();
             if (dialog == null) {
-                dialog = new ProgressDialog(context);
+                dialog = new ProgressDialog(context, R.style.BlackTextAlertDialog);
                 String message = context.getResources().getString(R.string.viewing) + " " + this.currentPoi.getName() + " " + context.getResources().getString(R.string.inLG);
                 dialog.setMessage(message);
                 dialog.setIndeterminate(false);
@@ -295,8 +648,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
 
                 dialog.show();
-                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_fast_forward_black_36dp, 0, 0);
-                dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_fast_rewind_black_36dp, 0, 0);
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.baseline_fast_forward_24, 0, 0);
+                dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.baseline_fast_rewind_24, 0, 0);
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -306,7 +659,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
                         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setText(context.getResources().getString(R.string.speedx4));
                         dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setText(context.getResources().getString(R.string.speeddiv2));
                         dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setEnabled(true);
-                        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_fast_rewind_black_36dp, 0, 0);
+                        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.baseline_fast_rewind_24, 0, 0);
 
                         if (rotationFactor == 4) {
                             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(false);
@@ -323,7 +676,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
                         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setText(context.getResources().getString(R.string.speedx2));
                         dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setText(context.getResources().getString(R.string.speeddiv4));
                         dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(true);
-                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.ic_fast_forward_black_36dp, 0, 0);
+                        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setCompoundDrawablesRelativeWithIntrinsicBounds(0, R.drawable.baseline_fast_forward_24, 0, 0);
 
                         if (rotationFactor == 1) {
                             dialog.getButton(DialogInterface.BUTTON_NEUTRAL).setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, 0);

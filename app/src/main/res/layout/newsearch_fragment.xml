@@ -93,37 +93,37 @@
             android:orientation="vertical"
             android:layout_marginRight="@dimen/_8sdp">
 
-            <Button
-                android:id="@+id/nearbyplaces"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:background="@drawable/bg_nearme"
-                android:paddingTop="@dimen/_8sdp"
-                android:paddingBottom="@dimen/_8sdp"
-                android:paddingLeft="@dimen/_13sdp"
-                android:paddingRight="@dimen/_12sdp"
-                android:layout_margin="@dimen/_2sdp"
-                android:text="Nearby Places  "
-                android:drawableEnd="@drawable/baseline_near_me_24"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10ssp" />
+<!--            <Button-->
+<!--                android:id="@+id/nearbyplaces"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:background="@drawable/bg_nearme"-->
+<!--                android:paddingTop="@dimen/_8sdp"-->
+<!--                android:paddingBottom="@dimen/_8sdp"-->
+<!--                android:paddingLeft="@dimen/_13sdp"-->
+<!--                android:paddingRight="@dimen/_12sdp"-->
+<!--                android:layout_margin="@dimen/_2sdp"-->
+<!--                android:text="Nearby Places  "-->
+<!--                android:drawableEnd="@drawable/baseline_near_me_24"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/_10ssp" />-->
 
-            <Button
-                android:id="@+id/listen_desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:background="@drawable/bg_nearme"
-                android:paddingTop="@dimen/_8sdp"
-                android:paddingBottom="@dimen/_8sdp"
-                android:paddingLeft="@dimen/_13sdp"
-                android:paddingRight="@dimen/_12sdp"
-                android:drawableEnd="@drawable/baseline_library_books_24"
-                android:layout_margin="@dimen/_2sdp"
-                android:text="Listen Description  "
-                android:textColor="@color/white"
-                android:textSize="@dimen/_10ssp" />
+<!--            <Button-->
+<!--                android:id="@+id/listen_desc"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:background="@drawable/bg_nearme"-->
+<!--                android:paddingTop="@dimen/_8sdp"-->
+<!--                android:paddingBottom="@dimen/_8sdp"-->
+<!--                android:paddingLeft="@dimen/_13sdp"-->
+<!--                android:paddingRight="@dimen/_12sdp"-->
+<!--                android:drawableEnd="@drawable/baseline_library_books_24"-->
+<!--                android:layout_margin="@dimen/_2sdp"-->
+<!--                android:text="Listen Description  "-->
+<!--                android:textColor="@color/white"-->
+<!--                android:textSize="@dimen/_10ssp" />-->
 
             <Button
                 android:id="@+id/sound_btn"

@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ai_voice"
+        android:title="Artificial Intelligence Voice" />
+    <item
+        android:id="@+id/ai_context"
+        android:title="Artificial Intelligence Context">
+        <menu>
+            <item
+                android:id="@+id/voice_normal"
+                android:title="Normal Voice" />
+            <item
+                android:id="@+id/voice_laughter"
+                android:title="With Added Laughter" />
+            <item
+                android:id="@+id/voice_sigh"
+                android:title="With Added Sighs" />
+            <item
+                android:id="@+id/voice_music"
+                android:title="With Added Music" />
+            <item
+                android:id="@+id/voice_gasp"
+                android:title="With Added Gasps" />
+        </menu>
+    </item>
+</menu>

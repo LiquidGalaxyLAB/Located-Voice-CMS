@@ -71,9 +71,9 @@
     </style>
 
 <!--    Menu Popup-->
-    <style name="menupopupBGStyle" parent="Widget.Material3.PopupMenu">
-<!--        <item name="android:textColor">@color/white</item>-->
-        <item name="android:popupBackground">@drawable/bg_searchpoi</item>
+    <style name="menupopupBGStyle" parent="@style/Widget.MaterialComponents.PopupMenu">
+        <item name="android:colorPrimary">@color/white</item>
+        <item name="popupMenuBackground">@color/red</item>
     </style>
 
 <!--    Change Planet Popup-->

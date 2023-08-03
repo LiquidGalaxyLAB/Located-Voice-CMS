@@ -10,14 +10,14 @@ repositories {
 
 android {
     namespace 'com.gsoc.vedantsingh.locatedvoicecms'
-//    signingConfigs {
-//        config {
-//            keyAlias 'androiddebugkey'
-//            keyPassword 'android'
-//            storeFile file('C:/Users/vedan/Documents/git-demo/debug.keystore')
-//            storePassword 'android'
-//        }
-//    }
+    signingConfigs {
+        config {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('C:/Users/vedan/Documents/git-demo/Located-Voice-CMS/debug.keystore')
+            storePassword 'android'
+        }
+    }
     compileSdkVersion 33
     buildToolsVersion '30.0.3'
     defaultConfig {
@@ -90,7 +90,10 @@ dependencies {
 //    implementation 'com.google.http-client:google-http-client-gson:1.42.3'
 //    implementation 'com.google.android.gms:play-services-identity:18.0.1'
 
-
+//      Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'org.jsoup:jsoup:1.14.3'
 }
 
 

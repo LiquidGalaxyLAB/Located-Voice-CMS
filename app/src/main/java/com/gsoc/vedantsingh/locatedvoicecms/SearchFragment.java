@@ -1,6 +1,5 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
-import android.accounts.Account;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,15 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
-import androidx.annotation.Nullable;
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.fragment.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,13 +28,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
-import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.FileList;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.Category;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.POI;
 import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract;
@@ -54,18 +51,14 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements PoisGridViewAdapter.SignInListener{
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private String Audio_Path = "";
@@ -91,7 +84,7 @@ public class SearchFragment extends Fragment {
 
     private static final String TAG = "SearchFragment";
 
-    private static final int REQUEST_CODE_SIGN_IN = 1;
+    private static final int REQUEST_CODE_SIGN_IN = 123;
     public static DriveServiceHelper mDriveServiceHelper = null;
     public static String recentPOI;
     public static int CategoryIdForVoice;
@@ -116,8 +109,8 @@ public class SearchFragment extends Fragment {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         categoriesListView = (ListView) rootView.findViewById(R.id.categories_listview);
-        nearbyplaces = rootView.findViewById(R.id.nearbyplaces);
-        listen_desc = rootView.findViewById(R.id.listen_desc);
+//        nearbyplaces = rootView.findViewById(R.id.nearbyplaces);
+//        listen_desc = rootView.findViewById(R.id.listen_desc);
         sound_btn = rootView.findViewById(R.id.sound_btn);
         backIcon = (ImageView) rootView.findViewById(R.id.back_icon);
         backStartIcon = (ImageView) rootView.findViewById(R.id.back_start_icon);//comes back to the initial category
@@ -181,9 +174,9 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        nearbyplaces.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        nearbyplaces.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 ////                Displaying the Balloon on the rightmost part of the LG
 //                String machinesString = sharedPreferences.getString("Machines", "3");
 //                int machines = Integer.parseInt(machinesString);
@@ -200,8 +193,8 @@ public class SearchFragment extends Fragment {
 //                executorService.shutdown();
 
 
-            }
-        });
+//            }
+//        });
 
         if(isPermissionGranted(sharedPreferences)){
             if (!isAudioSaved(sharedPreferences)) {
@@ -255,9 +248,9 @@ public class SearchFragment extends Fragment {
 
 //        driveServiceHelper = new DriveServiceHelper();
 
-        listen_desc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        listen_desc.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 //                try {
 //                    DriveServiceHelper.testMethod(getContext());
 //                } catch (IOException e) {
@@ -266,14 +259,14 @@ public class SearchFragment extends Fragment {
 //                } catch (GeneralSecurityException e) {
 //                    throw new RuntimeException(e);
 //                }
-                if(listen_desc.getText().toString().equals("Listen Description  ")){
-                    requestSignIn();
-                } else {
-                    mDriveServiceHelper.stopVoicePlayer();
-                    listenDescButtonResetState();
-                }
-            }
-        });
+//                if(listen_desc.getText().toString().equals("Listen Description  ")){
+//                    requestSignIn("Eiffel Tower");
+//                } else {
+//                    mDriveServiceHelper.stopVoicePlayer();
+//                    listenDescButtonResetState();
+//                }
+//            }
+//        });
 
         return rootView;
     }
@@ -288,8 +281,14 @@ public class SearchFragment extends Fragment {
         listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
     }
 
-    private void requestSignIn() {
+    @Override
+    public void onSignInRequested(String poiName) {
+        requestSignIn(poiName);
+    }
+
+    private void requestSignIn(String poiName) {
         Log.d(TAG, "Requesting sign-in");
+        recentPOI = poiName;
 
         GoogleSignInAccount lastSignedInAccount = GoogleSignIn.getLastSignedInAccount(getContext());
         if (lastSignedInAccount != null) {
@@ -305,6 +304,7 @@ public class SearchFragment extends Fragment {
             GoogleSignInClient client = GoogleSignIn.getClient(getContext(), signInOptions);
 
             // The result of the sign-in Intent is handled in onActivityResult.
+            Log.d(TAG, "Requesting sign-in 2");
             startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
         }
     }
@@ -330,7 +330,7 @@ public class SearchFragment extends Fragment {
             // Its instantiation is required before handling any onClick actions.
             mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
             if(recentPOI != null){
-                mDriveServiceHelper.playAudioFileInFolder(DRIVE_FOLDER_ID, POIsContract.CategoryEntry.getNameById(getContext(), CategoryIdForVoice), recentPOI +".mp3");
+                mDriveServiceHelper.playAudioFileInFolder(DRIVE_FOLDER_ID, POIsContract.CategoryEntry.getNameById(getContext(), Integer.parseInt(backIDs.get(0))), recentPOI +".mp3");
             }else{
                 Toast.makeText(getContext(), "Please select a POI to listen to its description", Toast.LENGTH_SHORT).show();
             }
@@ -340,9 +340,9 @@ public class SearchFragment extends Fragment {
         }
     }
 
-    public static void setCategoryForVoice(){
-        CategoryIdForVoice = Integer.parseInt(backIDs.get(0));
-    };
+//    public static void setCategoryForVoice(){
+//        CategoryIdForVoice = Integer.parseInt(backIDs.get(0));
+//    };
 
 
 //    private void navigateFoldersAndFindAudioFile(String folderName) {
@@ -410,7 +410,7 @@ public class SearchFragment extends Fragment {
 
         final List<POI> poisList = getPoisList(Integer.parseInt(backIDs.get(0)));
         if (poisList != null) {
-            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity(), this));
         }
     }
 
@@ -492,10 +492,9 @@ public class SearchFragment extends Fragment {
             }
             case REQUEST_CODE_SIGN_IN:
                 if (resultCode == Activity.RESULT_OK && data != null) {
+                    Log.d(TAG, "Requesting sign-in 3");
                     GoogleSignIn.getSignedInAccountFromIntent(data)
-                            .addOnSuccessListener(googleSignInAccount -> {
-                                handleSignInResult(googleSignInAccount);
-                            });
+                            .addOnSuccessListener(this::handleSignInResult);
                 }
                 break;
         }
@@ -529,7 +528,7 @@ public class SearchFragment extends Fragment {
 
             final List<POI> poisList = getPoisList(category.getId());
             if (poisList != null) {
-                poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+                poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity(), this));
             }
         }
 
@@ -624,7 +623,7 @@ public class SearchFragment extends Fragment {
 
         final List<POI> poisList = getPoisList(category.getId());
         if (poisList != null) {
-            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity(), this));
         }
     }
 
@@ -646,7 +645,7 @@ public class SearchFragment extends Fragment {
             showCategoriesOnScreen(queryCursor);
 
             final List<POI> poisList = getPoisList(category.getId());
-            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity(), this));
         }
     }
 
@@ -667,7 +666,7 @@ public class SearchFragment extends Fragment {
             showCategoriesOnScreen(queryCursor);
 
             final List<POI> poisList = getPoisList(category.getId());
-            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity()));
+            poisGridView.setAdapter(new PoisGridViewAdapter(poisList, getActivity(), getActivity(), this));
         }
     }
 

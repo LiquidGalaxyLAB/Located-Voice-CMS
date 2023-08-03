@@ -29,6 +29,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewbinding.BuildConfig;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.ActionBar;
@@ -128,6 +129,14 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         sshConnDot = findViewById(R.id.ssh_conn_dot);
         sshConnText = findViewById(R.id.ssh_conn_text);
 
+        if (BuildConfig.DEBUG) {
+            // This code will be executed in debug builds only
+            Log.d("Signing", "Debug build - Signing not applied");
+        } else {
+            // This code will be executed in release builds only
+            Log.d("Signing", "Release build - Signing applied");
+        }
+
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int screenDensity = displayMetrics.densityDpi;
 
@@ -204,7 +213,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 }
                 executorService.shutdown();
             }
-        }, 500);
+        }, 5000);
 
 //        changeplanet.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -344,13 +353,23 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             try {
                 session1 = LGUtils.checkConnectionStatus(session1, context);
                 if(session1 == null || !session1.isConnected()){
-                    sshConnDot.setColorFilter(getResources().getColor(R.color.red));
-                    sshConnText.setTextColor(getResources().getColor(R.color.red));
-                    sshConnText.setText("Disconnected");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            sshConnDot.setColorFilter(getResources().getColor(R.color.red));
+                            sshConnText.setTextColor(getResources().getColor(R.color.red));
+                            sshConnText.setText("Disconnected");
+                        }
+                    });
                 }else{
-                    sshConnDot.setColorFilter(getResources().getColor(R.color.green));
-                    sshConnText.setTextColor(getResources().getColor(R.color.green));
-                    sshConnText.setText("Connected");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            sshConnDot.setColorFilter(getResources().getColor(R.color.green));
+                            sshConnText.setTextColor(getResources().getColor(R.color.green));
+                            sshConnText.setText("Connected");
+                        }
+                    });
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -382,6 +401,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //                .setTextColor(ContextCompat.getColor(this, R.color.lg_black))
 //                .setTextGravity(Gravity.CENTER)
                 .setTextSize(14)
+                .setAutoDismiss(true)
 //                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
 //                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setTextColor(ContextCompat.getColor(this, R.color.offwhite))
@@ -493,6 +513,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 //                .setTextGravity(Gravity.CENTER)
                 .setTextSize(13)
                 .setWidth(375)
+                .setAutoDismiss(true)
 //                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
 //                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setTextColor(ContextCompat.getColor(this, R.color.offwhite))
