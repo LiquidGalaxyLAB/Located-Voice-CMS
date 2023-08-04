@@ -2,7 +2,7 @@ package com.gsoc.vedantsingh.locatedvoicecms;
 
 import java.util.List;
 
-public class WikipediaResponse {
+public class WikipediaPageResponse {
     private List<Page> pages;
 
     public List<Page> getPages() {

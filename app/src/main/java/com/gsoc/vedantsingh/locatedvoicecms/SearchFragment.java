@@ -56,6 +56,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 public class SearchFragment extends Fragment implements PoisGridViewAdapter.SignInListener{
@@ -109,7 +112,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         categoriesListView = (ListView) rootView.findViewById(R.id.categories_listview);
-//        nearbyplaces = rootView.findViewById(R.id.nearbyplaces);
+        nearbyplaces = rootView.findViewById(R.id.nearbyplaces);
 //        listen_desc = rootView.findViewById(R.id.listen_desc);
         sound_btn = rootView.findViewById(R.id.sound_btn);
         backIcon = (ImageView) rootView.findViewById(R.id.back_icon);
@@ -150,7 +153,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                 backIDs.add(String.valueOf(category.getId()));
                 if(isPlaying){
                     mediaPlayer.stop();
-                    sound_btn.setText("Play Sound  ");
+                    sound_btn.setText("Play Category Sound  ");
                     sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
                 }
                 Audio_Path = "";
@@ -165,7 +168,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                     backIDs.remove(0);
                     if(isPlaying){
                         mediaPlayer.stop();
-                        sound_btn.setText("Play Sound  ");
+                        sound_btn.setText("Play Category Sound  ");
                         sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
                     }
                     Audio_Path = "";
@@ -174,27 +177,25 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             }
         });
 
-//        nearbyplaces.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                Displaying the Balloon on the rightmost part of the LG
-//                String machinesString = sharedPreferences.getString("Machines", "3");
-//                int machines = Integer.parseInt(machinesString);
-//                int slave_num = Math.floorDiv(machines, 2) + 1;
-//                String slave_name = "slave_" + slave_num;
-//                ExecutorService executorService = Executors.newSingleThreadExecutor();
-//                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext());
-//                Future<Void> future = executorService.submit(nearbyPlacesTask);
-//                try {
-//                    future.get();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                executorService.shutdown();
-
-
-//            }
-//        });
+        nearbyplaces.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Displaying the Balloon on the rightmost part of the LG
+                String machinesString = sharedPreferences.getString("Machines", "3");
+                int machines = Integer.parseInt(machinesString);
+                int slave_num = Math.floorDiv(machines, 2) + 1;
+                String slave_name = "slave_" + slave_num;
+                ExecutorService executorService = Executors.newSingleThreadExecutor();
+                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext());
+                Future<Void> future = executorService.submit(nearbyPlacesTask);
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                executorService.shutdown();
+            }
+        });
 
         if(isPermissionGranted(sharedPreferences)){
             if (!isAudioSaved(sharedPreferences)) {
@@ -217,7 +218,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                         // If audio is already playing, stop it
                         mediaPlayer.stop();
                         mediaPlayer.reset();
-                        sound_btn.setText("Play Sound  ");
+                        sound_btn.setText("Play Category Sound  ");
                         sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
                         isPlaying = false;
                     } else {
@@ -228,12 +229,12 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                                 @Override
                                 public void onCompletion(MediaPlayer mp) {
-                                    sound_btn.setText("Play Sound  ");
+                                    sound_btn.setText("Play Category Sound  ");
                                     sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
                                 }
                             });
                             mediaPlayer.start();
-                            sound_btn.setText("Stop Sound  ");
+                            sound_btn.setText("Stop Category Sound  ");
                             sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
                             isPlaying = true;
                         } catch (IOException e) {
@@ -604,13 +605,13 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
     }
 
     private void Earth() {
-        String command = "echo 'planet=earth' > /tmp/query.txt";
+//        String command = "echo 'planet=earth' > /tmp/query.txt";
 
-//        if (!Objects.equals(getArguments().getString("currentplanet"), "EARTH")) {
-            SearchTask searchTask = new SearchTask(command, true);
-            searchTask.execute();
+        if (Objects.equals(getArguments().getString("currentplanet"), "EARTH")) {
+//            SearchTask searchTask = new SearchTask(command, true);
+//            searchTask.execute();
             currentPlanet = "EARTH";
-//        }
+        }
 
         Category category = getCategoryByName(currentPlanet);
         categorySelectorTitle.setText(category.getName());
@@ -629,11 +630,11 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
 
     void Moon() {
 
-        String command = "echo 'planet=moon' > /tmp/query.txt";
+//        String command = "echo 'planet=moon' > /tmp/query.txt";
         if (!currentPlanet.equals("MOON")) {
             //setConnectionWithLiquidGalaxy(command);
-            SearchTask searchTask = new SearchTask(command, true);
-            searchTask.execute();
+//            SearchTask searchTask = new SearchTask(command, true);
+//            searchTask.execute();
             currentPlanet = "MOON";
             Category category = getCategoryByName(currentPlanet);
             categorySelectorTitle.setText(category.getName());
@@ -651,10 +652,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
 
     private void Mars() {
 
-        String command = "echo 'planet=mars' > /tmp/query.txt";
+//        String command = "echo 'planet=mars' > /tmp/query.txt";
         if (!currentPlanet.equals("MARS")) {
-            SearchTask searchTask = new SearchTask(command, true);
-            searchTask.execute();
+//            SearchTask searchTask = new SearchTask(command, true);
+//            searchTask.execute();
             currentPlanet = "MARS";
             Category category = getCategoryByName(currentPlanet);
             categorySelectorTitle.setText(category.getName());
@@ -828,11 +829,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                         "      <screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
                         "      <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
                         "      <size x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <gx:balloonVisibility>1</gx:balloonVisibility>\n" +
                         "    </ScreenOverlay>\n" +
                         "  </Document>\n" +
                         "</kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
-
-
 
                 LGUtils.setConnectionWithLiquidGalaxy(session, sentence, context);
             } catch (Exception e) {

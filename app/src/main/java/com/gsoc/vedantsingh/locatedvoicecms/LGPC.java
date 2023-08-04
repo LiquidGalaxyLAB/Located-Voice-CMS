@@ -418,6 +418,9 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                                 if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
                                     planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
                                     planetname.setText("Earth");
+                                    String command = "echo 'planet=earth' > /tmp/query.txt";
+                                    SearchTask searchTask = new SearchTask(LGPC.this, command, true);
+                                    searchTask.execute();
                                 }
                                 break;
                             case 1:
@@ -427,6 +430,9 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                                 if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
                                     planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
                                     planetname.setText("Moon");
+                                    String command = "echo 'planet=moon' > /tmp/query.txt";
+                                    SearchTask searchTask = new SearchTask(LGPC.this, command, true);
+                                    searchTask.execute();
                                 }
                                 break;
                             case 2:
@@ -436,6 +442,9 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                                 if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
                                     planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
                                     planetname.setText("Mars");
+                                    String command = "echo 'planet=mars' > /tmp/query.txt";
+                                    SearchTask searchTask = new SearchTask(LGPC.this, command, true);
+                                    searchTask.execute();
                                 }
                                 break;
                         }

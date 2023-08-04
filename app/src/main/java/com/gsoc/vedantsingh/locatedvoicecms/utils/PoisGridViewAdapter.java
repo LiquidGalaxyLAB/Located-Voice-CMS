@@ -30,7 +30,7 @@ import android.widget.Toast;
 
 import com.gsoc.vedantsingh.locatedvoicecms.R;
 import com.gsoc.vedantsingh.locatedvoicecms.SearchFragment;
-import com.gsoc.vedantsingh.locatedvoicecms.WikipediaResponse;
+import com.gsoc.vedantsingh.locatedvoicecms.WikipediaPageResponse;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.POI;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
@@ -71,9 +71,9 @@ public class PoisGridViewAdapter extends BaseAdapter {
     private Activity activity;
     private Session session;
     private SignInListener signInListener;
-    interface WikiPediaService{
+    interface WikiPediaPageService{
         @GET("/w/rest.php/v1/search/title")
-        Call<WikipediaResponse> getQuery(@Query("q") String query, @Query("limit") int limit);
+        Call<WikipediaPageResponse> getQuery(@Query("q") String query, @Query("limit") int limit);
     }
 
 
@@ -124,7 +124,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
             public void onClick(View view) {
                 String command = buildCommand(currentPoi);
                 Log.d("Rotate","button");
-//                SearchFragment.recentPOI = currentPoi.getName();
+                SearchFragment.recentPOI = currentPoi.getName();
 //                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, true);
                 visitPoiTask.execute();
@@ -202,10 +202,11 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
                 String command = buildCommand(currentPoi);
                 Log.d("POINAME","button");
-//                SearchFragment.recentPOI = currentPoi.getName();
+                SearchFragment.recentPOI = currentPoi.getName();
 //                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
                 visitPoiTask.execute();
+                playBarkAudioFromText(context, "You are looking at " + currentPoi.getName());
 
                 disableOtherRotateButtons(viewGroup);
 
@@ -233,6 +234,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
         List<PowerMenuItem> menuItems = new ArrayList<>();
         menuItems.add(new PowerMenuItem("Artificial Intelligence Voice"));
         menuItems.add(new PowerMenuItem("Artificial Intelligence Context"));
+
+        SearchFragment.recentPOI = POIName;
 
         PowerMenu powerMenu = new PowerMenu.Builder(context)
                 .addItemList(menuItems)
@@ -264,10 +267,10 @@ public class PoisGridViewAdapter extends BaseAdapter {
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
 
-                                WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
-                                wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
+                                WikiPediaPageService wikiPediaPageService = retrofit.create(WikiPediaPageService.class);
+                                wikiPediaPageService.getQuery(POIName, 1).enqueue(new Callback<WikipediaPageResponse>() {
                                     @Override
-                                    public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
+                                    public void onResponse(Call<WikipediaPageResponse> call, Response<WikipediaPageResponse> response) {
                                         if (response.isSuccessful() && response.body() != null) {
                                             String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription());
                                             Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
@@ -276,7 +279,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
                                         }
                                     }
                                     @Override
-                                    public void onFailure(Call<WikipediaResponse> call, Throwable t) {
+                                    public void onFailure(Call<WikipediaPageResponse> call, Throwable t) {
                                         Log.d("Wikipedia Response", "Failure");
                                     }
                                 });
