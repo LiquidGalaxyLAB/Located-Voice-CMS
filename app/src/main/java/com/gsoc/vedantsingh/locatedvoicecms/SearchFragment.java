@@ -44,6 +44,7 @@ import com.google.api.services.drive.Drive;
 import com.google.api.services.drive.DriveScopes;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.Category;
 import com.gsoc.vedantsingh.locatedvoicecms.beans.POI;
+import com.gsoc.vedantsingh.locatedvoicecms.beans.PlaceInfo;
 import com.gsoc.vedantsingh.locatedvoicecms.data.POIsContract;
 import com.gsoc.vedantsingh.locatedvoicecms.utils.LGUtils;
 import com.gsoc.vedantsingh.locatedvoicecms.utils.PoisGridViewAdapter;
@@ -53,12 +54,21 @@ import com.jcraft.jsch.Session;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 
 public class SearchFragment extends Fragment implements PoisGridViewAdapter.SignInListener{
@@ -92,10 +102,34 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
     public static String recentPOI;
     public static int CategoryIdForVoice;
     String DRIVE_FOLDER_ID = "1IqFDdaIRWhqv580G2uknYaFgGQmEVQ8P";
+    List<PlaceInfo> nearbyPlaces = new ArrayList<>();
 
 
     public SearchFragment() {
         // Required empty public constructor
+    }
+
+    public interface WikipediaObtainCoordinates {
+        @GET("w/api.php")
+        Call<WikipediaCoordinatesResponse> getCoordinates(
+                @Query("action") String action,
+                @Query("format") String format,
+                @Query("titles") String titles,
+                @Query("prop") String prop
+        );
+    }
+
+    public interface WikipediaGeoSearchApiService {
+        @GET("w/api.php")
+        Call<WikipediaGeoSearchResponse> getPlaces(
+                @Query("action") String action,
+                @Query("format") String format,
+                @Query("ggsradius") int ggsradius,
+                @Query("ggslimit") int ggslimit,
+                @Query("ggscoord") String ggscoord,
+                @Query("generator") String generator,
+                @Query("prop") String prop
+        );
     }
 
     @Override
@@ -180,20 +214,23 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         nearbyplaces.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Displaying the Balloon on the rightmost part of the LG
-                String machinesString = sharedPreferences.getString("Machines", "3");
-                int machines = Integer.parseInt(machinesString);
-                int slave_num = Math.floorDiv(machines, 2) + 1;
-                String slave_name = "slave_" + slave_num;
-                ExecutorService executorService = Executors.newSingleThreadExecutor();
-                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext());
-                Future<Void> future = executorService.submit(nearbyPlacesTask);
-                try {
-                    future.get();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                executorService.shutdown();
+
+                obtainCoordinatesfromWikiAndDisplayNearbyPlaces(recentPOI);
+
+////                Displaying the Balloon on the rightmost part of the LG
+//                String machinesString = sharedPreferences.getString("Machines", "3");
+//                int machines = Integer.parseInt(machinesString);
+//                int slave_num = Math.floorDiv(machines, 2) + 1;
+//                String slave_name = "slave_" + slave_num;
+//                ExecutorService executorService = Executors.newSingleThreadExecutor();
+//                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext(), nearbyPlaces);
+//                Future<Void> future = executorService.submit(nearbyPlacesTask);
+//                try {
+//                    future.get();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                executorService.shutdown();
             }
         });
 
@@ -272,15 +309,118 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         return rootView;
     }
 
-    public static void listenDescButtonResetState(){
-        listen_desc.setText("Listen Description  ");
-        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_library_books_24, 0);
+    public void searchNearbyPlaces(double[] coordinates){
+
+//        List<PlaceInfo> nearbyPlaces = new ArrayList<>();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://en.wikipedia.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        WikipediaGeoSearchApiService wikipediaGeoSearchApiService = retrofit.create(WikipediaGeoSearchApiService.class);
+
+        wikipediaGeoSearchApiService.getPlaces("query", "json", 1000,10, String.valueOf(coordinates[0]) + "|" + String.valueOf(coordinates[1]), "geosearch", "coordinates|pageimages|description").enqueue(new Callback<WikipediaGeoSearchResponse>() {
+            @Override
+            public void onResponse(Call<WikipediaGeoSearchResponse> call, Response<WikipediaGeoSearchResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    WikipediaGeoSearchResponse.QueryResult queryResult = response.body().getQueryResult();
+                    if (queryResult != null && queryResult.getWikiPages() != null) {
+                        for (WikipediaGeoSearchResponse.WikiPage wikiPage : queryResult.getWikiPages().values()) {
+                            if (wikiPage != null) {
+                                String title = wikiPage.getTitle();
+                                String description = "";
+                                if(wikiPage.getDescription() != null) {
+                                    description = wikiPage.getDescription();
+                                }
+
+                                String imageLink = "";
+                                if(wikiPage.getThumbnail() != null && wikiPage.getThumbnail().getSource() != null){
+                                    imageLink = wikiPage.getThumbnail().getSource();
+                                }
+//                                Log.d("NearbyPlaces", title + description + imageLink);
+                                PlaceInfo placeInfo = new PlaceInfo( title, description, imageLink);
+//                                Log.d("NearbyPlaces object", placeInfo.getTitle() + placeInfo.getDescription() + placeInfo.getImageLink());
+                                nearbyPlaces.add(placeInfo);
+                            }
+                        }
+                    }
+//                Displaying the Balloon on the rightmost part of the LG
+                    String machinesString = sharedPreferences.getString("Machines", "3");
+                    int machines = Integer.parseInt(machinesString);
+                    int slave_num = Math.floorDiv(machines, 2) + 1;
+                    String slave_name = "slave_" + slave_num;
+                    ExecutorService executorService = Executors.newSingleThreadExecutor();
+                    SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext(), nearbyPlaces);
+                    Future<Void> future = executorService.submit(nearbyPlacesTask);
+                    try {
+                        future.get();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    executorService.shutdown();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WikipediaGeoSearchResponse> call, Throwable t) {
+
+            }
+        });
     }
 
-    public static void listenDescButtonPlayState(){
-        listen_desc.setText("Stop Listening to Description  ");
-        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
+    public void obtainCoordinatesfromWikiAndDisplayNearbyPlaces(String POIName){
+
+        final double[] coordinates = new double[2];
+//       Get the coordinates of the Recent POI
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://en.wikipedia.org/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // Create the service using the Retrofit instance
+        WikipediaObtainCoordinates wikipediaObtainCoordinates = retrofit.create(WikipediaObtainCoordinates.class);
+
+        // Make the API call
+//       Call<WikipediaCoordinatesResponse> call = apiService.getCoordinates("query", "json", recentPOI, "coordinates");
+
+        // Execute the call and handle the response
+        wikipediaObtainCoordinates.getCoordinates("query", "json", POIName, "coordinates").enqueue(new Callback<WikipediaCoordinatesResponse>() {
+            @Override
+            public void onResponse(Call<WikipediaCoordinatesResponse> call, Response<WikipediaCoordinatesResponse> response) {
+                if(response.isSuccessful() && response.body() != null){
+                    WikipediaCoordinatesResponse.QueryResult queryResult = response.body().getQueryResult();
+                    if (queryResult != null && queryResult.getWikiPages() != null) {
+                        WikipediaCoordinatesResponse.WikiPage wikiPage = queryResult.getWikiPages().values().iterator().next();
+                        if (wikiPage != null && wikiPage.getCoordinates() != null && wikiPage.getCoordinates().length > 0){
+                            coordinates[0] = wikiPage.getCoordinates()[0].getLatitude();
+                            coordinates[1] = wikiPage.getCoordinates()[0].getLongitude();
+
+                            searchNearbyPlaces(coordinates);
+
+                            Log.d("Coordinates Obtained", String.valueOf(coordinates[0]) + " , " + String.valueOf(coordinates[1]) );
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WikipediaCoordinatesResponse> call, Throwable t) {
+
+            }
+        });
+
     }
+
+//    public static void listenDescButtonResetState(){
+//        listen_desc.setText("Listen Description  ");
+//        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_library_books_24, 0);
+//    }
+//
+//    public static void listenDescButtonPlayState(){
+//        listen_desc.setText("Stop Listening to Description  ");
+//        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
+//    }
 
     @Override
     public void onSignInRequested(String poiName) {
@@ -775,11 +915,13 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         private String slaveName;
         private Session session;
         private Context context;
+        private List<PlaceInfo> nearbyPlaces;
 
-        public NearbyPlacesTask(String slaveName, Session session, Context context) {
+        public NearbyPlacesTask(String slaveName, Session session, Context context, List<PlaceInfo> nearbyPlaces) {
             this.slaveName = slaveName;
             this.session = session;
             this.context = context;
+            this.nearbyPlaces = nearbyPlaces;
         }
 
         @Override
@@ -795,44 +937,64 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                         "      <description><![CDATA[\n" +
                         "        <html>\n" +
                         "          <body>\n" +
-                        "            <table width=\"400\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\" style=\"font-size: 14px;\" border=1 frame=void rules=rows>\n" +
-                        "              <tr>\n" +
-                        "                <td colspan=\"2\" align=\"center\">\n" +
-                        "                  <p><b>Place 1:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
-                        "                </td>\n" +
-                        "              </tr>\n" +
-                        "              <tr>\n" +
-                        "                <td colspan=\"2\" align=\"center\">\n" +
-                        "                  <p><b>Place 2:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
-                        "                </td>\n" +
-                        "              </tr>\n" +
-                        "              <tr>\n" +
-                        "                <td colspan=\"2\" align=\"center\">\n" +
-                        "                  <p><b>Place 3:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
-                        "                </td>\n" +
-                        "              </tr>\n" +
-                        "              <tr>\n" +
-                        "                <td colspan=\"2\" align=\"center\">\n" +
-                        "                  <p><b>Place 4:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
-                        "                </td>\n" +
-                        "              </tr>\n" +
-                        "              <tr>\n" +
-                        "                <td colspan=\"2\" align=\"center\">\n" +
-                        "                  <p><b>Place 5:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>\n" +
-                        "                </td>\n" +
-                        "              </tr>\n" +
-                        "            </table>\n" +
-                        "          </body>\n" +
-                        "        </html>\n" +
-                        "      ]]></description>\n" +
-                        "      <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                        "      <screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                        "      <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                        "      <size x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                        "      <gx:balloonVisibility>1</gx:balloonVisibility>\n" +
-                        "    </ScreenOverlay>\n" +
-                        "  </Document>\n" +
-                        "</kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
+                        "            <table width=\"400\" border=\"0\" cellspacing=\"0\" cellpadding=\"5\" style=\"font-size: 14px;\" border=1 frame=void rules=rows>\n";
+
+                Iterator<PlaceInfo> iterator = nearbyPlaces.iterator();
+                int iterationCount = 0; // Counter variable to keep track of iterations
+                while (iterator.hasNext() && iterationCount < 10) {
+                    PlaceInfo placeInfo = iterator.next();
+                    sentence += "              <tr>\n" +
+                                "                <td colspan=\"2\" align=\"center\">\n" +
+                                "                <img src=\"" + placeInfo.getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
+                                "                  <p><b>" + placeInfo.getTitle() + "</b> " + placeInfo.getDescription() + "</p>\n" +
+                                "                </td>\n" +
+                                "              </tr>\n";
+                    iterationCount++; // Increment the counter variable
+                }
+
+                sentence += "            </table>\n" +
+                            "          </body>\n" +
+                            "        </html>\n" +
+                            "      ]]></description>\n" +
+                            "      <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                            "      <screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                            "      <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                            "      <size x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                            "      <gx:balloonVisibility>1</gx:balloonVisibility>\n" +
+                            "    </ScreenOverlay>\n" +
+                            "  </Document>\n" +
+                            "</kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
+
+//                        "              <tr>\n" +
+//                        "                <td colspan=\"2\" align=\"center\">\n" +
+//                        "                <img src=\"" + nearbyPlaces.get(0).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
+//                        "                  <p><b>" + nearbyPlaces.get(0).getTitle() + "</b> " + nearbyPlaces.get(0).getDescription() + "</p>\n" +
+//                        "                </td>\n" +
+//                        "              </tr>\n" +
+//                        "              <tr>\n" +
+//                        "                <td colspan=\"2\" align=\"center\">\n" +
+//                        "                <img src=\"" + nearbyPlaces.get(1).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
+//                        "                  <p><b>" + nearbyPlaces.get(1).getTitle() + "</b> " + nearbyPlaces.get(1).getDescription() + "</p>\n" +
+//                        "                </td>\n" +
+//                        "              </tr>\n" +
+//                        "              <tr>\n" +
+//                        "                <td colspan=\"2\" align=\"center\">\n" +
+//                        "                <img src=\"" + nearbyPlaces.get(2).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
+//                        "                  <p><b>" + nearbyPlaces.get(2).getTitle() + "</b> " + nearbyPlaces.get(2).getDescription() + "</p>\n" +
+//                        "                </td>\n" +
+//                        "              </tr>\n" +
+//                        "              <tr>\n" +
+//                        "                <td colspan=\"2\" align=\"center\">\n" +
+//                        "                <img src=\"" + nearbyPlaces.get(3).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
+//                        "                  <p><b>" + nearbyPlaces.get(3).getTitle() + "</b> " + nearbyPlaces.get(3).getDescription() + "</p>\n" +
+//                        "                </td>\n" +
+//                        "              </tr>\n" +
+//                        "              <tr>\n" +
+//                        "                <td colspan=\"2\" align=\"center\">\n" +
+//                        "                <img src=\"" + nearbyPlaces.get(4).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
+//                        "                  <p><b>" + nearbyPlaces.get(4).getTitle() + "</b> " + nearbyPlaces.get(4).getDescription() + "</p>\n" +
+//                        "                </td>\n" +
+//                                "              </tr>\n" +
 
                 LGUtils.setConnectionWithLiquidGalaxy(session, sentence, context);
             } catch (Exception e) {
