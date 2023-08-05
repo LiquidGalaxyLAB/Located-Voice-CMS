@@ -65,4 +65,20 @@
         android:singleLine="true"
         android:title="@string/server_port" />
 
+    <EditTextPreference
+        android:defaultValue="172.28.26.84"
+        android:digits="0123456789."
+        android:inputType="numberDecimal"
+        android:key="AIServerIP"
+        android:singleLine="true"
+        android:title="AI Server IP" />
+
+    <EditTextPreference
+        android:defaultValue="5000"
+        android:digits="0123456789."
+        android:inputType="numberDecimal"
+        android:key="AIServerPort"
+        android:singleLine="true"
+        android:title="AI Server Port" />
+
 </PreferenceScreen>

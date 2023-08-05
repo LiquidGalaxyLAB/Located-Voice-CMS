@@ -44,6 +44,8 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference("pref_kiosk_mode"));
         bindPreferenceSummaryToValue(findPreference("ServerIp"));
         bindPreferenceSummaryToValue(findPreference("ServerPort"));
+        bindPreferenceSummaryToValue(findPreference("AIServerIP"));
+        bindPreferenceSummaryToValue(findPreference("AIServerPort"));
     }
 
     /**

@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.util.DisplayMetrics;
@@ -359,6 +360,11 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                         e.printStackTrace();
                     }
                     executorService.shutdown();
+
+                    Intent intent = new Intent(getActivity(), NearbyPlacesActivity.class);
+                    intent.putParcelableArrayListExtra("nearbyPlacesList", (ArrayList<? extends Parcelable>) nearbyPlaces);
+                    startActivity(intent);
+
                 }
             }
 

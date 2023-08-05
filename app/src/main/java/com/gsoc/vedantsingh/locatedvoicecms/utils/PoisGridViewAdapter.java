@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -15,6 +16,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -423,8 +425,12 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
                 Log.d("BARK", "playBarkAudioFromText");
 
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                String aiServerIp = prefs.getString("AIServerIP", "172.28.26.84");
+                String aiServerPort = prefs.getString("AIServerPort", "5000");
+
                 // Send the API request to the server and get the audio file
-                String command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"text\":\"" + text + "\"}' " + "http://172.28.26.84:5000/synthesize";
+                String command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"text\":\"" + text + "\"}' " + "http://" + aiServerIp + ":" + aiServerPort + "/synthesize";
                 byte[] response = LGUtils.executeAudioCommandWithResponse(session, command, context);
                 File audioFile = saveAudioFile(context, response);
 //                if (audioFile != null) {

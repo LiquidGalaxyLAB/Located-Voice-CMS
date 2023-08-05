@@ -32,6 +32,11 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".NearbyPlacesActivity"
+            android:exported="false"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme"/>
+        <activity
             android:name=".SplashActivity"
             android:exported="true"
             android:screenOrientation="landscape">
@@ -47,6 +52,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
+<!--        <meta-data-->
+<!--            android:name="com.gsoc.vedantsingh.locatedvoicecms.MyAppGlideModule"-->
+<!--            android:value="GlideModule" />-->
 
         <provider
             android:name=".data.POIsProvider"
