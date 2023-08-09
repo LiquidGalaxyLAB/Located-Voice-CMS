@@ -190,11 +190,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_2sdp"
-        android:text="Disconnected"
+        android:text="LG Disconnected"
         android:fontFamily="@font/montserrat_medium"
         android:textColor="@color/red"
         android:textSize="@dimen/_6ssp"
         app:layout_constraintStart_toEndOf="@+id/ssh_conn_dot"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+    <ImageView
+        android:id="@+id/ai_conn_dot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:src="@drawable/baseline_circle_24"
+        app:tint="@color/red"
+        android:layout_marginLeft="@dimen/_30sdp"
+        app:layout_constraintStart_toEndOf="@id/ssh_conn_text"
+        app:layout_constraintTop_toBottomOf="@id/textView2"/>
+
+    <TextView
+        android:id="@+id/ai_conn_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="AI Server Disconnected"
+        android:layout_marginStart="@dimen/_2sdp"
+        android:fontFamily="@font/montserrat_medium"
+        android:textColor="@color/red"
+        android:textSize="@dimen/_6ssp"
+        app:layout_constraintStart_toEndOf="@id/ai_conn_dot"
+        app:layout_constraintTop_toBottomOf="@id/textView2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -119,6 +119,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
         RelativeLayout.LayoutParams paramsRotate = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         final ImageButton rotatePoiButton = new ImageButton(context);
         rotatePoiButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
+        paramsRotate.addRule(RelativeLayout.CENTER_VERTICAL);
         paramsRotate.addRule(RelativeLayout.ALIGN_PARENT_END);
 
         rotatePoiButton.setOnClickListener(new View.OnClickListener() {
@@ -138,14 +139,88 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
 
         //View POI
+//        RelativeLayout.LayoutParams paramsView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        ImageButton AIVoiceButton = new ImageButton(context);
+//        ImageButton AIContextButton = new ImageButton(context);
+//        paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
+//        paramsView.addRule(RelativeLayout.ALIGN_START);
+//        AIVoiceButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ai_voice, null));
+//        AIContextButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ai_context, null));
+
         RelativeLayout.LayoutParams paramsView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        ImageButton viewPoiButton = new ImageButton(context);
         paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
         paramsView.addRule(RelativeLayout.ALIGN_START);
-        viewPoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.vertical_dot_menu, null));
-        viewPoiButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
-        viewPoiButton.setLayoutParams(paramsView);
-        showVoiceMenu(viewPoiButton, currentPoi.getName());
+
+// Set the layout parameters for the first icon (AIVoiceButton)
+        ImageButton AIVoiceButton = new ImageButton(context);
+        int iconSize = (int) context.getResources().getDimension(R.dimen.icon_size);
+        AIVoiceButton.setLayoutParams(new RelativeLayout.LayoutParams(iconSize, iconSize));
+        AIVoiceButton.setId(View.generateViewId()); // Set a unique ID for this view
+        AIVoiceButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ai_voice, null));
+        AIVoiceButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
+        AIVoiceButton.setLayoutParams(paramsView);
+        AIVoiceButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Your action for the AIVoiceButton
+                requestSignIn(currentPoi.getName());
+            }
+        });
+
+// Update the layout parameters for the second icon (AIContextButton)
+        RelativeLayout.LayoutParams paramsView2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        paramsView2.addRule(RelativeLayout.CENTER_VERTICAL);
+        paramsView2.addRule(RelativeLayout.END_OF, AIVoiceButton.getId()); // Position to the right of the first icon
+//        paramsView2.setMarginStart(4); // Add margin between the two icon
+
+
+
+        ImageButton AIContextButton = new ImageButton(context);
+        AIContextButton.setLayoutParams(new RelativeLayout.LayoutParams(iconSize, iconSize));
+        AIContextButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ai_context, null));
+        AIContextButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
+        AIContextButton.setLayoutParams(paramsView2);
+        AIContextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Your action for the AIContextButton\
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://en.wikipedia.org")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                WikiPediaPageService wikiPediaPageService = retrofit.create(WikiPediaPageService.class);
+                wikiPediaPageService.getQuery(currentPoi.getName(), 1).enqueue(new Callback<WikipediaPageResponse>() {
+                    @Override
+                    public void onResponse(Call<WikipediaPageResponse> call, Response<WikipediaPageResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            String fullSentence = makeSentence(currentPoi.getName(), response.body().getPages().get(0).getDescription());
+                            Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
+//                                            Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
+                            playBarkAudioFromText(context, fullSentence);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<WikipediaPageResponse> call, Throwable t) {
+                        Log.d("Wikipedia Response", "Failure");
+                    }
+                });
+            }
+        });
+
+// Add both icons to the RelativeLayout
+        layout.addView(AIVoiceButton);
+        layout.addView(AIContextButton);
+
+
+//        ImageButton viewPoiButton = new ImageButton(context);
+//        paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
+//        paramsView.addRule(RelativeLayout.ALIGN_START);
+//        viewPoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.vertical_dot_menu, null));
+//        viewPoiButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
+//        viewPoiButton.setLayoutParams(paramsView);
+//        showVoiceMenu(viewPoiButton, currentPoi.getName());
+
 //        viewPoiButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -171,7 +246,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
 //            }
 //        });
 
-        layout.addView(viewPoiButton);
+//        layout.addView(viewPoiButton);
 
         int maxLengthPoiName = getMaxLength();
 
@@ -197,7 +272,6 @@ public class PoisGridViewAdapter extends BaseAdapter {
         poiName.setMaxLines(2);
         poiName.setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.white, null));
         paramsText.addRule(RelativeLayout.CENTER_IN_PARENT);
-
         poiName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -261,7 +335,6 @@ public class PoisGridViewAdapter extends BaseAdapter {
                         switch (position) {
                             case 0:
                                 requestSignIn(POIName);
-                                Toast.makeText(context, "AIVOICE", Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
                                 Retrofit retrofit = new Retrofit.Builder()

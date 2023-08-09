@@ -13,8 +13,11 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -104,6 +107,49 @@ public class LGUtils {
 
         return session;
     }
+
+    public static boolean checkAIServerConnection(Session session, Context context) {
+        try {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            String aiServerIp = prefs.getString("AIServerIP", "172.28.26.84");
+            String aiServerPort = prefs.getString("AIServerPort", "5000");
+
+            // Create the API URL for health check on server Y
+            String apiURL = "http://" + aiServerIp + ":" + aiServerPort + "/health";
+
+            // Create the SSH command to execute on server X
+            String sshCommand = "curl -I " + apiURL;
+
+            // Run the SSH command on server X
+            ChannelExec channel = (ChannelExec) session.openChannel("exec");
+            channel.setCommand(sshCommand);
+            channel.connect();
+
+            // Read the response from the SSH channel
+            InputStream inputStream = channel.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            StringBuilder responseBuilder = new StringBuilder();
+            while ((line = reader.readLine()) != null) {
+                responseBuilder.append(line).append("\n");
+            }
+            inputStream.close();
+
+            // Get the exit status of the SSH command
+            int exitStatus = channel.getExitStatus();
+
+            // Disconnect the SSH channel and session
+            channel.disconnect();
+            session.disconnect();
+
+            // Return true if the exit status indicates a successful connection (0)
+            return exitStatus == 0;
+        } catch (JSchException | IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public static byte[] executeAudioCommandWithResponse(Session session, String command, Context context) throws JSchException, IOException {
         if (session == null || !session.isConnected()) {

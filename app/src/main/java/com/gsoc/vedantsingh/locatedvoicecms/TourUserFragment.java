@@ -29,9 +29,9 @@ public class TourUserFragment extends Fragment {
     View rootView;
     GridView toursGridView;
     private ListView categoriesListView;
-    private TextView categorySelectorTitle, currentCategoryText;
+    private TextView categorySelectorTitle, currentCategoryText, sshConnText, aiConnText;
+    private ImageView backIcon, backStartIcon, sshConnDot, aiConnDot;
     private Button show_all;
-    private ImageView backIcon, backStartIcon;
     private ArrayList<String> backIDs = new ArrayList<String>();
 
     @Nullable
@@ -41,12 +41,37 @@ public class TourUserFragment extends Fragment {
 
         toursGridView = (GridView) rootView.findViewById(R.id.TOURSgridview);
 
+        sshConnDot = rootView.findViewById(R.id.ssh_conn_dot);
+        sshConnText = rootView.findViewById(R.id.ssh_conn_text);
+        aiConnText = rootView.findViewById(R.id.ai_conn_text);
+        aiConnDot = rootView.findViewById(R.id.ai_conn_dot);
+
         categoriesListView = (ListView) rootView.findViewById(R.id.categories_listview);
         backIcon = (ImageView) rootView.findViewById(R.id.back_icon);
         backStartIcon = (ImageView) rootView.findViewById(R.id.back_start_icon);
         categorySelectorTitle = (TextView) rootView.findViewById(R.id.current_category);
         currentCategoryText = (TextView) rootView.findViewById(R.id.viewing_category_text);
         show_all = (Button) rootView.findViewById(R.id.show_all);
+
+        if(LGPC.LG_CONNECTION){
+            sshConnDot.setColorFilter(getResources().getColor(R.color.green));
+            sshConnText.setTextColor(getResources().getColor(R.color.green));
+            sshConnText.setText("LG Connected");
+        } else {
+            sshConnDot.setColorFilter(getResources().getColor(R.color.red));
+            sshConnText.setTextColor(getResources().getColor(R.color.red));
+            sshConnText.setText("LG Disconnected");
+        }
+
+        if(LGPC.AI_SERVER_CONNECTION){
+            aiConnDot.setColorFilter(getResources().getColor(R.color.green));
+            aiConnText.setTextColor(getResources().getColor(R.color.green));
+            aiConnText.setText("AI Server Connected");
+        } else {
+            aiConnDot.setColorFilter(getResources().getColor(R.color.red));
+            aiConnText.setTextColor(getResources().getColor(R.color.red));
+            aiConnText.setText("AI Server Disconnected");
+        }
 
         backStartIcon.setOnClickListener(new View.OnClickListener() {
             @Override

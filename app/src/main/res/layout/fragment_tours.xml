@@ -111,10 +111,66 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:layout_marginBottom="@dimen/_4sdp"
                 android:text="@string/tours"
                 android:fontFamily="@font/montserrat_semibold"
                 android:textSize="@dimen/_12ssp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="left"
+                android:layout_margin="@dimen/_2sdp"
+                android:paddingEnd="@dimen/_5sdp">
+
+                <ImageView
+                    android:id="@+id/ssh_conn_dot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:src="@drawable/baseline_circle_24"
+                    android:tint="@color/red" />
+
+                <TextView
+                    android:id="@+id/ssh_conn_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LG Disconnected"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_6ssp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="left"
+                android:layout_margin="@dimen/_2sdp"
+                android:paddingEnd="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_4sdp">
+
+                <ImageView
+                    android:id="@+id/ai_conn_dot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:src="@drawable/baseline_circle_24"
+                    android:tint="@color/red" />
+
+                <TextView
+                    android:id="@+id/ai_conn_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AI Server Disconnected"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/red"
+                    android:textSize="@dimen/_6ssp" />
+
+            </LinearLayout>
 
             <GridView
                 android:id="@+id/TOURSgridview"

@@ -36,8 +36,8 @@ public class AdminCollectionPagerAdapter extends FragmentStatePagerAdapter {
                 return fragmentTours;
             case PAGE_TOOLS:
                 return new LGTools();
-            case PAGE_TASKS:
-                return AdvancedToolsFragment.newInstance();
+//            case PAGE_TASKS:
+//                return AdvancedToolsFragment.newInstance();
 //            case PAGE_BEACONS:
 //                return NearbyBeaconsFragment.newInstance();
             default:
@@ -46,7 +46,7 @@ public class AdminCollectionPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public int getCount() {
-        return 4;
+        return 3;
     }
 
     public CharSequence getPageTitle(int position) {
@@ -57,8 +57,8 @@ public class AdminCollectionPagerAdapter extends FragmentStatePagerAdapter {
                 return "TOURS";
             case PAGE_TOOLS:
                 return "TOOLS";
-            case PAGE_TASKS:
-                return "LG TASKS";
+//            case PAGE_TASKS:
+//                return "LG TASKS";
 //            case PAGE_BEACONS:
 //                return "SCAN BEACON";
             default:

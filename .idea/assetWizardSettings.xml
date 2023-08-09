@@ -33,9 +33,10 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="assetSourceType" value="FILE" />
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="baseline_image_24" />
-                            <entry key="sourceFile" value="C:\Users\vedan\Downloads\3844442_dot_menu_more_vertical_icon.svg" />
+                            <entry key="outputName" value="ai_context" />
+                            <entry key="sourceFile" value="C:\Users\vedan\Downloads\9026682_magic_wand_thin_icon.svg" />
                           </map>
                         </option>
                       </PersistentState>

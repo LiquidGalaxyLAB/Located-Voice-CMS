@@ -8,7 +8,4 @@
     <item
         android:id="@+id/menu_tools"
         android:title="TOOLS"/>
-    <item
-        android:id="@+id/menu_tasks"
-        android:title="LG TASKS" />
 </menu>

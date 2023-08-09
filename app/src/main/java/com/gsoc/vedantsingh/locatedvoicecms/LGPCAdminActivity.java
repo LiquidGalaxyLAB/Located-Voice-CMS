@@ -64,8 +64,8 @@ public class LGPCAdminActivity extends AppCompatActivity implements TabListener 
                 position = AdminCollectionPagerAdapter.PAGE_TOURS;
             } else if (item.getItemId() == R.id.menu_tools) {
                 position = AdminCollectionPagerAdapter.PAGE_TOOLS;
-            } else if (item.getItemId() == R.id.menu_tasks) {
-                position = AdminCollectionPagerAdapter.PAGE_TASKS;
+//            } else if (item.getItemId() == R.id.menu_tasks) {
+//                position = AdminCollectionPagerAdapter.PAGE_TASKS;
 //            } else if (item.getItemId() == R.id.menu_beacons) {
 //                position = AdminCollectionPagerAdapter.PAGE_BEACONS;
             }

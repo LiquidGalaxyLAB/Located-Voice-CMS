@@ -103,10 +103,12 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
     private boolean logo_switch=true;
     Button SuggPOIButton, changeplanet, tourbutton;
     FloatingActionButton menufab, btnSpeak, buttonSearch;
-    ImageView planetimg, sshConnDot;
+    ImageView planetimg, sshConnDot, aiConnDot;
     EditText editSearch;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
-    TextView planetname, sshConnText;
+    TextView planetname, sshConnText, aiConnText;
+    public static boolean LG_CONNECTION = false;
+    public static boolean AI_SERVER_CONNECTION = false;
     int numBack = 0;
     Bundle bundle = new Bundle();
     @Override
@@ -128,6 +130,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         sshConnDot = findViewById(R.id.ssh_conn_dot);
         sshConnText = findViewById(R.id.ssh_conn_text);
+        aiConnDot = findViewById(R.id.ai_conn_dot);
+        aiConnText = findViewById(R.id.ai_conn_text);
 
         if (BuildConfig.DEBUG) {
             // This code will be executed in debug builds only
@@ -213,7 +217,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 }
                 executorService.shutdown();
             }
-        }, 5000);
+        }, 1000);
 
 //        changeplanet.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -358,7 +362,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                         public void run() {
                             sshConnDot.setColorFilter(getResources().getColor(R.color.red));
                             sshConnText.setTextColor(getResources().getColor(R.color.red));
-                            sshConnText.setText("Disconnected");
+                            sshConnText.setText("LG Disconnected");
+                            LG_CONNECTION = false;
                         }
                     });
                 }else{
@@ -367,9 +372,32 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                         public void run() {
                             sshConnDot.setColorFilter(getResources().getColor(R.color.green));
                             sshConnText.setTextColor(getResources().getColor(R.color.green));
-                            sshConnText.setText("Connected");
+                            sshConnText.setText("LG Connected");
+                            LG_CONNECTION = true;
                         }
                     });
+                    AI_SERVER_CONNECTION = LGUtils.checkAIServerConnection(session1, context);
+                    if(AI_SERVER_CONNECTION){
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                aiConnDot.setColorFilter(getResources().getColor(R.color.green));
+                                aiConnText.setTextColor(getResources().getColor(R.color.green));
+                                aiConnText.setText("AI Server Connected");
+                                AI_SERVER_CONNECTION = true;
+                            }
+                        });
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                aiConnDot.setColorFilter(getResources().getColor(R.color.red));
+                                aiConnText.setTextColor(getResources().getColor(R.color.red));
+                                aiConnText.setText("AI Server Disconnected");
+                                AI_SERVER_CONNECTION = false;
+                            }
+                        });
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

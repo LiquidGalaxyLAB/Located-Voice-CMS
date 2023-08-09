@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,8 +92,8 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
     public static Button listen_desc;
 //    private DriveServiceHelper driveServiceHelper;
     private CategoriesAdapter adapter;
-    private TextView categorySelectorTitle;
-    private ImageView backIcon, backStartIcon;
+    private TextView categorySelectorTitle, sshConnText, aiConnText;
+    private ImageView backIcon, backStartIcon, sshConnDot, aiConnDot;
     SharedPreferences sharedPreferences;
     private static ArrayList<String> backIDs = new ArrayList<>();
 
@@ -146,6 +147,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
 //        btnSpeak = (FloatingActionButton) rootView.findViewById(R.id.btnSpeak);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sshConnDot = rootView.findViewById(R.id.ssh_conn_dot);
+        sshConnText = rootView.findViewById(R.id.ssh_conn_text);
+        aiConnText = rootView.findViewById(R.id.ai_conn_text);
+        aiConnDot = rootView.findViewById(R.id.ai_conn_dot);
         categoriesListView = (ListView) rootView.findViewById(R.id.categories_listview);
         nearbyplaces = rootView.findViewById(R.id.nearbyplaces);
 //        listen_desc = rootView.findViewById(R.id.listen_desc);
@@ -178,6 +183,26 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             if(Objects.equals(currentplanet, "EARTH")){Earth();}
             else if(Objects.equals(currentplanet, "MOON")){Moon();}
             else if(Objects.equals(currentplanet, "MARS")){Mars();}
+        }
+
+        if(LGPC.LG_CONNECTION){
+            sshConnDot.setColorFilter(getResources().getColor(R.color.green));
+            sshConnText.setTextColor(getResources().getColor(R.color.green));
+            sshConnText.setText("LG Connected");
+        } else {
+            sshConnDot.setColorFilter(getResources().getColor(R.color.red));
+            sshConnText.setTextColor(getResources().getColor(R.color.red));
+            sshConnText.setText("LG Disconnected");
+        }
+
+        if(LGPC.AI_SERVER_CONNECTION){
+            aiConnDot.setColorFilter(getResources().getColor(R.color.green));
+            aiConnText.setTextColor(getResources().getColor(R.color.green));
+            aiConnText.setText("AI Server Connected");
+        } else {
+            aiConnDot.setColorFilter(getResources().getColor(R.color.red));
+            aiConnText.setTextColor(getResources().getColor(R.color.red));
+            aiConnText.setText("AI Server Disconnected");
         }
 
         backStartIcon.setOnClickListener(new View.OnClickListener() {
@@ -245,7 +270,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                 editor.apply();
             }
         } else {
-            Toast.makeText(getContext(), "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT).show();
+            Toast toast= Toast.makeText(getContext(),
+                    "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+            toast.show();
         }
 
         sound_btn.setOnClickListener(new View.OnClickListener() {
@@ -280,7 +308,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                         }
                     }
                 }else{
-                    Toast.makeText(getContext(), "Audio not set", Toast.LENGTH_SHORT).show();
+                    Toast toast= Toast.makeText(requireContext(),
+                            "Audio not set", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP, 0, 0);
+                    toast.show();
                 }
             }
         });
@@ -476,6 +507,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             // The DriveServiceHelper encapsulates all REST API and SAF functionality.
             // Its instantiation is required before handling any onClick actions.
             mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+            Toast.makeText(getContext(), "Fetching Audio...", Toast.LENGTH_SHORT).show();
             if(recentPOI != null){
                 mDriveServiceHelper.playAudioFileInFolder(DRIVE_FOLDER_ID, POIsContract.CategoryEntry.getNameById(getContext(), Integer.parseInt(backIDs.get(0))), recentPOI +".mp3");
             }else{
