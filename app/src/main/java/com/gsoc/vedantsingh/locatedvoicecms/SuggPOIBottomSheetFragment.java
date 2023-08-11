@@ -50,7 +50,7 @@ public class SuggPOIBottomSheetFragment extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 SearchFragment.audioPlayerStop();
                 if(SearchFragment.mDriveServiceHelper != null){
-                    SearchFragment.mDriveServiceHelper.stopVoicePlayer();
+//                    SearchFragment.mDriveServiceHelper.stopVoicePlayer();
                 }
                 dismiss(); // Dismiss the BottomSheet
             }

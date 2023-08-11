@@ -113,6 +113,9 @@ public class NearbyPlacesAdapter extends BaseAdapter {
                         e.printStackTrace();
                     }
                     executorService.shutdown();
+//                    if(!placeDescription.getText().toString().equals("")) {
+                        PoisGridViewAdapter.playBarkAudioFromText(context, "You have clicked on "+ placeName.getText().toString() + "." + placeDescription.getText().toString());
+//                    }
                 }
             });
         }

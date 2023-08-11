@@ -103,7 +103,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
     private boolean logo_switch=true;
     Button SuggPOIButton, changeplanet, tourbutton;
     FloatingActionButton menufab, btnSpeak, buttonSearch;
-    ImageView planetimg, sshConnDot, aiConnDot;
+    ImageView planetimg, sshConnDot, aiConnDot, refreshButton;
     EditText editSearch;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     TextView planetname, sshConnText, aiConnText;
@@ -130,16 +130,17 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         sshConnDot = findViewById(R.id.ssh_conn_dot);
         sshConnText = findViewById(R.id.ssh_conn_text);
+//        refreshButton = findViewById(R.id.refresh_conn);
         aiConnDot = findViewById(R.id.ai_conn_dot);
         aiConnText = findViewById(R.id.ai_conn_text);
 
-        if (BuildConfig.DEBUG) {
-            // This code will be executed in debug builds only
-            Log.d("Signing", "Debug build - Signing not applied");
-        } else {
-            // This code will be executed in release builds only
-            Log.d("Signing", "Release build - Signing applied");
-        }
+//        if (BuildConfig.DEBUG) {
+//            // This code will be executed in debug builds only
+//            Log.d("Signing", "Debug build - Signing not applied");
+//        } else {
+//            // This code will be executed in release builds only
+//            Log.d("Signing", "Release build - Signing applied");
+//        }
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int screenDensity = displayMetrics.densityDpi;
@@ -202,7 +203,29 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         showMenu();
         showPlanetMenu();
-////        Check LG Connection
+
+//        refreshButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //        Check LG Connection
+////                Handler handler = new Handler(Looper.getMainLooper());
+////                handler.postDelayed(new Runnable() {
+////                    @Override
+////                    public void run() {
+//                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+//                        CheckConnectionStatus checkConnectionStatus = new CheckConnectionStatus(session, LGPC.this);
+//                        Future<Void> future = executorService.submit(checkConnectionStatus);
+//                        try {
+//                            future.get();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        executorService.shutdown();
+////                    }
+////                }, 1000);
+//            }
+//        });
+
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
             @Override
@@ -1067,7 +1090,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                         " <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
                         " <screenXY x=\"0.02\" y=\"0.95\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
                         " <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
-                        " <size x=\"0.6\" y=\"0.8\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
+                        " <size x=\"0.6\" xunits=\"fraction\"/> \n" +
                         "</ScreenOverlay> \n" +
                         " </Folder> \n" +
                         " </Document> \n" +

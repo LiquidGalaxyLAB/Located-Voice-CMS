@@ -11,16 +11,13 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 
-import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.Build;
 import android.preference.PreferenceManager;
-import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -29,6 +26,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.gsoc.vedantsingh.locatedvoicecms.R;
 import com.gsoc.vedantsingh.locatedvoicecms.SearchFragment;
@@ -56,12 +54,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
-import retrofit2.http.Part;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+
 
 /**
  * Created by Ivan Josa on 7/07/16.
@@ -73,6 +67,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
     private Activity activity;
     private Session session;
     private SignInListener signInListener;
+
     interface WikiPediaPageService{
         @GET("/w/rest.php/v1/search/title")
         Call<WikipediaPageResponse> getQuery(@Query("q") String query, @Query("limit") int limit);
@@ -293,7 +288,7 @@ public class PoisGridViewAdapter extends BaseAdapter {
                     e.printStackTrace();
                 }
                 rotatePoiButton.setEnabled(true);
-                rotatePoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_autorenew_black_36dp, null));
+                rotatePoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.baseline_autorenew_24_for_orbit, null));
             }
         });
 
@@ -541,13 +536,140 @@ private static File saveAudioFile(Context context, byte[] audioData) throws IOEx
     return tempFile;
 }
 
+//    public static String convertAudio(Context context, File audioFile) {
+//        final String[] convertedFilePath = {null}; // To store the converted file path
+//
+//        IConvertCallback callback = new IConvertCallback() {
+//            @Override
+//            public void onSuccess(File convertedFile) {
+//                Log.d("Audio Conversion", "Success: " + convertedFile.getPath());
+//                convertedFilePath[0] = convertedFile.getPath();
+//            }
+//            @Override
+//            public void onFailure(Exception error) {
+//                Log.d("Audio Conversion", "Failure: " + error.getMessage());
+//            }
+//        };
+//
+//        AndroidAudioConverter.with(context)
+//                .setFile(audioFile)
+//                .setFormat(AudioFormat.MP3)
+//                .setCallback(callback)
+//                .convert();
+//
+//        long startTime = System.currentTimeMillis();
+//        long timeout = 10000; // Timeout in milliseconds (adjust as needed)
+//
+//        // Wait until the conversion is completed or timeout is reached
+//        while (convertedFilePath[0] == null && System.currentTimeMillis() - startTime < timeout) {
+//            // Wait for a short interval before checking again
+//            try {
+//                Thread.sleep(100);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        return convertedFilePath[0];
+//    }
+
+
+
+//    private static void playAudio(Context context, File audioFile) {
+//        // Create a new ExoPlayer instance
+//        ExoPlayer player = new ExoPlayer.Builder(context).build();
+//        // Create a media source
+//        MediaItem mediaItem = MediaItem.fromUri(audioFile.getAbsolutePath());
+//        player.setMediaItem(mediaItem);
+//        player.prepare();
+//        player.play();
+//    }
+
+//    static void playAudio(Context context, File audioFile) {
+//        try {
+//            // Set up AudioTrack parameters
+//            int streamType = AudioManager.STREAM_MUSIC;
+//            int sampleRate = 24000;
+//            int channelConfig = AudioFormat.CHANNEL_OUT_MONO;
+//            int audioFormat = AudioFormat.ENCODING_PCM_FLOAT; // Use ENCODING_PCM_FLOAT for 32-bit floating point audio
+//            int bufferSize = AudioTrack.getMinBufferSize(sampleRate, channelConfig, audioFormat);
+//
+//            // Create AudioAttributes
+//            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+//                    .setUsage(AudioAttributes.USAGE_MEDIA)
+//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+//                    .build();
+//
+//            // Create the AudioTrack instance with AudioAttributes
+//            AudioTrack audioTrack = new AudioTrack.Builder()
+//                    .setAudioAttributes(audioAttributes)
+//                    .setAudioFormat(new AudioFormat.Builder()
+//                            .setSampleRate(sampleRate)
+//                            .setChannelMask(channelConfig)
+//                            .setEncoding(audioFormat)
+//                            .build())
+//                    .setBufferSizeInBytes(bufferSize)
+//                    .build();
+//
+//            // Start playback
+//            audioTrack.play();
+//
+//            // Read the WAV file into a byte array
+//            FileInputStream fileInputStream = new FileInputStream(audioFile);
+//            byte[] audioData = new byte[(int) audioFile.length()];
+//            fileInputStream.read(audioData);
+//            fileInputStream.close();
+//
+//            // Write audio data to the AudioTrack
+//            audioTrack.write(audioData, 0, audioData.length);
+//
+//            // Wait for playback to finish
+//            while (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
+//                // You can add optional sleep here if needed
+//            }
+//
+//            // Release the AudioTrack resources
+//            audioTrack.release();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
+
+//    private static void playAudio(Context context, File audioFile) {
+//        Log.d("sp", "Check 1");
+//        SoundPool soundPool = new SoundPool.Builder()
+//                .setMaxStreams(1)  // Set the maximum number of concurrent streams
+//                .setAudioAttributes(new AudioAttributes.Builder()
+//                        .setUsage(AudioAttributes.USAGE_MEDIA)
+//                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+//                        .build())
+//                .build();
+//
+//        int soundId = soundPool.load(audioFile.getAbsolutePath(), 1); // Load the audio file
+//
+//        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+//            @Override
+//            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+//                if (status == 0) {  // Status 0 indicates success
+//                    Log.d("sp", "Check 2");
+//                    soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f); // Play the loaded sound
+//                } else {
+//                    Log.e("sp", "Error loading sound: " + status);
+//                }
+//            }
+//        });
+//    }
+
+
 //    Play the Audio file via MediaPlayer
-private static void playAudio(Context context, File audioFile) {
+private static void playAudio(Context context, File audioFilePath) {
+        Log.d("mp", "Check 1");
     MediaPlayer mediaPlayer = new MediaPlayer();
 
     try {
-        mediaPlayer.setDataSource(audioFile.getAbsolutePath());
-
+        Log.d("mp", "Check 2");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -557,21 +679,39 @@ private static void playAudio(Context context, File audioFile) {
         } else {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
-
+//        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+//                .setUsage(AudioAttributes.USAGE_MEDIA)
+//                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+//                .build();
+        Log.d("mp", "Check 3");
+//        mediaPlayer.setAudioAttributes(audioAttributes);
+        Log.d("mp", "Check 4");
+        mediaPlayer.setDataSource(audioFilePath.getAbsolutePath());
+        Log.d("mp", "Check 5");
         mediaPlayer.prepare();
-        mediaPlayer.start();
-
+        Log.d("mp", "Check 6");
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
+                Log.d("mp", "Check 7");
                 mediaPlayer.release();
             }
         });
+        Log.d("mp", "Check 8");
+        try {
+            mediaPlayer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // You can also log the exception message if needed
+            Log.e("mp", "Error during playback: " + e.getMessage());
+        }
+
     } catch (IOException e) {
         e.printStackTrace();
         mediaPlayer.release();
     }
 }
+
 
 //   Making proper sentence for description returned by the wikipedia API
     private String makeSentence(String POIName, String description){
@@ -624,7 +764,7 @@ private static void playAudio(Context context, File audioFile) {
 
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             RelativeLayout poiItem = (RelativeLayout) viewGroup.getChildAt(i);
-            ImageButton rotateButton = (ImageButton) poiItem.getChildAt(2);
+            ImageButton rotateButton = (ImageButton) poiItem.getChildAt(3);
 
             rotateButton.setEnabled(false);
             rotateButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_autorenew_white_36dp, null));

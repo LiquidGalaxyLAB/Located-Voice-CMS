@@ -98,6 +98,7 @@ public class DriveServiceHelper extends Activity {
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private final com.google.api.services.drive.Drive mDriveService;
     static MediaPlayer mediaPlayer;
+//    public static boolean mediaPlayerRunning = false;
 
 
     public DriveServiceHelper(com.google.api.services.drive.Drive googleDriveService) {
@@ -213,9 +214,11 @@ public class DriveServiceHelper extends Activity {
             mediaPlayer.prepare();
             mediaPlayer.setOnCompletionListener(mp -> {
                 mediaPlayer.release();
+//                mediaPlayer
 //                changeListenDescButtonState(true);
             });
             mediaPlayer.start();
+//            mediaPlayerRunning = true;
 //            changeListenDescButtonState(false);
 
 //            SearchFragment.listen_desc.setText("Stop Listening to description  ");

@@ -11,6 +11,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 import android.widget.EditText;
 
+import com.gsoc.vedantsingh.locatedvoicecms.utils.PoisGridViewAdapter;
+
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -46,6 +48,19 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference("ServerPort"));
         bindPreferenceSummaryToValue(findPreference("AIServerIP"));
         bindPreferenceSummaryToValue(findPreference("AIServerPort"));
+
+        Preference testButton = new Preference(this);
+        testButton.setTitle("AI Server Test");
+        testButton.setSummary("Click Here to test AI Server Audio");
+        testButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // Handle button click here
+                onTestButtonClicked();
+                return true;
+            }
+        });
+        getPreferenceScreen().addPreference(testButton);
     }
 
     /**
@@ -67,6 +82,10 @@ public class SettingsActivity extends PreferenceActivity
         } else {
             onPreferenceChange(preference, PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
         }
+    }
+
+    private void onTestButtonClicked(){
+        PoisGridViewAdapter.playBarkAudioFromText(getApplicationContext(), "This is AI server test");
     }
 
     private void onPreferencePasswordChange(Preference preference, String string) {

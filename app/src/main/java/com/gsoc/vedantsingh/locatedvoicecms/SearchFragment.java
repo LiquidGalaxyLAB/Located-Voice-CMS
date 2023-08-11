@@ -358,6 +358,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                 if(response.isSuccessful() && response.body() != null){
                     WikipediaGeoSearchResponse.QueryResult queryResult = response.body().getQueryResult();
                     if (queryResult != null && queryResult.getWikiPages() != null) {
+                        nearbyPlaces = new ArrayList<>();
                         for (WikipediaGeoSearchResponse.WikiPage wikiPage : queryResult.getWikiPages().values()) {
                             if (wikiPage != null) {
                                 String title = wikiPage.getTitle();
