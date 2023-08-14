@@ -12,9 +12,9 @@ android {
     namespace 'com.gsoc.vedantsingh.locatedvoicecms'
 //    signingConfigs {
 //        config {
-//            keyAlias 'androiddebugkey'
+//            keyAlias 'lvc-key'
 //            keyPassword 'android'
-//            storeFile file('C:/Users/vedan/Documents/git-demo/Located-Voice-CMS/debug.keystore')
+//            storeFile file('C:/Users/vedan/Documents/git-demo/Located-Voice-CMS/lvc-key.keystore')
 //            storePassword 'android'
 //        }
 //    }
@@ -25,7 +25,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 33
         versionCode 5
-        versionName "1.2.3"
+        versionName "2.0.0"
     }
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES'
