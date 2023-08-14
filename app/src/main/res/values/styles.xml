@@ -15,7 +15,8 @@
     <style name="AppTheme.WithActionBar" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:screenOrientation">landscape</item>
         <item name="colorPrimary">#111111</item>
-        <item name="colorControlNormal">@color/white</item>
+        <item name="colorControlNormal">@color/offwhite</item>
+        <item name="colorSecondary">@color/offwhite</item>
         <item name="android:textColorPrimary">@color/lg_black</item>
         <!-- Customize other attributes as needed -->
     </style>

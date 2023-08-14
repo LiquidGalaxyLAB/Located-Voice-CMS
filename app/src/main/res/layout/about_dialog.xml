@@ -12,7 +12,8 @@
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_173sdp"
+        android:layout_height="@dimen/_195sdp"
+        android:paddingTop="@dimen/_5sdp"
         app:srcCompat="@drawable/about_logos"/>
 
     <TextView

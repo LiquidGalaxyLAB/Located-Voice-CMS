@@ -6,8 +6,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gsoc.vedantsingh.locatedvoicecms.R;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
@@ -155,7 +160,7 @@ public class LGUtils {
             // Wait for the result with a timeout of 2 seconds
             boolean isServerRunning;
             try {
-                isServerRunning = future.get(2, TimeUnit.SECONDS);
+                isServerRunning = future.get(1, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
                 // Timeout occurred, server is not running
                 isServerRunning = false;
@@ -238,7 +243,15 @@ public class LGUtils {
             @Override
             public void run() {
                 // This code will run on the main thread
-                Toast.makeText(context, "Audio Generation initiated, please wait...", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context, "Audio Generation initiated, please wait...", Toast.LENGTH_SHORT).show();
+                Toast toast = new Toast(context);
+                View toast_view = LayoutInflater.from(context).inflate(R.layout.toast_text, null);
+                TextView toasttext = toast_view.findViewById(R.id.toasttext);
+                toasttext.setText("Audio Generation initiated, please wait...");
+                toast.setView(toast_view);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 100);
+                toast.show();
             }
         });
 

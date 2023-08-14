@@ -18,6 +18,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -963,7 +965,15 @@ private static void playAudio(Context context, File audioFilePath) {
 
                     @Override
                     public void run() {
-                        Toast.makeText(context, context.getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(context, context.getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
+                        Toast toast = new Toast(context);
+                        View toast_view = LayoutInflater.from(context).inflate(R.layout.toast_text, null);
+                        TextView toasttext = toast_view.findViewById(R.id.toasttext);
+                        toasttext.setText(context.getResources().getString(R.string.error_galaxy));
+                        toast.setView(toast_view);
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP, 0, 100);
+                        toast.show();
                     }
                 });
 
@@ -973,7 +983,15 @@ private static void playAudio(Context context, File audioFilePath) {
 
                     @Override
                     public void run() {
-                        Toast.makeText(context, context.getResources().getString(R.string.visualizationCanceled), Toast.LENGTH_LONG).show();
+//                        Toast.makeText(context, context.getResources().getString(R.string.visualizationCanceled), Toast.LENGTH_LONG).show();
+                        Toast toast = new Toast(context);
+                        View toast_view = LayoutInflater.from(context).inflate(R.layout.toast_text, null);
+                        TextView toasttext = toast_view.findViewById(R.id.toasttext);
+                        toasttext.setText(context.getResources().getString(R.string.visualizationCanceled));
+                        toast.setView(toast_view);
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP, 0, 100);
+                        toast.show();
                     }
                 });
                 return null;

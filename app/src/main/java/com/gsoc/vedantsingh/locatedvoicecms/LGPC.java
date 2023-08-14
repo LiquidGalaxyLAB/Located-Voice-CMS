@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -258,22 +259,29 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             }
         });
 
-        // Check if the permission is already granted
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted, request it
-            ActivityCompat.requestPermissions(this, new String[]{
-                            android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    },
-                    REQUEST_PERMISSION_CODE);
-            Log.d("Permission Storage", "part 1");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // Android version is 10 or higher
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("permissionGranted", true);
+            editor.apply();
         } else {
-            // Permission is already granted, proceed with your operations
-            Log.d("Permission Storage", "part 2");
-        }
+            // Check if the permission is already granted
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                    ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
+                // Permission is not granted, request it
+                ActivityCompat.requestPermissions(this, new String[]{
+                                android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        },
+                        REQUEST_PERMISSION_CODE);
+                Log.d("Permission Storage", "part 1");
+            } else {
+                // Permission is already granted, proceed with your operations
+                Log.d("Permission Storage", "part 2");
+            }
+        }
 
 
         //////////////////////////////////////////////////////////////////////////////////

@@ -39,6 +39,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -270,9 +271,18 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                 editor.apply();
             }
         } else {
-            Toast toast= Toast.makeText(getContext(),
-                    "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+//            Toast toast= Toast.makeText(getContext(),
+//                    "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
+//            toast.show();
+
+            Toast toast = new Toast(getContext());
+            View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
+            TextView toasttext = toast_view.findViewById(R.id.toasttext);
+            toasttext.setText("Storage permissions are not granted, please restart the app and grant the permissions");
+            toast.setView(toast_view);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP, 0, 100);
             toast.show();
         }
 
@@ -308,9 +318,17 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                         }
                     }
                 }else{
-                    Toast toast= Toast.makeText(requireContext(),
-                            "Audio not set", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP, 0, 0);
+//                    Toast toast= Toast.makeText(requireContext(),
+//                            "Audio not set", Toast.LENGTH_SHORT);
+//                    toast.setGravity(Gravity.TOP, 0, 0);
+//                    toast.show();
+                    Toast toast = new Toast(getContext());
+                    View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
+                    TextView toasttext = toast_view.findViewById(R.id.toasttext);
+                    toasttext.setText("Audio not set");
+                    toast.setView(toast_view);
+                    toast.setDuration(Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP, 0, 100);
                     toast.show();
                 }
             }
@@ -508,11 +526,31 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             // The DriveServiceHelper encapsulates all REST API and SAF functionality.
             // Its instantiation is required before handling any onClick actions.
             mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-            Toast.makeText(getContext(), "Fetching Audio...", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getContext(), "Fetching Audio...", Toast.LENGTH_SHORT).show();
+
+            // Create a Toast object
+//            Toast toast = Toast.makeText(requireContext(), "Fetching Audio...", Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.TOP, 0, 0);
+//            toast.show();
+            Toast toast = new Toast(getContext());
+            View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
+            TextView toasttext = toast_view.findViewById(R.id.toasttext);
+            toasttext.setText("Fetching Audio...");
+            toast.setView(toast_view);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP, 0, 100);
+            toast.show();
+
             if(recentPOI != null){
                 mDriveServiceHelper.playAudioFileInFolder(DRIVE_FOLDER_ID, POIsContract.CategoryEntry.getNameById(getContext(), Integer.parseInt(backIDs.get(0))), recentPOI +".mp3");
             }else{
-                Toast.makeText(getContext(), "Please select a POI to listen to its description", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Please select a POI to listen to its description", Toast.LENGTH_SHORT).show();
+                toasttext.setText("Please select a POI to listen to its description");
+                toast.setView(toast_view);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 100);
+                toast.show();
+
             }
             Log.d("Sign In", "Completed");
         } else {
@@ -1138,7 +1176,15 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                     public void run() {
                         if (dialog != null && dialog.isShowing()) {
                             dialog.dismiss();
-                            Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
+//                            Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
+                            Toast toast = new Toast(getContext());
+                            View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
+                            TextView toasttext = toast_view.findViewById(R.id.toasttext);
+                            toasttext.setText(taskContext.getResources().getString(R.string.connection_failure));
+                            toast.setView(toast_view);
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.TOP, 0, 100);
+                            toast.show();
                         }
                     }
                 }, 10000); // 10 seconds (10000 milliseconds)
@@ -1168,7 +1214,15 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                     handler.removeCallbacksAndMessages(null);
                 }
             } else {
-                Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
+//                Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
+                Toast toast = new Toast(getContext());
+                View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
+                TextView toasttext = toast_view.findViewById(R.id.toasttext);
+                toasttext.setText(taskContext.getResources().getString(R.string.connection_failure));
+                toast.setView(toast_view);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 100);
+                toast.show();
             }
         }
     }

@@ -9,9 +9,16 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.gsoc.vedantsingh.locatedvoicecms.utils.LGUtils;
 import com.gsoc.vedantsingh.locatedvoicecms.utils.PoisGridViewAdapter;
+import com.jcraft.jsch.Session;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -43,16 +50,45 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference("HostName"));
         bindPreferenceSummaryToValue(findPreference("Port"));
         bindPreferenceSummaryToValue(findPreference("AdminPassword"));
-        bindPreferenceSummaryToValue(findPreference("pref_kiosk_mode"));
-        bindPreferenceSummaryToValue(findPreference("ServerIp"));
-        bindPreferenceSummaryToValue(findPreference("ServerPort"));
+//        bindPreferenceSummaryToValue(findPreference("pref_kiosk_mode"));
+//        bindPreferenceSummaryToValue(findPreference("ServerIp"));
+//        bindPreferenceSummaryToValue(findPreference("ServerPort"));
         bindPreferenceSummaryToValue(findPreference("AIServerIP"));
         bindPreferenceSummaryToValue(findPreference("AIServerPort"));
 
-        Preference testButton = new Preference(this);
-        testButton.setTitle("AI Server Test");
-        testButton.setSummary("Click Here to test AI Server Audio");
-        testButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        Preference testConnButton = new Preference(this);
+        testConnButton.setTitle("AI Server Connection Test");
+        testConnButton.setSummary("Click Here to check your connection with the AI Server");
+        testConnButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // Handle button click here
+                String connectionStatus;
+                Session session = null;
+                session = LGUtils.checkConnectionStatus(session, getApplicationContext());
+                if(LGUtils.checkAIServerConnection(session, getApplicationContext())){
+                    connectionStatus = "Connected";
+                } else {
+                    connectionStatus = "Disconnected";
+                }
+
+                Toast toast = new Toast(getApplicationContext());
+                View toast_view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.toast_text, null);
+                TextView toasttext = toast_view.findViewById(R.id.toasttext);
+                toasttext.setText("AI Server " + connectionStatus);
+                toast.setView(toast_view);
+                toast.setDuration(Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.TOP, 0, 100);
+                toast.show();
+                return true;
+            }
+        });
+        getPreferenceScreen().addPreference(testConnButton);
+
+        Preference testAudioButton = new Preference(this);
+        testAudioButton.setTitle("AI Server Audio Generation Test");
+        testAudioButton.setSummary("Click Here to test AI Server Audio");
+        testAudioButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 // Handle button click here
@@ -60,7 +96,7 @@ public class SettingsActivity extends PreferenceActivity
                 return true;
             }
         });
-        getPreferenceScreen().addPreference(testButton);
+        getPreferenceScreen().addPreference(testAudioButton);
     }
 
     /**
