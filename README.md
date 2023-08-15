@@ -61,7 +61,7 @@ Access the latest features:
 
 ## AI Server Guide
 
-- The AI server is used for real-time AI audio generation. It runs the [Bark](https://github.com/suno-ai/bark) created model by [Suno AI](https://www.suno.ai/) in your AI server.
+- The AI server is used for real-time AI audio generation. It runs the [Bark](https://github.com/suno-ai/bark) AI model created model by [Suno AI](https://www.suno.ai/) in your AI server.
 - Running your own AI server for Located Voice CMS is fairly simple. You can simply run the API in a dockerized container using the [Docker Image](https://hub.docker.com/repository/docker/vedantkingh/bark2/general). To do this, just run the following commands on your AI server:
     1. **Pull the docker image:**
        ```bash
