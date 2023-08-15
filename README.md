@@ -60,6 +60,7 @@ Access the latest features:
 * Now simply explore the application, send a wide variety of KML Data to the LG and listen to immersive audio via our Cloud as well as your local AI Server. 
 
 ## AI Server Guide
+
 - The AI server is used for real-time AI audio generation. It runs the [Bark](https://github.com/suno-ai/bark) created model by [Suno AI](https://www.suno.ai/) in your AI server.
 - Running your own AI server for Located Voice CMS is fairly simple. You can simply run the API in a dockerized container using the [Docker Image](https://hub.docker.com/repository/docker/vedantkingh/bark2/general). To do this, just run the following commands on your AI server:
     1. **Pull the docker image:**
