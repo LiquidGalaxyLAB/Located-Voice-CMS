@@ -8,7 +8,7 @@
 - **[About Located Voice CMS](#about-located-voice-cms)**
 - **[App Screenshots](#app-screenshots)**
 - **[Running the APK](#running-the-apk)**
-- **[AI Server Guide](ai-server-guide)**
+- **[AI Server Guide](#ai-server-guide)**
 - **[Previous Versions](#previous-versions)**
 - **[Contributing](#contributing)**
 
