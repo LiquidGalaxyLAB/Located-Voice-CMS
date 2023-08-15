@@ -8,6 +8,7 @@
 - **[About Located Voice CMS](#about-located-voice-cms)**
 - **[App Screenshots](#app-screenshots)**
 - **[Running the APK](#running-the-apk)**
+- **[AI Server Guide](ai-server-guide)**
 - **[Previous Versions](#previous-versions)**
 - **[Contributing](#contributing)**
 
@@ -58,7 +59,48 @@ Access the latest features:
 * To connect to the Liquid Galaxy and the AI Server, tap on menu icon and go to Administration Tools > Settings then fill up the details of your Liquid Galaxy Rig (LG Server IP, LG Server ID, LG Server Password and the number of machines) and the AI Server (AI Server IP and the Port on which the docker is running).
 * Now simply explore the application, send a wide variety of KML Data to the LG and listen to immersive audio via our Cloud as well as your local AI Server. 
 
-
+## AI Server Guide
+- The AI server is used for real-time AI audio generation. It runs the [Bark](https://github.com/suno-ai/bark) created model by [Suno AI](https://www.suno.ai/) in your AI server.
+- Running your own AI server for Located Voice CMS is fairly simple. You can simply run the API in a dockerized container using the [Docker Image](https://hub.docker.com/repository/docker/vedantkingh/bark2/general). To do this, just run the following commands on your AI server:
+    1. **Pull the docker image:**
+       ```bash
+       docker pull vedantkingh/bark2
+       ```
+    2. **To run on CPU:**
+       ```bash
+  	   docker run vedantkingh/bark2
+       ```
+  
+       **To run on GPU:**
+       ```bash
+       docker run --gpus all vedantkingh/bark2 
+       ```
+- If you want to run the API without docker or dig deep into the API which is running the model. It is available [at this repository](https://github.com/vedantkingh/bark).
+    1. **Clone the repository:**
+         ```bash
+  		git clone https://github.com/vedantkingh/bark.git
+         ```
+    2. **Install dependencies:**
+       ```bash
+  	   sudo apt-get update && sudo apt-get upgrade -y
+       sudo apt-get install -y python3-dev python3-pip build-essential sox libsox-fmt-mp3
+       sudo apt-get install -y nvidia-cudnn
+       pip install --no-cache-dir -r requirements.txt
+       ```
+    3. Start the Flask API on the server:
+        ```bash
+        python app.py
+        ```
+    4. Send a POST request to the /synthesize endpoint with the desired text as JSON payload. For example:
+        ```bash
+        POST /synthesize
+        Content-Type: application/json
+        
+        {
+            "text": "Hello, my name is Suno. And, uh — and I like pizza. [laughs] But I also have other interests such as playing tic tac toe."
+        }
+        ```
+    This will generate the voice audio corresponding to the provided text.
 
 ## Previous Versions
 An Android app that lets the user connect to one Liquid Galaxy system and send POIs and Tours. At the same time, the app also lets to create, update and delete POIs, Tours and Categories.
