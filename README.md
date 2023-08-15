@@ -33,6 +33,7 @@ Access the latest features:
        ```bash
   		docker run --gpus all vedantkingh/bark2 
        ```
+       Install the [NVIDIA Container Toolkit using this installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) if GPU is inaccessible by the Docker.
 4. **Category Sounds:** Feel the POIs ambience around you with immersive sounds to your categories. You can also add, edit and delete the category sounds.
 5. **Context Sensing:** With the Nearby Places feature, you can now generate nearby places out of thin air to visit around a certain POI. Best experienced when coupled with Artificial Intelligence Context.
 
@@ -76,6 +77,7 @@ Access the latest features:
        ```bash
        docker run --gpus all vedantkingh/bark2 
        ```
+       Install the [NVIDIA Container Toolkit using this installation guide](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) if GPU is inaccessible by the Docker.
 - If you want to run the API without docker or dig deep into the API which is running the model. It is available [at this repository](https://github.com/vedantkingh/bark).
     1. **Clone the repository:**
          ```bash
