@@ -90,11 +90,11 @@ Access the latest features:
        sudo apt-get install -y nvidia-cudnn
        pip install --no-cache-dir -r requirements.txt
        ```
-    3. Start the Flask API on the server:
+    3. **Start the Flask API on the server:**
         ```bash
         python app.py
         ```
-    4. Send a POST request to the /synthesize endpoint with the desired text as JSON payload. For example:
+    4. **Send a POST request to the /synthesize endpoint with the desired text as JSON payload.** For example:
         ```bash
         POST /synthesize
         Content-Type: application/json
