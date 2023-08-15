@@ -237,7 +237,7 @@
     <string name="aboutDocText1">This app has been developed thanks to GSOC 2023 Program as a continuation of GSOC 2016 and GSOC 2015 Project.</string>
     <string name="aboutDocText2">Developed originally by Rafa Durán Sàez (rafaduransaez@gmail.com) and continued by Ivan Josa Llovera (ivanjosallovera@gmail.com) and Vedant Singh (vedantkingh@gmail.com).</string>
     <string name="aboutDocText3">https://github.com/LiquidGalaxyLAB/Located-Voice-CMS.git</string>
-    <string name="aboutDocText4">Developed thanks to the TIC Laboratories of the Scientific Park of Lleida, Liquid Galaxy LAB and LleidaDrone LAB, Polytechnic School of Lleida, End Point Corp (NY), Wonderama LAB from Western University (Sydney), Gigabyte, Benq, HP, Corsair, Hemav Academics, MediaWiki and Suno.AI\nThanks to mentors Andreu Ibàñez and Yash Raj Bharti and interns Imad, Navdeep, Mohamed and Rafel at Lleida LG lab.</string>
+    <string name="aboutDocText4">Developed thanks to the TIC Laboratories of the Scientific Park of Lleida, Liquid Galaxy LAB and LleidaDrone LAB, Polytechnic School of Lleida, End Point Corp (NY), Wonderama LAB from Western University (Sydney), Gigabyte, Benq, HP, Corsair, Hemav Academics, MediaWiki and Suno.AI\nThanks to Navdeep (aka: Lord of the IA), Mohamed (the relentless APK tester), Imad (the careful document crafter), Rafel (the Rocky Linux server handler), Mario Ezquerro, Google Developer Expert Cloud (the real SUDO master) and Alejandro (the Play Store master at the LG community) next to mentor Yash Raj Bharti, and Andreu Ibáñez (Liquid Galaxy administrator).</string>
     <string name="about_Controller_message">About Liquid Galaxy Controller</string>
     <string name="hidden">Hidden</string>
     <string name="visible">Visible</string>
