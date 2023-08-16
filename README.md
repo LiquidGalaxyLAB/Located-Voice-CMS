@@ -44,9 +44,9 @@ Access the latest features:
     <img src="https://github.com/vedantkingh/Located-Voice-CMS/assets/123883929/af97b383-e6ad-43aa-a8fd-643d5c81d2f2" alt="Screenshot 2" style="width: 49%; margin-left: 1%; margin-bottom: 10px;">
     <img src="https://github.com/vedantkingh/Located-Voice-CMS/assets/123883929/c711b3dc-1f90-4868-a46f-ecc3f67091f0" alt="Screenshot 3" style="width: 49%; margin-right: 1%; margin-bottom: 10px;">
     <img src="https://github.com/vedantkingh/Located-Voice-CMS/assets/123883929/99f0087b-d922-44f2-b8fc-fc4693043535" alt="Screenshot 4" style="width: 49%; margin-left: 1%; margin-bottom: 10px;">
+    <img src="https://github.com/vedantkingh/Located-Voice-CMS/assets/123883929/dec1a39f-b3f2-4334-bd92-0ede211c3860" alt="Screenshot 5" style="width: 49%; margin-right: 1%; margin-bottom: 10px;">
     <img src="https://github.com/vedantkingh/Located-Voice-CMS/assets/123883929/4404aba5-ddf2-40a8-ab41-9b80d79da639" alt="Screenshot 5" style="width: 49%; margin-right: 1%; margin-bottom: 10px;">
 </div>
-
 
 ## Running the APK
 
