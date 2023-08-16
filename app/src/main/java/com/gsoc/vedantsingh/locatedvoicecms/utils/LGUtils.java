@@ -95,17 +95,13 @@ public class LGUtils {
             });
 
             try {
-                // Wait for 5 seconds to get the result from getSession
                 session = future.get(3, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
-                // Timeout occurred, handle the timeout case (skip it, for example)
                 e.printStackTrace();
                 session = null;
             }catch (Exception e) {
-                // Handle any exceptions that may occur during getSession
                 e.printStackTrace();
             } finally {
-                // Shutdown the executor
                 executor.shutdown();
             }
         }
@@ -119,21 +115,17 @@ public class LGUtils {
             String aiServerIp = prefs.getString("AIServerIP", "172.28.26.84");
             String aiServerPort = prefs.getString("AIServerPort", "5000");
 
-            // Create the API URL for health check on server Y
             String apiURL = "http://" + aiServerIp + ":" + aiServerPort + "/health";
 
-            // Create the SSH command to execute on server X
             String sshCommand = "curl -I " + apiURL;
 
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Future<Boolean> future = executor.submit(() -> {
                 try {
-                    // Run the SSH command on server X
                     ChannelExec channel = (ChannelExec) session.openChannel("exec");
                     channel.setCommand(sshCommand);
                     channel.connect();
 
-                    // Read the response from the SSH channel
                     InputStream inputStream = channel.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                     String line;
@@ -142,10 +134,8 @@ public class LGUtils {
                     }
                     inputStream.close();
 
-                    // Get the exit status of the SSH command
                     int exitStatus = channel.getExitStatus();
 
-                    // Disconnect the SSH channel and session
                     channel.disconnect();
                     session.disconnect();
 
@@ -157,17 +147,14 @@ public class LGUtils {
                 }
             });
 
-            // Wait for the result with a timeout of 2 seconds
             boolean isServerRunning;
             try {
                 isServerRunning = future.get(1, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
-                // Timeout occurred, server is not running
                 isServerRunning = false;
                 future.cancel(true); // Cancel the task
             }
 
-            // Shutdown the executor
             executor.shutdown();
 
             return isServerRunning;
@@ -176,51 +163,6 @@ public class LGUtils {
             return false;
         }
     }
-
-
-
-//    public static boolean checkAIServerConnection(Session session, Context context) {
-//        try {
-//            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-//            String aiServerIp = prefs.getString("AIServerIP", "172.28.26.84");
-//            String aiServerPort = prefs.getString("AIServerPort", "5000");
-//
-//            // Create the API URL for health check on server Y
-//            String apiURL = "http://" + aiServerIp + ":" + aiServerPort + "/health";
-//
-//            // Create the SSH command to execute on server X
-//            String sshCommand = "curl -I " + apiURL;
-//
-//            // Run the SSH command on server X
-//            ChannelExec channel = (ChannelExec) session.openChannel("exec");
-//            channel.setCommand(sshCommand);
-//            channel.connect();
-//
-//            // Read the response from the SSH channel
-//            InputStream inputStream = channel.getInputStream();
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-//            String line;
-//            StringBuilder responseBuilder = new StringBuilder();
-//            while ((line = reader.readLine()) != null) {
-//                responseBuilder.append(line).append("\n");
-//            }
-//            inputStream.close();
-//
-//            // Get the exit status of the SSH command
-//            int exitStatus = channel.getExitStatus();
-//
-//            // Disconnect the SSH channel and session
-//            channel.disconnect();
-//            session.disconnect();
-//
-//            // Return true if the exit status indicates a successful connection (0)
-//            return exitStatus == 0;
-//        } catch (JSchException | IOException e) {
-//            e.printStackTrace();
-//            return false;
-//        }
-//    }
-
 
     public static byte[] executeAudioCommandWithResponse(Session session, String command, Context context) throws JSchException, IOException {
         if (session == null || !session.isConnected()) {
@@ -242,8 +184,6 @@ public class LGUtils {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                // This code will run on the main thread
-//                Toast.makeText(context, "Audio Generation initiated, please wait...", Toast.LENGTH_SHORT).show();
                 Toast toast = new Toast(context);
                 View toast_view = LayoutInflater.from(context).inflate(R.layout.toast_text, null);
                 TextView toasttext = toast_view.findViewById(R.id.toasttext);
@@ -255,10 +195,9 @@ public class LGUtils {
             }
         });
 
-        // Wait for the command to complete
         while (!channelssh.isClosed()) {
             try {
-                Thread.sleep(100); // Add some delay between checks
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

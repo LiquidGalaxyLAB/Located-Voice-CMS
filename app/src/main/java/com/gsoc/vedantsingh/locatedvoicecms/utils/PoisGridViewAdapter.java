@@ -125,7 +125,6 @@ public class PoisGridViewAdapter extends BaseAdapter {
                 String command = buildCommand(currentPoi);
                 Log.d("Rotate","button");
                 SearchFragment.recentPOI = currentPoi.getName();
-//                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, true);
                 visitPoiTask.execute();
             }
@@ -134,43 +133,28 @@ public class PoisGridViewAdapter extends BaseAdapter {
         rotatePoiButton.setEnabled(false);
         rotatePoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_autorenew_white_36dp, null));
 
-
-        //View POI
-//        RelativeLayout.LayoutParams paramsView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        ImageButton AIVoiceButton = new ImageButton(context);
-//        ImageButton AIContextButton = new ImageButton(context);
-//        paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
-//        paramsView.addRule(RelativeLayout.ALIGN_START);
-//        AIVoiceButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ai_voice, null));
-//        AIContextButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ai_context, null));
-
+//        AI Context and AI Voice Button
         RelativeLayout.LayoutParams paramsView = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
         paramsView.addRule(RelativeLayout.ALIGN_START);
 
-// Set the layout parameters for the first icon (AIVoiceButton)
         ImageButton AIVoiceButton = new ImageButton(context);
         int iconSize = (int) context.getResources().getDimension(R.dimen.icon_size);
         AIVoiceButton.setLayoutParams(new RelativeLayout.LayoutParams(iconSize, iconSize));
-        AIVoiceButton.setId(View.generateViewId()); // Set a unique ID for this view
+        AIVoiceButton.setId(View.generateViewId());
         AIVoiceButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ai_voice, null));
         AIVoiceButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
         AIVoiceButton.setLayoutParams(paramsView);
         AIVoiceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Your action for the AIVoiceButton
                 requestSignIn(currentPoi.getName());
             }
         });
 
-// Update the layout parameters for the second icon (AIContextButton)
         RelativeLayout.LayoutParams paramsView2 = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         paramsView2.addRule(RelativeLayout.CENTER_VERTICAL);
-        paramsView2.addRule(RelativeLayout.END_OF, AIVoiceButton.getId()); // Position to the right of the first icon
-//        paramsView2.setMarginStart(4); // Add margin between the two icon
-
-
+        paramsView2.addRule(RelativeLayout.END_OF, AIVoiceButton.getId());
 
         ImageButton AIContextButton = new ImageButton(context);
         AIContextButton.setLayoutParams(new RelativeLayout.LayoutParams(iconSize, iconSize));
@@ -180,7 +164,6 @@ public class PoisGridViewAdapter extends BaseAdapter {
         AIContextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Your action for the AIContextButton\
                 Retrofit retrofit = new Retrofit.Builder()
                         .baseUrl("https://en.wikipedia.org")
                         .addConverterFactory(GsonConverterFactory.create())
@@ -193,7 +176,6 @@ public class PoisGridViewAdapter extends BaseAdapter {
                         if (response.isSuccessful() && response.body() != null) {
                             String fullSentence = makeSentence(currentPoi.getName(), response.body().getPages().get(0).getDescription());
                             Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
-//                                            Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
                             playBarkAudioFromText(context, fullSentence);
                         }
                     }
@@ -205,45 +187,8 @@ public class PoisGridViewAdapter extends BaseAdapter {
             }
         });
 
-// Add both icons to the RelativeLayout
         layout.addView(AIVoiceButton);
         layout.addView(AIContextButton);
-
-
-//        ImageButton viewPoiButton = new ImageButton(context);
-//        paramsView.addRule(RelativeLayout.CENTER_VERTICAL);
-//        paramsView.addRule(RelativeLayout.ALIGN_START);
-//        viewPoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.vertical_dot_menu, null));
-//        viewPoiButton.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.button_rounded_grey, null));
-//        viewPoiButton.setLayoutParams(paramsView);
-//        showVoiceMenu(viewPoiButton, currentPoi.getName());
-
-//        viewPoiButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showVoiceMenu(view, currentPoi.getName());
-
-//                String command = buildCommand(currentPoi);
-//                Log.d("viewPOI","button");
-//                SearchFragment.recentPOI = currentPoi.getName();
-//                SearchFragment.setCategoryForVoice();
-//                VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
-//                visitPoiTask.execute();
-//
-//                disableOtherRotateButtons(viewGroup);
-//
-//                try {
-//                    Thread.sleep(10000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                rotatePoiButton.setEnabled(true);
-//                rotatePoiButton.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_autorenew_black_36dp, null));
-//            }
-//        });
-
-//        layout.addView(viewPoiButton);
 
         int maxLengthPoiName = getMaxLength();
 
@@ -276,7 +221,6 @@ public class PoisGridViewAdapter extends BaseAdapter {
                 String command = buildCommand(currentPoi);
                 Log.d("POINAME","button");
                 SearchFragment.recentPOI = currentPoi.getName();
-//                SearchFragment.setCategoryForVoice();
                 VisitPoiTask visitPoiTask = new VisitPoiTask(command, currentPoi, false);
                 visitPoiTask.execute();
                 playBarkAudioFromText(context, "You are looking at " + currentPoi.getName());
@@ -314,18 +258,12 @@ public class PoisGridViewAdapter extends BaseAdapter {
                 .addItemList(menuItems)
                 .setAnimation(MenuAnimation.SHOWUP_BOTTOM_LEFT)
                 .setMenuRadius(20f)
-//                .setMenuShadow(10f)
-//                .setTextColor(ContextCompat.getColor(this, R.color.lg_black))
-//                .setTextGravity(Gravity.CENTER)
                 .setTextSize(15)
                 .setWidth(500)
                 .setAnimation(MenuAnimation.SHOWUP_TOP_LEFT)
                 .setAutoDismiss(true)
-//                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
-//                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setTextColor(ContextCompat.getColor(context, R.color.offwhite))
                 .setMenuColor(ContextCompat.getColor(context, R.color.suggpoi_blue))
-//                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
                     @Override
                     public void onItemClick(int position, PowerMenuItem item) {
@@ -346,7 +284,6 @@ public class PoisGridViewAdapter extends BaseAdapter {
                                         if (response.isSuccessful() && response.body() != null) {
                                             String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription());
                                             Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
-//                                            Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
                                             playBarkAudioFromText(context, fullSentence);
                                         }
                                     }
@@ -364,133 +301,11 @@ public class PoisGridViewAdapter extends BaseAdapter {
         view.setOnClickListener(powerMenu::showAsAnchorLeftTop);
     }
 
-//    private void showVoiceDropdownMenu(View v, String POIName) {
-//        PopupMenu popupMenu = new PopupMenu(v.getContext(), v, R.style.menupopupBGStyle);
-//        popupMenu.getMenuInflater().inflate(R.menu.voice_dropdown, popupMenu.getMenu());
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("https://en.wikipedia.org")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                        .build();
-//
-//        // Handle menu item clicks
-//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                if (item.getItemId() == R.id.ai_voice) {
-//                    // Handle Option 1 click
-//                    requestSignIn(POIName);
-////                    Toast.makeText(context, "AIVOICE", Toast.LENGTH_SHORT).show();
-//                    return true;
-//                } else if (item.getItemId() == R.id.voice_normal) {
-//                    // Handle Sub Option 1 click
-//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
-//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
-//                        @Override
-//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
-//                            if (response.isSuccessful() && response.body() != null) {
-//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription());
-//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
-////                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
-//                                playBarkAudioFromText(context, fullSentence);
-//                            }
-//                        }
-//                        @Override
-//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
-//                            Log.d("Wikipedia Response", "Failure");
-//                        }
-//                    });
-//                    Toast.makeText(context, "Voice normal", Toast.LENGTH_SHORT).show();
-//                    return true;
-//                } else if (item.getItemId() == R.id.voice_laughter) {
-//                    // Handle Sub Option 2 click
-//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
-//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
-//                        @Override
-//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
-//                            if (response.isSuccessful() && response.body() != null) {
-//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription());
-//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
-//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
-//                                playBarkAudioFromText(context, fullSentence);
-//                            }
-//                        }
-//                        @Override
-//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
-//                            Log.d("Wikipedia Response", "Failure");
-//                        }
-//                    });
-//                    return true;
-//                } else if (item.getItemId() == R.id.voice_sigh) {
-//                    // Handle Option 3 click
-//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
-//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
-//                        @Override
-//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
-//                            if (response.isSuccessful() && response.body() != null) {
-//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription(), "[sighs]");
-//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
-//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
-//                                playBarkAudioFromText(context, fullSentence);
-//                            }
-//                        }
-//                        @Override
-//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
-//                            Log.d("Wikipedia Response", "Failure");
-//                        }
-//                    });
-//                    return true;
-//                } else if (item.getItemId() == R.id.voice_music) {
-//                    // Handle Option 3 click
-//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
-//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
-//                        @Override
-//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
-//                            if (response.isSuccessful() && response.body() != null) {
-//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription(), "[music]");
-//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
-//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
-//                                playBarkAudioFromText(context, fullSentence);
-//                            }
-//                        }
-//                        @Override
-//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
-//                            Log.d("Wikipedia Response", "Failure");
-//                        }
-//                    });
-//                    return true;
-//                } else if (item.getItemId() == R.id.voice_gasp) {
-//                    // Handle Option 3 click
-//                    WikiPediaService wikiPediaService = retrofit.create(WikiPediaService.class);
-//                    wikiPediaService.getQuery(POIName, 1).enqueue(new Callback<WikipediaResponse>() {
-//                        @Override
-//                        public void onResponse(Call<WikipediaResponse> call, Response<WikipediaResponse> response) {
-//                            if (response.isSuccessful() && response.body() != null) {
-//                                String fullSentence = makeSentence(POIName, response.body().getPages().get(0).getDescription(), "[gasps]");
-//                                Log.d("Wikipedia Response", "Succeeded: " + fullSentence);
-//                                Toast.makeText(context, fullSentence, Toast.LENGTH_SHORT).show();
-//                                playBarkAudioFromText(context, fullSentence);
-//                            }
-//                        }
-//                        @Override
-//                        public void onFailure(Call<WikipediaResponse> call, Throwable t) {
-//                            Log.d("Wikipedia Response", "Failure");
-//                        }
-//                    });
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
-//        });
-//        popupMenu.show();
-//    }
-
 //  Play the Audio received by Bark from the AI server
     public static void playBarkAudioFromText(final Context context, final String text) {
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             try {
-                // Create a new session if it is null or not connected
                 Session session = LGUtils.getSession(context);
 
                 Log.d("BARK", "playBarkAudioFromText");
@@ -499,17 +314,12 @@ public class PoisGridViewAdapter extends BaseAdapter {
                 String aiServerIp = prefs.getString("AIServerIP", "172.28.26.84");
                 String aiServerPort = prefs.getString("AIServerPort", "5000");
 
-                // Send the API request to the server and get the audio file
                 String command = "curl -X POST -H \"Content-Type: application/json\" -d '{\"text\":\"" + text + "\"}' " + "http://" + aiServerIp + ":" + aiServerPort + "/synthesize";
                 byte[] response = LGUtils.executeAudioCommandWithResponse(session, command, context);
                 File audioFile = saveAudioFile(context, response);
-//                if (audioFile != null) {
-//                    playAudio(context, audioFile);
-//                }
                 if (audioFile != null && audioFile.exists() && audioFile.length() > 0) {
                     playAudio(context, audioFile);
                 } else {
-                    // Handle the case when the audio file is not ready yet
                     Log.d("BARK", "Audio file is not ready yet.");
                 }
             } catch (Exception e) {
@@ -520,11 +330,9 @@ public class PoisGridViewAdapter extends BaseAdapter {
 
 //    Save Audio to Temp file
 private static File saveAudioFile(Context context, byte[] audioData) throws IOException {
-    Log.d("BARK", "saveAudioFile 1");
     File tempFile = File.createTempFile("lg_audio_", ".wav", context.getExternalCacheDir());
     FileOutputStream fos = new FileOutputStream(tempFile);
 
-    // Use ByteArrayInputStream to read audioData byte array
     ByteArrayInputStream bais = new ByteArrayInputStream(audioData);
 
     byte[] buffer = new byte[1024];
@@ -533,145 +341,15 @@ private static File saveAudioFile(Context context, byte[] audioData) throws IOEx
         fos.write(buffer, 0, bytesRead);
     }
 
-    Log.d("BARK", "saveAudioFile 2");
     fos.close();
     return tempFile;
 }
 
-//    public static String convertAudio(Context context, File audioFile) {
-//        final String[] convertedFilePath = {null}; // To store the converted file path
-//
-//        IConvertCallback callback = new IConvertCallback() {
-//            @Override
-//            public void onSuccess(File convertedFile) {
-//                Log.d("Audio Conversion", "Success: " + convertedFile.getPath());
-//                convertedFilePath[0] = convertedFile.getPath();
-//            }
-//            @Override
-//            public void onFailure(Exception error) {
-//                Log.d("Audio Conversion", "Failure: " + error.getMessage());
-//            }
-//        };
-//
-//        AndroidAudioConverter.with(context)
-//                .setFile(audioFile)
-//                .setFormat(AudioFormat.MP3)
-//                .setCallback(callback)
-//                .convert();
-//
-//        long startTime = System.currentTimeMillis();
-//        long timeout = 10000; // Timeout in milliseconds (adjust as needed)
-//
-//        // Wait until the conversion is completed or timeout is reached
-//        while (convertedFilePath[0] == null && System.currentTimeMillis() - startTime < timeout) {
-//            // Wait for a short interval before checking again
-//            try {
-//                Thread.sleep(100);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        return convertedFilePath[0];
-//    }
-
-
-
-//    private static void playAudio(Context context, File audioFile) {
-//        // Create a new ExoPlayer instance
-//        ExoPlayer player = new ExoPlayer.Builder(context).build();
-//        // Create a media source
-//        MediaItem mediaItem = MediaItem.fromUri(audioFile.getAbsolutePath());
-//        player.setMediaItem(mediaItem);
-//        player.prepare();
-//        player.play();
-//    }
-
-//    static void playAudio(Context context, File audioFile) {
-//        try {
-//            // Set up AudioTrack parameters
-//            int streamType = AudioManager.STREAM_MUSIC;
-//            int sampleRate = 24000;
-//            int channelConfig = AudioFormat.CHANNEL_OUT_MONO;
-//            int audioFormat = AudioFormat.ENCODING_PCM_FLOAT; // Use ENCODING_PCM_FLOAT for 32-bit floating point audio
-//            int bufferSize = AudioTrack.getMinBufferSize(sampleRate, channelConfig, audioFormat);
-//
-//            // Create AudioAttributes
-//            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-//                    .setUsage(AudioAttributes.USAGE_MEDIA)
-//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                    .build();
-//
-//            // Create the AudioTrack instance with AudioAttributes
-//            AudioTrack audioTrack = new AudioTrack.Builder()
-//                    .setAudioAttributes(audioAttributes)
-//                    .setAudioFormat(new AudioFormat.Builder()
-//                            .setSampleRate(sampleRate)
-//                            .setChannelMask(channelConfig)
-//                            .setEncoding(audioFormat)
-//                            .build())
-//                    .setBufferSizeInBytes(bufferSize)
-//                    .build();
-//
-//            // Start playback
-//            audioTrack.play();
-//
-//            // Read the WAV file into a byte array
-//            FileInputStream fileInputStream = new FileInputStream(audioFile);
-//            byte[] audioData = new byte[(int) audioFile.length()];
-//            fileInputStream.read(audioData);
-//            fileInputStream.close();
-//
-//            // Write audio data to the AudioTrack
-//            audioTrack.write(audioData, 0, audioData.length);
-//
-//            // Wait for playback to finish
-//            while (audioTrack.getPlayState() == AudioTrack.PLAYSTATE_PLAYING) {
-//                // You can add optional sleep here if needed
-//            }
-//
-//            // Release the AudioTrack resources
-//            audioTrack.release();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
-
-//    private static void playAudio(Context context, File audioFile) {
-//        Log.d("sp", "Check 1");
-//        SoundPool soundPool = new SoundPool.Builder()
-//                .setMaxStreams(1)  // Set the maximum number of concurrent streams
-//                .setAudioAttributes(new AudioAttributes.Builder()
-//                        .setUsage(AudioAttributes.USAGE_MEDIA)
-//                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                        .build())
-//                .build();
-//
-//        int soundId = soundPool.load(audioFile.getAbsolutePath(), 1); // Load the audio file
-//
-//        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-//            @Override
-//            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-//                if (status == 0) {  // Status 0 indicates success
-//                    Log.d("sp", "Check 2");
-//                    soundPool.play(soundId, 1.0f, 1.0f, 1, 0, 1.0f); // Play the loaded sound
-//                } else {
-//                    Log.e("sp", "Error loading sound: " + status);
-//                }
-//            }
-//        });
-//    }
-
-
 //    Play the Audio file via MediaPlayer
 private static void playAudio(Context context, File audioFilePath) {
-        Log.d("mp", "Check 1");
     MediaPlayer mediaPlayer = new MediaPlayer();
 
     try {
-        Log.d("mp", "Check 2");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -681,31 +359,18 @@ private static void playAudio(Context context, File audioFilePath) {
         } else {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
-//        AudioAttributes audioAttributes = new AudioAttributes.Builder()
-//                .setUsage(AudioAttributes.USAGE_MEDIA)
-//                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                .build();
-        Log.d("mp", "Check 3");
-//        mediaPlayer.setAudioAttributes(audioAttributes);
-        Log.d("mp", "Check 4");
         mediaPlayer.setDataSource(audioFilePath.getAbsolutePath());
-        Log.d("mp", "Check 5");
         mediaPlayer.prepare();
-        Log.d("mp", "Check 6");
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mediaPlayer) {
-                Log.d("mp", "Check 7");
                 mediaPlayer.release();
             }
         });
-        Log.d("mp", "Check 8");
         try {
             mediaPlayer.start();
         } catch (Exception e) {
             e.printStackTrace();
-            // You can also log the exception message if needed
-            Log.e("mp", "Error during playback: " + e.getMessage());
         }
 
     } catch (IOException e) {
@@ -738,19 +403,6 @@ private static void playAudio(Context context, File audioFilePath) {
         // Check if the character is a vowel (ignoring case)
         return "AEIOUaeiou".indexOf(ch) != -1;
     }
-
-//    private String parseExcerptFromHtml(String htmlExcerpt) {
-//        Document doc = Jsoup.parse(htmlExcerpt);
-//        Element spanTag = doc.select("span.searchmatch").first();
-//        return spanTag != null ? spanTag.text() : "";
-//    }
-//private String parseExcerptFromHtml(String htmlExcerpt) {
-//    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//        return Html.fromHtml(htmlExcerpt, Html.FROM_HTML_MODE_LEGACY).toString();
-//    } else {
-//        return Html.fromHtml(htmlExcerpt).toString();
-//    }
-//}
 
     public interface SignInListener {
         void onSignInRequested(String poiName);

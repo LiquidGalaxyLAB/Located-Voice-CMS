@@ -396,24 +396,26 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                             }
                         }
                     }
-//                Displaying the Balloon on the rightmost part of the LG
-                    String machinesString = sharedPreferences.getString("Machines", "3");
-                    int machines = Integer.parseInt(machinesString);
-                    int slave_num = Math.floorDiv(machines, 2) + 1;
-                    String slave_name = "slave_" + slave_num;
-                    ExecutorService executorService = Executors.newSingleThreadExecutor();
-                    SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext(), nearbyPlaces);
-                    Future<Void> future = executorService.submit(nearbyPlacesTask);
-                    try {
-                        future.get();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    executorService.shutdown();
-
                     Intent intent = new Intent(getActivity(), NearbyPlacesActivity.class);
                     intent.putParcelableArrayListExtra("nearbyPlacesList", (ArrayList<? extends Parcelable>) nearbyPlaces);
                     startActivity(intent);
+                    if(LGPC.LG_CONNECTION){
+//                Displaying the Balloon on the rightmost part of the LG
+                        String machinesString = sharedPreferences.getString("Machines", "3");
+                        int machines = Integer.parseInt(machinesString);
+                        int slave_num = Math.floorDiv(machines, 2) + 1;
+                        String slave_name = "slave_" + slave_num;
+                        ExecutorService executorService = Executors.newSingleThreadExecutor();
+                        SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext(), nearbyPlaces);
+                        Future<Void> future = executorService.submit(nearbyPlacesTask);
+                        try {
+                            future.get();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        executorService.shutdown();
+                    }
+
 
                 }
             }

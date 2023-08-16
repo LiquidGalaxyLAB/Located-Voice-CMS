@@ -76,8 +76,6 @@ public class NearbyPlacesAdapter extends BaseAdapter {
                     .error(R.drawable.baseline_image_24)
                     .into(viewHolder.placeImage);
         } else {
-            // Handle the case when the imageLink is null or empty.
-            // For example, you can set a placeholder image like this:
             viewHolder.placeImage.setImageResource(R.drawable.baseline_image_24);
         }
 
@@ -113,9 +111,7 @@ public class NearbyPlacesAdapter extends BaseAdapter {
                         e.printStackTrace();
                     }
                     executorService.shutdown();
-//                    if(!placeDescription.getText().toString().equals("")) {
                         PoisGridViewAdapter.playBarkAudioFromText(context, "You have clicked on "+ placeName.getText().toString() + "." + placeDescription.getText().toString());
-//                    }
                 }
             });
         }
