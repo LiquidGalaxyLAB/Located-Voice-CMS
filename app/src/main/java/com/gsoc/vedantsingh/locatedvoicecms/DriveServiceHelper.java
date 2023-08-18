@@ -28,73 +28,6 @@ import java.util.concurrent.Executors;
 
 /* class to demonstrate use of Drive files list API */
 public class DriveServiceHelper extends Activity {
-//    private static final String TAG = "drive-quickstart";
-//    private static final int REQUEST_CODE_SIGN_IN = 0;
-//
-//    private Drive mDriveService;
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        signIn();
-//    }
-//
-//    /** Start sign-in activity. */
-//    private void signIn() {
-//        Log.i(TAG, "Start sign in");
-//        GoogleSignInOptions signInOptions =
-//                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                        .requestScopes(Drive.SCOPE_FILE)
-//                        .build();
-//
-//        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(this)
-//                .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, signInOptions)
-//                .build();
-//
-//        startActivityForResult(googleApiClient.getSignInIntent(), REQUEST_CODE_SIGN_IN);
-//    }
-//
-//    @Override
-//    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_CODE_SIGN_IN) {
-//            Log.i(TAG, "Sign in request code");
-//            GoogleSignInResult result = com.google.android.gms.auth.api.Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-//            handleSignInResult(result);
-//        }
-//    }
-//
-//    /** Handle sign-in result. */
-//    private void handleSignInResult(GoogleSignInResult result) {
-//        if (result.isSuccess()) {
-//            Log.i(TAG, "Signed in successfully.");
-//            GoogleSignInAccount account = result.getSignInAccount();
-//            // Use the access token to authenticate HTTP requests
-//            assert account != null;
-//            GoogleCredential credential = new GoogleCredential().setAccessToken(((GoogleSignInAccount) account).getIdToken());
-//            // Create the Drive service
-//            mDriveService = new Drive.Builder(
-//                    AndroidHttp.newCompatibleTransport(),
-//                    new AndroidJsonFactory(),
-//                    credential)
-//                    .setApplicationName("YourAppName")
-//                    .build();
-//
-//            // Now you can make API requests using mDriveService
-//            // For example, to list files:
-//            try {
-//                com.google.api.services.drive.model.FileList files = mDriveService.files().list().execute();
-//                for (File file : files.getFiles()) {
-//                    Log.d(TAG, "File Name: " + file.getName());
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        } else {
-//            Log.e(TAG, "Unable to sign in.");
-//        }
-//    }
-
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private final com.google.api.services.drive.Drive mDriveService;
     static MediaPlayer mediaPlayer;
@@ -166,7 +99,6 @@ public class DriveServiceHelper extends Activity {
                 throw new IOException("Folder not found in the main folder.");
             }
         }).addOnFailureListener(mExecutor, exception -> {
-            // The code inside this block will be executed if the task fails
             Log.e("Error", "Error listing files in the folder: " + exception.getMessage());
         });
     }
@@ -214,33 +146,12 @@ public class DriveServiceHelper extends Activity {
             mediaPlayer.prepare();
             mediaPlayer.setOnCompletionListener(mp -> {
                 mediaPlayer.release();
-//                mediaPlayer
-//                changeListenDescButtonState(true);
             });
             mediaPlayer.start();
-//            mediaPlayerRunning = true;
-//            changeListenDescButtonState(false);
-
-//            SearchFragment.listen_desc.setText("Stop Listening to description  ");
-//            SearchFragment.listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
-            // Release the media player after playback completes
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-//    private void changeListenDescButtonState(boolean state) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(state){
-//                    SearchFragment.listenDescButtonResetState();
-//                } else {
-//                    SearchFragment.listenDescButtonPlayState();
-//                }
-//            }
-//        });
-//    }
 
     public void stopVoicePlayer(){
         if (mediaPlayer.isPlaying()){

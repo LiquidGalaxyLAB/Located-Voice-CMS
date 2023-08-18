@@ -1,7 +1,6 @@
 package com.gsoc.vedantsingh.locatedvoicecms;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,29 +11,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewbinding.BuildConfig;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.ActionBar;
-
 import android.speech.RecognizerIntent;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
@@ -43,16 +25,23 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gsoc.vedantsingh.locatedvoicecms.utils.LGUtils;
@@ -79,34 +68,17 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
     //Required for kioskMode
     private final List blockedKeys = new ArrayList(Arrays.asList(KeyEvent.KEYCODE_VOLUME_DOWN, KeyEvent.KEYCODE_VOLUME_UP));
-    /**
-     * The {@link PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link FragmentStatePagerAdapter}.
-     */
-    CollectionPagerAdapter mSectionsPagerAdapter;
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     ViewPager mViewPager;
     Session session = null;
 
     private final int REQ_CODE_SPEECH_INPUT = 100;
     private static final int REQUEST_PERMISSION_CODE = 123;
-
-
-
-    //    private ArrayList<String> backIDs = new ArrayList<>();
     private SharedPreferences sharedPreferences;
     private boolean logo_switch=true;
     Button SuggPOIButton, changeplanet, tourbutton;
     FloatingActionButton menufab, btnSpeak, buttonSearch;
-    ImageView planetimg, sshConnDot, aiConnDot, refreshButton;
+    ImageView planetimg, sshConnDot, aiConnDot;
     EditText editSearch;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
     TextView planetname, sshConnText, aiConnText;
     public static boolean LG_CONNECTION = false;
     public static boolean AI_SERVER_CONNECTION = false;
@@ -117,7 +89,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         setContentView(R.layout.new_home);
-//        changed layout from activity_lg to new_home
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         SuggPOIButton=findViewById(R.id.suggpoibutton);
         changeplanet=findViewById(R.id.changeplanet);
@@ -131,17 +102,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         sshConnDot = findViewById(R.id.ssh_conn_dot);
         sshConnText = findViewById(R.id.ssh_conn_text);
-//        refreshButton = findViewById(R.id.refresh_conn);
         aiConnDot = findViewById(R.id.ai_conn_dot);
         aiConnText = findViewById(R.id.ai_conn_text);
-
-//        if (BuildConfig.DEBUG) {
-//            // This code will be executed in debug builds only
-//            Log.d("Signing", "Debug build - Signing not applied");
-//        } else {
-//            // This code will be executed in release builds only
-//            Log.d("Signing", "Release build - Signing applied");
-//        }
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int screenDensity = displayMetrics.densityDpi;
@@ -158,7 +120,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             buttonSearch.setSize(FloatingActionButton.SIZE_NORMAL);
         }
 
-
         btnSpeak.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -166,6 +127,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 promptSpeechInput();
             }
         });
+
         buttonSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -186,15 +148,10 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             }
         });
         bundle.putString("currentplanet", "EARTH");
+
         SuggPOIButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (bottomSheetDialog == null) {
-//                    bottomSheetDialog = new BottomSheetDialog(LGPC.this, R.style.AppBottomSheetDialogTheme);
-//                    View view = LayoutInflater.from(LGPC.this).inflate(R.layout.bottomsheetlayout, findViewById(R.id.bottomsheetll));
-//                    bottomSheetDialog.setContentView(view);
-//                }
-//                bottomSheetDialog.show();
                 SuggPOIBottomSheetFragment bottomSheetFragment = new SuggPOIBottomSheetFragment();
                 bottomSheetFragment.setStyle(DialogFragment.STYLE_NORMAL,R.style.AppBottomSheetDialogTheme);
                 bottomSheetFragment.setArguments(bundle);
@@ -204,28 +161,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         showMenu();
         showPlanetMenu();
-
-//        refreshButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //        Check LG Connection
-////                Handler handler = new Handler(Looper.getMainLooper());
-////                handler.postDelayed(new Runnable() {
-////                    @Override
-////                    public void run() {
-//                        ExecutorService executorService = Executors.newSingleThreadExecutor();
-//                        CheckConnectionStatus checkConnectionStatus = new CheckConnectionStatus(session, LGPC.this);
-//                        Future<Void> future = executorService.submit(checkConnectionStatus);
-//                        try {
-//                            future.get();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                        executorService.shutdown();
-////                    }
-////                }, 1000);
-//            }
-//        });
 
         Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(new Runnable() {
@@ -242,13 +177,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 executorService.shutdown();
             }
         }, 1000);
-
-//        changeplanet.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showPlanetMenu();
-//            }
-//        });
 
         tourbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,50 +210,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 Log.d("Permission Storage", "part 2");
             }
         }
-
-
-        //////////////////////////////////////////////////////////////////////////////////
-//        // Set up the action bar.
-//        final ActionBar actionBar = getSupportActionBar();
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_action_bar));
-//        }
-//
-//
-//
-//        // Create the adapter that will return a fragment for each of the three
-//        // primary sections of the activity.
-//        mSectionsPagerAdapter = new CollectionPagerAdapter(getSupportFragmentManager());
-//
-//        // Set up the ViewPager with the sections adapter.
-//        mViewPager = (ViewPager) findViewById(R.id.pager);
-//        mViewPager.setAdapter(mSectionsPagerAdapter);
-//
-//        // When swiping between different sections, select the corresponding
-//        // tab. We can also use ActionBar.Tab#select() to do this if we have
-//        // a reference to the Tab.
-//        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-//            @Override
-//            public void onPageSelected(int position) {
-//                actionBar.setSelectedNavigationItem(position);
-//            }
-//        });
-//
-//        // For each of the sections in the app, add a tab to the action bar.
-//        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-//            // Create a tab with text corresponding to the page title defined by
-//            // the adapter. Also specify this Activity object, which implements
-//            // the TabListener interface, as the callback (listener) for when
-//            // this tab is selected.
-//            actionBar.addTab(
-//                    actionBar.newTab()
-//                            .setText(mSectionsPagerAdapter.getPageTitle(i))
-//                            .setTabListener(this));
-//        }
-//
-//        showLogo();
     }
 
     @Override
@@ -358,27 +242,11 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         executorService.shutdown();
     }
 
-//    public void checkConnectionStatus(Session session){
-//        LGPC.GetSessionTask getSessionTask = new GetSessionTask(LGPC.this);
-//        getSessionTask.execute();
-//        if(session != null || session.isConnected()){
-//            sshConnDot.setColorFilter(getResources().getColor(R.color.green));
-//            sshConnText.setText("Connected");
-//            sshConnText.setTextColor(getResources().getColor(R.color.green));
-//        }else{
-//            sshConnDot.setColorFilter(getResources().getColor(R.color.red));
-//            sshConnText.setText("Disconnected");
-//            sshConnText.setTextColor(getResources().getColor(R.color.red));
-//        }
-//    }
-
     public class CheckConnectionStatus implements Callable<Void> {
-//        private String slaveName;
         private Session session1;
         private Context context;
 
         public CheckConnectionStatus(Session session1, Context context) {
-//            this.slaveName = slaveName;
             this.session1 = session1;
             this.context = context;
         }
@@ -437,15 +305,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         }
     }
 
-
-
-    private void showLogo() {
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.lg_logo);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
-    }
-
     public void showPlanetMenu(){
         List<PowerMenuItem> menuItems = new ArrayList<>();
         menuItems.add(new PowerMenuItem("EARTH"));
@@ -456,16 +315,10 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 .addItemList(menuItems)
                 .setAnimation(MenuAnimation.SHOWUP_BOTTOM_LEFT)
                 .setMenuRadius(20f)
-//                .setMenuShadow(10f)
-//                .setTextColor(ContextCompat.getColor(this, R.color.lg_black))
-//                .setTextGravity(Gravity.CENTER)
                 .setTextSize(14)
                 .setAutoDismiss(true)
-//                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
-//                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setTextColor(ContextCompat.getColor(this, R.color.offwhite))
                 .setMenuColor(ContextCompat.getColor(this, R.color.lg_black))
-//                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
                     @Override
                     public void onItemClick(int position, PowerMenuItem item) {
@@ -477,9 +330,11 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                                 if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
                                     planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
                                     planetname.setText("Earth");
-                                    String command = "echo 'planet=earth' > /tmp/query.txt";
-                                    SearchTask searchTask = new SearchTask(LGPC.this, command, true);
-                                    searchTask.execute();
+                                    if(LG_CONNECTION) {
+                                        String command = "echo 'planet=earth' > /tmp/query.txt";
+                                        SearchTask searchTask = new SearchTask(LGPC.this, command, true);
+                                        searchTask.execute();
+                                    }
                                 }
                                 break;
                             case 1:
@@ -489,9 +344,11 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                                 if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
                                     planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
                                     planetname.setText("Moon");
-                                    String command = "echo 'planet=moon' > /tmp/query.txt";
-                                    SearchTask searchTask = new SearchTask(LGPC.this, command, true);
-                                    searchTask.execute();
+                                    if(LG_CONNECTION){
+                                        String command = "echo 'planet=moon' > /tmp/query.txt";
+                                        SearchTask searchTask = new SearchTask(LGPC.this, command, true);
+                                        searchTask.execute();
+                                    }
                                 }
                                 break;
                             case 2:
@@ -501,9 +358,11 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                                 if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
                                     planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
                                     planetname.setText("Mars");
-                                    String command = "echo 'planet=mars' > /tmp/query.txt";
-                                    SearchTask searchTask = new SearchTask(LGPC.this, command, true);
-                                    searchTask.execute();
+                                    if(LG_CONNECTION) {
+                                        String command = "echo 'planet=mars' > /tmp/query.txt";
+                                        SearchTask searchTask = new SearchTask(LGPC.this, command, true);
+                                        searchTask.execute();
+                                    }
                                 }
                                 break;
                         }
@@ -514,57 +373,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         findViewById(R.id.changeplanet).setOnClickListener(powerMenu::showAsAnchorLeftTop);
     }
 
-//    public void showPlanetMenu() {
-//        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.planetpopupBGStyle);
-//        PopupMenu popupMenu = new PopupMenu(wrapper, changeplanet); // Pass the context and the view that triggers the menu
-//        MenuInflater inflater = popupMenu.getMenuInflater();
-//        inflater.inflate(R.menu.menu_planets, popupMenu.getMenu()); // Inflate your menu resource
-//
-//
-//        // Set a listener for menu item clicks
-//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                int itemId = item.getItemId();
-//                if (itemId == R.id.earthid) {
-//                    bundle.putString("currentplanet", "EARTH");
-//                    SearchFragment fragment = new SearchFragment();
-//                    fragment.setArguments(bundle);
-//                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newearthimg).getConstantState())){
-//                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newearthimg));
-//                        planetname.setText("Earth");
-//                    }
-//                    return true;
-//                } else if (itemId == R.id.moonid) {
-//                    bundle.putString("currentplanet", "MOON");
-//                    SearchFragment fragment = new SearchFragment();
-//                    fragment.setArguments(bundle);
-//                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmoon).getConstantState())){
-//                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmoon));
-//                        planetname.setText("Moon");
-//                    }
-//                    return true;
-//                } else if (itemId == R.id.marsid) {
-//                    bundle.putString("currentplanet", "MARS");
-//                    SearchFragment fragment = new SearchFragment();
-//                    fragment.setArguments(bundle);
-//                    if(!planetimg.getDrawable().getConstantState().equals(getResources().getDrawable(R.drawable.newmars).getConstantState())){
-//                        planetimg.setImageDrawable(getResources().getDrawable(R.drawable.newmars));
-//                        planetname.setText("Mars");
-//                    }
-//                    return true;
-//                } else {
-//                    return false;
-//                }
-//            }
-//
-//        });
-//
-//        // Show the popup menu
-//        popupMenu.show();
-//    }
-
-
     private void showMenu() {
         List<PowerMenuItem> menuItems = new ArrayList<>();
         menuItems.add(new PowerMenuItem("Administration Tools"));
@@ -574,19 +382,12 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         PowerMenu powerMenu = new PowerMenu.Builder(this)
                 .addItemList(menuItems)
-//                .setAnimation(MenuAnimation.SHOW_UP_CENTER)
                 .setMenuRadius(20f)
-//                .setMenuShadow(10f)
-//                .setTextColor(ContextCompat.getColor(this, R.color.lg_black))
-//                .setTextGravity(Gravity.CENTER)
                 .setTextSize(13)
                 .setWidth(375)
                 .setAutoDismiss(true)
-//                .setTextTypeface(ResourcesCompat.getFont(this, R.font.montserrat_medium))
-//                .setSelectedTextColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setTextColor(ContextCompat.getColor(this, R.color.offwhite))
                 .setMenuColor(ContextCompat.getColor(this, R.color.lg_black))
-//                .setSelectedMenuColor(ContextCompat.getColor(this, R.color.lg_black))
                 .setOnMenuItemClickListener(new OnMenuItemClickListener<PowerMenuItem>() {
                     @Override
                     public void onItemClick(int position, PowerMenuItem item) {
@@ -635,61 +436,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
         findViewById(R.id.menufab).setOnClickListener(powerMenu::showAsDropDown);
     }
-
-
-//    private void  showMenu() {
-//        ContextThemeWrapper wrapper = new ContextThemeWrapper(LGPC.this, R.style.menupopupBGStyle);
-//        PopupMenu popupMenu = new PopupMenu(wrapper, findViewById(R.id.menufab));
-//        popupMenu.getMenuInflater().inflate(R.menu.menu_lgpc, popupMenu.getMenu());
-//
-//        String machinesString = sharedPreferences.getString("Machines", "3");
-//        int machines = Integer.parseInt(machinesString);
-//        int slave_num = Math.floorDiv(machines, 2) + 2;
-//        String slave_name = "slave_" + slave_num;
-//        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//            @Override
-//            public boolean onMenuItemClick(MenuItem item) {
-//                int id = item.getItemId();
-//                if (id == R.id.action_information_help) {
-//                    Intent intent = new Intent(LGPC.this, InfoActivity.class);
-//                    startActivity(intent);
-//                    return true;
-//                } else if (id == R.id.action_showhidelogo){
-//                    if(logo_switch==true){
-//                        ExecutorService executor = Executors.newSingleThreadExecutor();
-//                        executor.submit(new SetLogosTask(slave_name, session, LGPC.this));
-//                        executor.shutdown();
-//                        logo_switch=false;
-//                    }else{
-//                        ExecutorService executorService = Executors.newSingleThreadExecutor();
-//                        CleanLogosTask cleanLogosTask = new CleanLogosTask(slave_name, session, LGPC.this);
-//                        Future<Void> future = executorService.submit(cleanLogosTask);
-//                        try {
-//                            future.get();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                        executorService.shutdown();
-//                        logo_switch=true;
-//                    }
-//                    return true;
-//                }else if (id == R.id.action_admin) {
-//                    if (!POISFragment.getTourState()) {
-//                        showPasswordAlert();
-//                    } else {
-//                        showAlert();
-//                    }
-//                    return true;
-//                } else if (id == R.id.action_about) {
-//                    showAboutDialog();
-//                    return true;
-//                }
-//                return false;
-//            }
-//        });
-//        popupMenu.show();
-//    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -759,47 +505,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
 
     private void showPasswordAlert(){
         // prepare the alert box
-//        final AlertDialog.Builder alertbox = new AlertDialog.Builder(LGPC.this,R.style.BlackTextAlertDialog);
-//        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//
-//        // set the message to display
-//        alertbox.setMessage("Please, enter the password:");
-//        final EditText input = new EditText(LGPC.this);
-//        input.setHint("Password");
-//        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-//                LinearLayout.LayoutParams.MATCH_PARENT,
-//                LinearLayout.LayoutParams.MATCH_PARENT);
-//        input.setLayoutParams(lp);
-////        Show/Hide password visibilty
-//        Drawable eyeIcon = ContextCompat.getDrawable(LGPC.this, R.drawable.eye_show_pw);
-//        eyeIcon.setBounds(0, 0, eyeIcon.getIntrinsicWidth(), eyeIcon.getIntrinsicHeight());
-//        int eyeIconWidth = eyeIcon.getIntrinsicWidth();
-//        int eyeIconHeight = eyeIcon.getIntrinsicHeight();
-//        Rect eyeIconBounds = new Rect(0, 0, eyeIconWidth, eyeIconHeight);
-//        eyeIcon.setBounds(eyeIconBounds);
-//        input.setCompoundDrawables(null, null, eyeIcon, null);
-//        input.setOnTouchListener((v, event) -> {
-//            final int DRAWABLE_RIGHT = 2;
-//            if (event.getAction() == MotionEvent.ACTION_UP) {
-//                if (event.getRawX() >= (input.getRight() - input.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-//                    // Toggle password visibility
-//                    if (input.getTransformationMethod() == PasswordTransformationMethod.getInstance()) {
-//                        Drawable eyeHideIcon = ContextCompat.getDrawable(LGPC.this, R.drawable.eye_hide_pw);
-//                        eyeHideIcon.setBounds(0, 0, eyeHideIcon.getIntrinsicWidth(), eyeHideIcon.getIntrinsicHeight());
-//                        input.setCompoundDrawables(null, null, eyeHideIcon, null);
-//                        input.setTransformationMethod(null);
-//                    } else {
-//                        input.setCompoundDrawables(null, null, eyeIcon, null);
-//                        input.setTransformationMethod(PasswordTransformationMethod.getInstance());
-//                    }
-//                    // Move cursor to the end of the text
-//                    input.setSelection(input.getText().length());
-//                    return true;
-//                }
-//            }
-//            return false;
-//        });
         LayoutInflater inflater = LayoutInflater.from(LGPC.this);
         View customView = inflater.inflate(R.layout.password_alert, null);
         final EditText input = customView.findViewById(R.id.passwordInput);
@@ -840,19 +545,8 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                 String pass = input.getText().toString();
                 String correct_pass = prefs.getString("AdminPassword", "lg");
                 if(pass.equals(correct_pass)){
-//                    if (ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-//                            && ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                        // Permission is not granted, request it
-//                        ActivityCompat.requestPermissions(LGPC.this,
-//                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
-//                                LOCATION_PERMISSION_REQUEST_CODE);
-//                    } else {
-//                        // Permission is already granted, proceed with your logic
-//                        // ...
                     Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
                     startActivity(intent);
-//                    }
-
                 }else{
                     incorrectPasswordAlertMessage();
                 }
@@ -868,64 +562,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         });
 
         alertbox.show();
-
-
-    //        alertbox.setView(input);
-    //
-    //        // set a positive/yes button and create a listener
-    //        alertbox.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-    //
-    //            // When button is clicked
-    //            public void onClick(DialogInterface arg0, int arg1) {
-    //
-    //                String pass = input.getText().toString();
-    //                String correct_pass = prefs.getString("AdminPassword", "lg");
-    //                if(pass.equals(correct_pass)){
-    ////                    if (ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-    ////                            && ContextCompat.checkSelfPermission(LGPC.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-    ////                        // Permission is not granted, request it
-    ////                        ActivityCompat.requestPermissions(LGPC.this,
-    ////                                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION},
-    ////                                LOCATION_PERMISSION_REQUEST_CODE);
-    ////                    } else {
-    ////                        // Permission is already granted, proceed with your logic
-    ////                        // ...
-    //                        Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
-    //                        startActivity(intent);
-    ////                    }
-    //
-    //                }else{
-    //                    incorrectPasswordAlertMessage();
-    //                }
-    //            }
-    //        });
-    //
-    //        // set a negative/no button and create a listener
-    //        alertbox.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-    //            // When button is clicked
-    //            public void onClick(DialogInterface arg0, int arg1) {
-    //            }
-    //        });
-    //        // display box
-    //        alertbox.show();
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-//                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-//                // Location permissions granted, proceed with your logic
-//                // ...
-//                Intent intent = new Intent(LGPC.this, LGPCAdminActivity.class);
-//                startActivity(intent);
-//            } else {
-//                // Location permissions denied, handle accordingly (e.g., show an error message)
-//                // ...
-//            }
-//        }
-//    }
 
     private void incorrectPasswordAlertMessage() {
         // prepare the alert box
@@ -1082,6 +719,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         @Override
         public void run() {
             try {
+                int factor = 400 * (6190/6054);
                 Log.d("Set Logos", "SetLogosTask: Background task started");
                 String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; echo '" +
                         "<kml xmlns=\"http://www.opengis.net/kml/2.2\"\n" +
@@ -1098,7 +736,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                         " <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
                         " <screenXY x=\"0.02\" y=\"0.95\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
                         " <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
-                        " <size x=\"0.6\" xunits=\"fraction\"/> \n" +
+                        " <size x=\"400\" y=\"" + factor + "\" xunits=\"pixels\" yunits=\"pixels\"/> \n" +
                         "</ScreenOverlay> \n" +
                         " </Folder> \n" +
                         " </Document> \n" +
@@ -1139,10 +777,6 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
             return null;
         }
     }
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {

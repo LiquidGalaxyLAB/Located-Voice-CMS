@@ -59,36 +59,36 @@
             android:text="@string/inst_send_TOUR"
             android:textColor="@color/offwhite" />
 
-        <TextView
-            android:id="@+id/import_tittle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/inf_TOURS"
-            android:text="@string/import_pois_tittle"
-            android:textColor="@color/offwhite"
-            android:textStyle="bold" />
+<!--        <TextView-->
+<!--            android:id="@+id/import_tittle"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/inf_TOURS"-->
+<!--            android:text="@string/import_pois_tittle"-->
+<!--            android:textColor="@color/offwhite"-->
+<!--            android:textStyle="bold" />-->
 
-        <TextView
-            android:id="@+id/import_introduction"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/import_tittle"
-            android:text="@string/import_introduction"
-            android:textColor="@color/offwhite" />
+<!--        <TextView-->
+<!--            android:id="@+id/import_introduction"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/import_tittle"-->
+<!--            android:text="@string/import_introduction"-->
+<!--            android:textColor="@color/offwhite" />-->
 
-        <TextView
-            android:id="@+id/import_inst"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/import_introduction"
-            android:text="@string/import_instructions"
-            android:textColor="@color/offwhite" />
+<!--        <TextView-->
+<!--            android:id="@+id/import_inst"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_below="@id/import_introduction"-->
+<!--            android:text="@string/import_instructions"-->
+<!--            android:textColor="@color/offwhite" />-->
 
         <TextView
             android:id="@+id/icons_tittle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/import_inst"
+            android:layout_below="@id/inf_TOURS"
             android:text="@string/icons_tittle"
             android:textColor="@color/offwhite"
             android:textStyle="bold" />

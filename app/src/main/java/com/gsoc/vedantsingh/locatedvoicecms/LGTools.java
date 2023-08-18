@@ -177,8 +177,6 @@ public class LGTools extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-//                    String sentence = "/home/lg/bin/lg-poweroff > /home/lg/log.txt";
-//                    String sentence = "sshpass -p lg ssh -t lg1 \"echo lg | sudo -S poweroff\"";
                     String password = sharedPreferences.getString("Password", "lg");
                     String machinesString = sharedPreferences.getString("Machines", "3");
                     String sentence = null;
@@ -205,12 +203,6 @@ public class LGTools extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-//                    SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-//                    String password = sharedPreferences.getString("Password", "lg");
-//                    String sentence = "echo '" + password + "'  | /home/lg/bin/lg-reboot > /home/lg/log.txt";
-//                    String sentence="echo '" + password + "' | sudo -S reboot";
-//                    String sentence = "/home/lg/bin/lg-reboot > /home/lg/log.txt";
-//                    String sentence = "sshpass -p lg ssh -t lg1 \"echo lg | sudo -S reboot\"";
                     String password = sharedPreferences.getString("Password", "lg");
                     String machinesString = sharedPreferences.getString("Machines", "3");
                     String sentence = null;
@@ -237,11 +229,6 @@ public class LGTools extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-//                    String sentence = "chmod 777 /home/lg/bin/lg-relaunch; /home/lg/bin/lg-relaunch > /home/lg/log.txt";
-//                    String sentence = "'/home/lg/bin/lg-relaunch' > /home/lg/log.txt";
-//                    String sentence = "/home/lg/bin/lg-relaunch > /home/lg/log.txt";
-//                    String sentence = "lg-relaunch";
-//                    String sentence = "sshpass -p lg ssh -t lg1 \"echo lg | sudo -S lg-relaunch\"";
                     String user = sharedPreferences.getString("User", "lg");
                     String password = sharedPreferences.getString("Password", "lg");
                     String sentence = "/home/" + user + "/bin/lg-relaunch > /home/" + user + "/log.txt;\n " +
@@ -281,17 +268,9 @@ public class LGTools extends Fragment {
 
             // When button is clicked
             public void onClick(DialogInterface arg0, int arg1) {
-//                try {
-//                    LGUtils.setConnectionWithLiquidGalaxy(session, sentence, getActivity());
                     ExecutorService executorService = Executors.newSingleThreadExecutor();
-                    LGTools.SendLGCommands cleanLogosTask = new LGTools.SendLGCommands(sentence, session, getActivity());
-                    Future<Void> future = executorService.submit(cleanLogosTask);
-//                } catch (JSchException e) {
-//                    Toast.makeText(getActivity(), getResources().getString(R.string.error_galaxy), Toast.LENGTH_LONG).show();
-//                    Log.d("JScH exception", e.getMessage());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
+                    LGTools.SendLGCommands sendLGCommands = new LGTools.SendLGCommands(sentence, session, getActivity());
+                    Future<Void> future = executorService.submit(sendLGCommands);
             }
         });
 

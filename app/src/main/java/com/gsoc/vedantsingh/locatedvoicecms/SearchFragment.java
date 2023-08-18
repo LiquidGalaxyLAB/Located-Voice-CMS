@@ -74,24 +74,17 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 
-public class SearchFragment extends Fragment implements PoisGridViewAdapter.SignInListener{
+public class SearchFragment extends Fragment implements PoisGridViewAdapter.SignInListener {
 
-    private final int REQ_CODE_SPEECH_INPUT = 100;
     private String Audio_Path = "";
     private static boolean isPlaying = false;
     private static MediaPlayer mediaPlayer = new MediaPlayer();
     View rootView;
     GridView poisGridView;
     Session session;
-    private EditText editSearch;
-    private FloatingActionButton buttonSearch;
-    private ImageView earth, moon, mars;
     private String currentPlanet = "EARTH";
-    private FloatingActionButton btnSpeak;
     private ListView categoriesListView;
     private Button nearbyplaces, sound_btn;
-    public static Button listen_desc;
-//    private DriveServiceHelper driveServiceHelper;
     private CategoriesAdapter adapter;
     private TextView categorySelectorTitle, sshConnText, aiConnText;
     private ImageView backIcon, backStartIcon, sshConnDot, aiConnDot;
@@ -103,7 +96,6 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
     private static final int REQUEST_CODE_SIGN_IN = 123;
     public static DriveServiceHelper mDriveServiceHelper = null;
     public static String recentPOI;
-    public static int CategoryIdForVoice;
     String DRIVE_FOLDER_ID = "1IqFDdaIRWhqv580G2uknYaFgGQmEVQ8P";
     List<PlaceInfo> nearbyPlaces = new ArrayList<>();
 
@@ -139,13 +131,6 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.newsearch_fragment, container, false);
-//        editSearch = (EditText) rootView.findViewById(R.id.search_edittext);
-//        buttonSearch = (FloatingActionButton) rootView.findViewById(R.id.searchButton);
-//        earth = (ImageView) rootView.findViewById(R.id.earth);
-//        moon = (ImageView) rootView.findViewById(R.id.moon);
-//        mars = (ImageView) rootView.findViewById(R.id.mars);
-
-//        btnSpeak = (FloatingActionButton) rootView.findViewById(R.id.btnSpeak);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         sshConnDot = rootView.findViewById(R.id.ssh_conn_dot);
@@ -154,39 +139,24 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         aiConnDot = rootView.findViewById(R.id.ai_conn_dot);
         categoriesListView = (ListView) rootView.findViewById(R.id.categories_listview);
         nearbyplaces = rootView.findViewById(R.id.nearbyplaces);
-//        listen_desc = rootView.findViewById(R.id.listen_desc);
         sound_btn = rootView.findViewById(R.id.sound_btn);
         backIcon = (ImageView) rootView.findViewById(R.id.back_icon);
         backStartIcon = (ImageView) rootView.findViewById(R.id.back_start_icon);//comes back to the initial category
         categorySelectorTitle = (TextView) rootView.findViewById(R.id.current_category);
-
-//        btnSpeak.setOnClickListener(new View.OnClickListener() {
-
-//            @Override
-//            public void onClick(View v) {
-//                promptSpeechInput();
-//            }
-//        });
-
-//        screenSizeTreatment();
-//        setSearchInLGButton();
-//        setPlanetsButtonsBehaviour();
-
-//        GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE));
-//        credential.setSelectedAccount(new Account(userAccount, "com.google"));
-//        Drive driveService = new Drive.Builder(AndroidHttp.newCompatibleTransport(), new GsonFactory(), credential).build();
-
-
         poisGridView = (GridView) rootView.findViewById(R.id.POISgridview);
 
         if (getArguments() != null) {
             String currentplanet = getArguments().getString("currentplanet");
-            if(Objects.equals(currentplanet, "EARTH")){Earth();}
-            else if(Objects.equals(currentplanet, "MOON")){Moon();}
-            else if(Objects.equals(currentplanet, "MARS")){Mars();}
+            if (Objects.equals(currentplanet, "EARTH")) {
+                Earth();
+            } else if (Objects.equals(currentplanet, "MOON")) {
+                Moon();
+            } else if (Objects.equals(currentplanet, "MARS")) {
+                Mars();
+            }
         }
 
-        if(LGPC.LG_CONNECTION){
+        if (LGPC.LG_CONNECTION) {
             sshConnDot.setColorFilter(getResources().getColor(R.color.green));
             sshConnText.setTextColor(getResources().getColor(R.color.green));
             sshConnText.setText("LG Connected");
@@ -196,7 +166,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             sshConnText.setText("LG Disconnected");
         }
 
-        if(LGPC.AI_SERVER_CONNECTION){
+        if (LGPC.AI_SERVER_CONNECTION) {
             aiConnDot.setColorFilter(getResources().getColor(R.color.green));
             aiConnText.setTextColor(getResources().getColor(R.color.green));
             aiConnText.setText("AI Server Connected");
@@ -212,7 +182,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                 backIDs.clear();
                 Category category = getCategoryByName(currentPlanet);
                 backIDs.add(String.valueOf(category.getId()));
-                if(isPlaying){
+                if (isPlaying) {
                     mediaPlayer.stop();
                     sound_btn.setText("Play Category Sound  ");
                     sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
@@ -227,7 +197,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             public void onClick(View v) {
                 if (backIDs.size() > 1) {
                     backIDs.remove(0);
-                    if(isPlaying){
+                    if (isPlaying) {
                         mediaPlayer.stop();
                         sound_btn.setText("Play Category Sound  ");
                         sound_btn.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_volume_up_24, 0);
@@ -243,25 +213,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             public void onClick(View v) {
 
                 obtainCoordinatesfromWikiAndDisplayNearbyPlaces(recentPOI);
-
-////                Displaying the Balloon on the rightmost part of the LG
-//                String machinesString = sharedPreferences.getString("Machines", "3");
-//                int machines = Integer.parseInt(machinesString);
-//                int slave_num = Math.floorDiv(machines, 2) + 1;
-//                String slave_name = "slave_" + slave_num;
-//                ExecutorService executorService = Executors.newSingleThreadExecutor();
-//                SearchFragment.NearbyPlacesTask nearbyPlacesTask = new SearchFragment.NearbyPlacesTask(slave_name, session, getContext(), nearbyPlaces);
-//                Future<Void> future = executorService.submit(nearbyPlacesTask);
-//                try {
-//                    future.get();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//                executorService.shutdown();
             }
         });
 
-        if(isPermissionGranted(sharedPreferences)){
+        if (isPermissionGranted(sharedPreferences)) {
             if (!isAudioSaved(sharedPreferences)) {
                 POIsContract.CategoryEntry.saveAudioToDevice(getContext());
 
@@ -271,11 +226,6 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                 editor.apply();
             }
         } else {
-//            Toast toast= Toast.makeText(getContext(),
-//                    "Storage permissions are not granted, please restart the app and grant the permissions", Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 0);
-//            toast.show();
-
             Toast toast = new Toast(getContext());
             View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
             TextView toasttext = toast_view.findViewById(R.id.toasttext);
@@ -317,11 +267,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                             e.printStackTrace();
                         }
                     }
-                }else{
-//                    Toast toast= Toast.makeText(requireContext(),
-//                            "Audio not set", Toast.LENGTH_SHORT);
-//                    toast.setGravity(Gravity.TOP, 0, 0);
-//                    toast.show();
+                } else {
                     Toast toast = new Toast(getContext());
                     View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
                     TextView toasttext = toast_view.findViewById(R.id.toasttext);
@@ -334,32 +280,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             }
         });
 
-//        driveServiceHelper = new DriveServiceHelper();
-
-//        listen_desc.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                try {
-//                    DriveServiceHelper.testMethod(getContext());
-//                } catch (IOException e) {
-//                    Log.d("Here is the problem",e.getMessage());
-//                    throw new RuntimeException(e);
-//                } catch (GeneralSecurityException e) {
-//                    throw new RuntimeException(e);
-//                }
-//                if(listen_desc.getText().toString().equals("Listen Description  ")){
-//                    requestSignIn("Eiffel Tower");
-//                } else {
-//                    mDriveServiceHelper.stopVoicePlayer();
-//                    listenDescButtonResetState();
-//                }
-//            }
-//        });
-
         return rootView;
     }
 
-    public void searchNearbyPlaces(double[] coordinates){
+    public void searchNearbyPlaces(double[] coordinates) {
 
 //        List<PlaceInfo> nearbyPlaces = new ArrayList<>();
 
@@ -370,10 +294,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
 
         WikipediaGeoSearchApiService wikipediaGeoSearchApiService = retrofit.create(WikipediaGeoSearchApiService.class);
 
-        wikipediaGeoSearchApiService.getPlaces("query", "json", 1000,10, String.valueOf(coordinates[0]) + "|" + String.valueOf(coordinates[1]), "geosearch", "coordinates|pageimages|description").enqueue(new Callback<WikipediaGeoSearchResponse>() {
+        wikipediaGeoSearchApiService.getPlaces("query", "json", 1000, 10, String.valueOf(coordinates[0]) + "|" + String.valueOf(coordinates[1]), "geosearch", "coordinates|pageimages|description").enqueue(new Callback<WikipediaGeoSearchResponse>() {
             @Override
             public void onResponse(Call<WikipediaGeoSearchResponse> call, Response<WikipediaGeoSearchResponse> response) {
-                if(response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     WikipediaGeoSearchResponse.QueryResult queryResult = response.body().getQueryResult();
                     if (queryResult != null && queryResult.getWikiPages() != null) {
                         nearbyPlaces = new ArrayList<>();
@@ -381,17 +305,15 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                             if (wikiPage != null) {
                                 String title = wikiPage.getTitle();
                                 String description = "";
-                                if(wikiPage.getDescription() != null) {
+                                if (wikiPage.getDescription() != null) {
                                     description = wikiPage.getDescription();
                                 }
 
                                 String imageLink = "";
-                                if(wikiPage.getThumbnail() != null && wikiPage.getThumbnail().getSource() != null){
+                                if (wikiPage.getThumbnail() != null && wikiPage.getThumbnail().getSource() != null) {
                                     imageLink = wikiPage.getThumbnail().getSource();
                                 }
-//                                Log.d("NearbyPlaces", title + description + imageLink);
-                                PlaceInfo placeInfo = new PlaceInfo( title, description, imageLink);
-//                                Log.d("NearbyPlaces object", placeInfo.getTitle() + placeInfo.getDescription() + placeInfo.getImageLink());
+                                PlaceInfo placeInfo = new PlaceInfo(title, description, imageLink);
                                 nearbyPlaces.add(placeInfo);
                             }
                         }
@@ -399,7 +321,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                     Intent intent = new Intent(getActivity(), NearbyPlacesActivity.class);
                     intent.putParcelableArrayListExtra("nearbyPlacesList", (ArrayList<? extends Parcelable>) nearbyPlaces);
                     startActivity(intent);
-                    if(LGPC.LG_CONNECTION){
+                    if (LGPC.LG_CONNECTION) {
 //                Displaying the Balloon on the rightmost part of the LG
                         String machinesString = sharedPreferences.getString("Machines", "3");
                         int machines = Integer.parseInt(machinesString);
@@ -427,7 +349,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         });
     }
 
-    public void obtainCoordinatesfromWikiAndDisplayNearbyPlaces(String POIName){
+    public void obtainCoordinatesfromWikiAndDisplayNearbyPlaces(String POIName) {
 
         final double[] coordinates = new double[2];
 //       Get the coordinates of the Recent POI
@@ -439,24 +361,21 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         // Create the service using the Retrofit instance
         WikipediaObtainCoordinates wikipediaObtainCoordinates = retrofit.create(WikipediaObtainCoordinates.class);
 
-        // Make the API call
-//       Call<WikipediaCoordinatesResponse> call = apiService.getCoordinates("query", "json", recentPOI, "coordinates");
-
         // Execute the call and handle the response
         wikipediaObtainCoordinates.getCoordinates("query", "json", POIName, "coordinates").enqueue(new Callback<WikipediaCoordinatesResponse>() {
             @Override
             public void onResponse(Call<WikipediaCoordinatesResponse> call, Response<WikipediaCoordinatesResponse> response) {
-                if(response.isSuccessful() && response.body() != null){
+                if (response.isSuccessful() && response.body() != null) {
                     WikipediaCoordinatesResponse.QueryResult queryResult = response.body().getQueryResult();
                     if (queryResult != null && queryResult.getWikiPages() != null) {
                         WikipediaCoordinatesResponse.WikiPage wikiPage = queryResult.getWikiPages().values().iterator().next();
-                        if (wikiPage != null && wikiPage.getCoordinates() != null && wikiPage.getCoordinates().length > 0){
+                        if (wikiPage != null && wikiPage.getCoordinates() != null && wikiPage.getCoordinates().length > 0) {
                             coordinates[0] = wikiPage.getCoordinates()[0].getLatitude();
                             coordinates[1] = wikiPage.getCoordinates()[0].getLongitude();
 
                             searchNearbyPlaces(coordinates);
 
-                            Log.d("Coordinates Obtained", String.valueOf(coordinates[0]) + " , " + String.valueOf(coordinates[1]) );
+                            Log.d("Coordinates Obtained", String.valueOf(coordinates[0]) + " , " + String.valueOf(coordinates[1]));
                         }
                     }
                 }
@@ -469,16 +388,6 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         });
 
     }
-
-//    public static void listenDescButtonResetState(){
-//        listen_desc.setText("Listen Description  ");
-//        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_library_books_24, 0);
-//    }
-//
-//    public static void listenDescButtonPlayState(){
-//        listen_desc.setText("Stop Listening to Description  ");
-//        listen_desc.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.baseline_stop_24, 0);
-//    }
 
     @Override
     public void onSignInRequested(String poiName) {
@@ -509,7 +418,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
     }
 
     private void handleSignInResult(GoogleSignInAccount googleAccount) {
-        if(googleAccount != null){
+        if (googleAccount != null) {
             Log.d(TAG, "Signed in as " + googleAccount.getEmail());
 
             // Use the authenticated account to sign in to the Drive service.
@@ -528,12 +437,7 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             // The DriveServiceHelper encapsulates all REST API and SAF functionality.
             // Its instantiation is required before handling any onClick actions.
             mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-//            Toast.makeText(getContext(), "Fetching Audio...", Toast.LENGTH_SHORT).show();
 
-            // Create a Toast object
-//            Toast toast = Toast.makeText(requireContext(), "Fetching Audio...", Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.TOP, 0, 0);
-//            toast.show();
             Toast toast = new Toast(getContext());
             View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
             TextView toasttext = toast_view.findViewById(R.id.toasttext);
@@ -543,16 +447,14 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             toast.setGravity(Gravity.TOP, 0, 100);
             toast.show();
 
-            if(recentPOI != null){
-                mDriveServiceHelper.playAudioFileInFolder(DRIVE_FOLDER_ID, POIsContract.CategoryEntry.getNameById(getContext(), Integer.parseInt(backIDs.get(0))), recentPOI +".mp3");
-            }else{
-//                Toast.makeText(getContext(), "Please select a POI to listen to its description", Toast.LENGTH_SHORT).show();
+            if (recentPOI != null) {
+                mDriveServiceHelper.playAudioFileInFolder(DRIVE_FOLDER_ID, POIsContract.CategoryEntry.getNameById(getContext(), Integer.parseInt(backIDs.get(0))), recentPOI + ".mp3");
+            } else {
                 toasttext.setText("Please select a POI to listen to its description");
                 toast.setView(toast_view);
                 toast.setDuration(Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP, 0, 100);
                 toast.show();
-
             }
             Log.d("Sign In", "Completed");
         } else {
@@ -560,61 +462,25 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         }
     }
 
-//    public static void setCategoryForVoice(){
-//        CategoryIdForVoice = Integer.parseInt(backIDs.get(0));
-//    };
-
-
-//    private void navigateFoldersAndFindAudioFile(String folderName) {
-//        try {
-//            String folderId = driveServiceHelper.getFolderIdByName(folderName);
-//            if (folderId != null) {
-//                List<File> files = driveServiceHelper.listFilesInFolder(folderId);
-//                for (File file : files) {
-//                    if (file.getMimeType().startsWith("audio/") && file.getName().equals("desired_audio_file.mp3")) {
-//                        playAudioFile(file);
-//                        return;
-//                    }
-//                }
-//            } else {
-//                // Handle case when the specified folder name does not exist
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            // Handle error during navigation or file retrieval
-//        }
-//    }
-//
-//    private void playAudioFile(File audioFile) {
-//        // Use MediaPlayer or your chosen audio playback library to play the file
-//        String audioFileUrl = audioFile.getWebContentLink();
-//        // Configure MediaPlayer or library to play the audioFileUrl
-//        // ...
-//    }
-
-//    public static Context getSearchFragmentContext() {
-//        return this.getContext();
-//    }
-
     public static boolean isAudioSaved(SharedPreferences sharedPrefs) {
         return sharedPrefs.getBoolean("audioSaved", false);
     }
 
-    public static boolean isPermissionGranted(SharedPreferences sharedPrefs){
+    public static boolean isPermissionGranted(SharedPreferences sharedPrefs) {
         return sharedPrefs.getBoolean("permissionGranted", false);
     }
 
-    public static void audioPlayerStop(){
-        if(isPlaying){
+    public static void audioPlayerStop() {
+        if (isPlaying) {
             mediaPlayer.stop();
             mediaPlayer.reset();
             isPlaying = false;
         }
     }
 
-    private void setAudioFile(){
+    private void setAudioFile() {
         String audioFilePath = POIsContract.CategoryEntry.getAudioPathByID(getActivity(), Integer.parseInt(backIDs.get(0)));
-        if(audioFilePath != null){
+        if (audioFilePath != null) {
             Audio_Path = audioFilePath;
         }
     }
@@ -665,51 +531,10 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         }
     }
 
-//    private void promptSpeechInput() {
-//
-//        Locale spanish = new Locale("es", "ES");
-//        Locale catalan = new Locale("ca", "ES");
-//
-//        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-//        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-//        intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, catalan);
-//        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, catalan);
-//        intent.putExtra(RecognizerIntent.EXTRA_RESULTS, catalan);
-//        intent.putExtra(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES, spanish);
-//        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, spanish);
-//        intent.putExtra(RecognizerIntent.EXTRA_RESULTS, spanish);
-//        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, getString(R.string.speech_prompt));
-//        try {
-//            startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
-//        } catch (ActivityNotFoundException a) {
-//            Toast.makeText(getActivity().getApplicationContext(), getString(R.string.speech_not_supported),
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case REQ_CODE_SPEECH_INPUT: {
-                if (resultCode == Activity.RESULT_OK && null != data) {
-
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-                    String placeToSearch = result.get(0);
-                    if (placeToSearch != null && !placeToSearch.equals("")) {
-                        editSearch.setText(placeToSearch);
-                        String command = buildSearchCommand(placeToSearch);
-                        SearchTask searchTask = new SearchTask(command, false);
-                        searchTask.execute();
-
-                    } else {
-                        Toast.makeText(getActivity(), getResources().getString(R.string.please_enter_search), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-            }
             case REQUEST_CODE_SIGN_IN:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     Log.d(TAG, "Requesting sign-in 3");
@@ -761,12 +586,6 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
 
         GetSessionTask getSessionTask = new GetSessionTask();
         getSessionTask.execute();
-    }
-
-    private void setPlanetsButtonsBehaviour() {
-        Earth();
-        Moon();
-        Mars();
     }
 
     private List<POI> getPoisList(int categoryId) {
@@ -890,106 +709,6 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
         }
     }
 
-    private void screenSizeTreatment() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
-        int widthPixels = metrics.widthPixels;
-        int heightPixels = metrics.heightPixels;
-        float scaleFactor = metrics.density;
-
-
-        //The size of the diagonal in inches is equal to the square root of the height in inches squared plus the width in inches squared.
-        float widthDp = widthPixels / scaleFactor;
-        float heightDp = heightPixels / scaleFactor;
-
-        float smallestWidth = Math.min(widthDp, heightDp);
-
-
-        if (smallestWidth == 800) {
-            //Samsung Tab E => smallestWidth:800
-
-            editSearch.setTextSize(30);
-            earth.getLayoutParams().height = 160;
-            moon.getLayoutParams().height = 160;
-            mars.getLayoutParams().height = 160;
-            earth.getLayoutParams().width = 160;
-            moon.getLayoutParams().width = 160;
-            mars.getLayoutParams().width = 160;
-            earth.requestLayout();
-            moon.requestLayout();
-            mars.requestLayout();
-            categoriesListView.getLayoutParams().width = 350;
-            if (rootView.findViewById(R.id.layoutPlanets) != null) {
-                LinearLayout layoutPlanets = (LinearLayout) rootView.findViewById(R.id.layoutPlanets);
-                LinearLayout.LayoutParams actualParams = (LinearLayout.LayoutParams) layoutPlanets.getLayoutParams();
-                actualParams.setMarginStart(0);
-                layoutPlanets.setLayoutParams(actualParams);
-            }
-
-        } else if (smallestWidth == 1032) {
-            //Tablet All In One Big => smallesWidth:1032
-            editSearch.setTextSize(50);
-            earth.getLayoutParams().height = 160;
-            moon.getLayoutParams().height = 160;
-            mars.getLayoutParams().height = 160;
-            earth.getLayoutParams().width = 160;
-            moon.getLayoutParams().width = 160;
-            mars.getLayoutParams().width = 160;
-            earth.requestLayout();
-            moon.requestLayout();
-            mars.requestLayout();
-            categoriesListView.getLayoutParams().width = 350;
-        } else if (smallestWidth > 720) {
-            editSearch.setTextSize(50);
-            earth.getLayoutParams().height = 160;
-            moon.getLayoutParams().height = 160;
-            mars.getLayoutParams().height = 160;
-            earth.getLayoutParams().width = 160;
-            moon.getLayoutParams().width = 160;
-            mars.getLayoutParams().width = 160;
-            earth.requestLayout();
-            moon.requestLayout();
-            mars.requestLayout();
-        } else if (smallestWidth <= 720 && smallestWidth >= 600) {
-            editSearch.setTextSize(20);
-            earth.getLayoutParams().height = 320;
-            moon.getLayoutParams().height = 320;
-            mars.getLayoutParams().height = 320;
-            earth.getLayoutParams().width = 320;
-            moon.getLayoutParams().width = 320;
-            mars.getLayoutParams().width = 320;
-            earth.requestLayout();
-            moon.requestLayout();
-            mars.requestLayout();
-            categoriesListView.getLayoutParams().width = 450;
-            if (rootView.findViewById(R.id.layoutPlanets) != null) {
-                LinearLayout layoutPlanets = (LinearLayout) rootView.findViewById(R.id.layoutPlanets);
-                LinearLayout.LayoutParams actualParams = (LinearLayout.LayoutParams) layoutPlanets.getLayoutParams();
-                actualParams.setMarginStart(0);
-                layoutPlanets.setLayoutParams(actualParams);
-            }
-            if (rootView.findViewById(R.id.searchLayout) != null) {
-                LinearLayout searchLayout = (LinearLayout) rootView.findViewById(R.id.searchLayout);
-                LinearLayout.LayoutParams actualParams = (LinearLayout.LayoutParams) searchLayout.getLayoutParams();
-                actualParams.width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                searchLayout.setLayoutParams(actualParams);
-            }
-
-        } else {
-            editSearch.setTextSize(15);
-            earth.getLayoutParams().height = 75;
-            moon.getLayoutParams().height = 75;
-            mars.getLayoutParams().height = 75;
-            earth.getLayoutParams().width = 75;
-            moon.getLayoutParams().width = 75;
-            mars.getLayoutParams().width = 75;
-            earth.requestLayout();
-            moon.requestLayout();
-            mars.requestLayout();
-        }
-    }
-
     public class NearbyPlacesTask implements Callable<Void> {
         private String slaveName;
         private Session session;
@@ -1023,57 +742,26 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
                 while (iterator.hasNext() && iterationCount < 10) {
                     PlaceInfo placeInfo = iterator.next();
                     sentence += "              <tr>\n" +
-                                "                <td colspan=\"2\" align=\"center\">\n" +
-                                "                <img src=\"" + placeInfo.getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
-                                "                  <p><b>" + placeInfo.getTitle() + "</b> " + placeInfo.getDescription() + "</p>\n" +
-                                "                </td>\n" +
-                                "              </tr>\n";
+                            "                <td colspan=\"2\" align=\"center\">\n" +
+                            "                <img src=\"" + placeInfo.getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
+                            "                  <p><b>" + placeInfo.getTitle() + "</b> " + placeInfo.getDescription() + "</p>\n" +
+                            "                </td>\n" +
+                            "              </tr>\n";
                     iterationCount++; // Increment the counter variable
                 }
 
                 sentence += "            </table>\n" +
-                            "          </body>\n" +
-                            "        </html>\n" +
-                            "      ]]></description>\n" +
-                            "      <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                            "      <screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                            "      <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                            "      <size x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
-                            "      <gx:balloonVisibility>1</gx:balloonVisibility>\n" +
-                            "    </ScreenOverlay>\n" +
-                            "  </Document>\n" +
-                            "</kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
-
-//                        "              <tr>\n" +
-//                        "                <td colspan=\"2\" align=\"center\">\n" +
-//                        "                <img src=\"" + nearbyPlaces.get(0).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
-//                        "                  <p><b>" + nearbyPlaces.get(0).getTitle() + "</b> " + nearbyPlaces.get(0).getDescription() + "</p>\n" +
-//                        "                </td>\n" +
-//                        "              </tr>\n" +
-//                        "              <tr>\n" +
-//                        "                <td colspan=\"2\" align=\"center\">\n" +
-//                        "                <img src=\"" + nearbyPlaces.get(1).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
-//                        "                  <p><b>" + nearbyPlaces.get(1).getTitle() + "</b> " + nearbyPlaces.get(1).getDescription() + "</p>\n" +
-//                        "                </td>\n" +
-//                        "              </tr>\n" +
-//                        "              <tr>\n" +
-//                        "                <td colspan=\"2\" align=\"center\">\n" +
-//                        "                <img src=\"" + nearbyPlaces.get(2).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
-//                        "                  <p><b>" + nearbyPlaces.get(2).getTitle() + "</b> " + nearbyPlaces.get(2).getDescription() + "</p>\n" +
-//                        "                </td>\n" +
-//                        "              </tr>\n" +
-//                        "              <tr>\n" +
-//                        "                <td colspan=\"2\" align=\"center\">\n" +
-//                        "                <img src=\"" + nearbyPlaces.get(3).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
-//                        "                  <p><b>" + nearbyPlaces.get(3).getTitle() + "</b> " + nearbyPlaces.get(3).getDescription() + "</p>\n" +
-//                        "                </td>\n" +
-//                        "              </tr>\n" +
-//                        "              <tr>\n" +
-//                        "                <td colspan=\"2\" align=\"center\">\n" +
-//                        "                <img src=\"" + nearbyPlaces.get(4).getImageLink() + "\" alt=\"picture\" height=\"100\" style=\"float: left; margin-right: 10px;\" />\n" +
-//                        "                  <p><b>" + nearbyPlaces.get(4).getTitle() + "</b> " + nearbyPlaces.get(4).getDescription() + "</p>\n" +
-//                        "                </td>\n" +
-//                                "              </tr>\n" +
+                        "          </body>\n" +
+                        "        </html>\n" +
+                        "      ]]></description>\n" +
+                        "      <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <screenXY x=\"1\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <size x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/>\n" +
+                        "      <gx:balloonVisibility>1</gx:balloonVisibility>\n" +
+                        "    </ScreenOverlay>\n" +
+                        "  </Document>\n" +
+                        "</kml>\n' > /var/www/html/kml/" + slaveName + ".kml";
 
                 LGUtils.setConnectionWithLiquidGalaxy(session, sentence, context);
             } catch (Exception e) {
@@ -1081,35 +769,6 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             }
             return null;
         }
-    }
-
-
-
-    private void setSearchInLGButton() {
-
-        buttonSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                GetSessionTask getSessionTask = new GetSessionTask();
-                getSessionTask.execute();
-
-                String placeToSearch = editSearch.getText().toString();
-                if (!placeToSearch.equals("") && placeToSearch != null) {
-
-                    String command = "echo 'search=" + placeToSearch + "' > /tmp/query.txt";
-                    SearchTask searchTask = new SearchTask(command, false);
-                    searchTask.execute();
-
-                } else {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.please_enter_search), Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-    }
-
-    private String buildSearchCommand(String search) {
-        return "echo 'search=" + search + "' > /tmp/query.txt";
     }
 
     private class GetSessionTask extends AsyncTask<Void, Void, Void> {
@@ -1135,98 +794,4 @@ public class SearchFragment extends Fragment implements PoisGridViewAdapter.Sign
             super.onPostExecute(success);
         }
     }
-
-    private class SearchTask extends AsyncTask<Void, Void, String> {
-
-        String command;
-        boolean isChangingPlanet;
-        private ProgressDialog dialog;
-        private Handler handler;
-        Context taskContext=getContext();
-
-
-        public SearchTask(String command, boolean isChangingPlanet) {
-            this.command = command;
-            this.isChangingPlanet = isChangingPlanet;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (dialog == null) {
-                dialog = new ProgressDialog(getActivity(), R.style.CustomProgressDialog);
-                if (isChangingPlanet) {
-                    dialog.setMessage(getResources().getString(R.string.changingPlanet));
-                } else {
-                    dialog.setMessage(getResources().getString(R.string.searching));
-                }
-                dialog.setIndeterminate(false);
-                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                dialog.setCancelable(true);
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        cancel(true);
-                    }
-                });
-                dialog.show();
-
-                handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (dialog != null && dialog.isShowing()) {
-                            dialog.dismiss();
-//                            Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
-                            Toast toast = new Toast(getContext());
-                            View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
-                            TextView toasttext = toast_view.findViewById(R.id.toasttext);
-                            toasttext.setText(taskContext.getResources().getString(R.string.connection_failure));
-                            toast.setView(toast_view);
-                            toast.setDuration(Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.TOP, 0, 100);
-                            toast.show();
-                        }
-                    }
-                }, 10000); // 10 seconds (10000 milliseconds)
-            }
-        }
-
-        @Override
-        protected String doInBackground(Void... params) {
-            try {
-                return LGUtils.setConnectionWithLiquidGalaxy(session, command, getActivity());
-            } catch (JSchException e) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String success) {
-            super.onPostExecute(success);
-            if (success != null) {
-                if (dialog != null) {
-                    dialog.dismiss();
-                    handler.removeCallbacksAndMessages(null);
-                }
-            } else {
-//                Toast.makeText(taskContext, taskContext.getResources().getString(R.string.connection_failure), Toast.LENGTH_LONG).show();
-                Toast toast = new Toast(getContext());
-                View toast_view = LayoutInflater.from(getContext()).inflate(R.layout.toast_text, null);
-                TextView toasttext = toast_view.findViewById(R.id.toasttext);
-                toasttext.setText(taskContext.getResources().getString(R.string.connection_failure));
-                toast.setView(toast_view);
-                toast.setDuration(Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.TOP, 0, 100);
-                toast.show();
-            }
-        }
-    }
-
 }

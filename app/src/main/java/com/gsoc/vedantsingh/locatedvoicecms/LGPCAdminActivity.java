@@ -94,38 +94,6 @@ public class LGPCAdminActivity extends AppCompatActivity implements TabListener 
                 mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_TREEEVIEW);
             }
         }
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_lgpcadmin);
-//        ActionBar actionBar = getSupportActionBar();
-//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_action_bar));
-//        }
-//
-//
-//        this.mSectionsPagerAdapter = new AdminCollectionPagerAdapter(getSupportFragmentManager());
-//        this.mViewPager = (ViewPager) findViewById(R.id.pager_admin);
-//        this.mViewPager.setAdapter(this.mSectionsPagerAdapter);
-//        this.mViewPager.setOnPageChangeListener(new C02741(actionBar));
-//
-//
-//        for (int i = 0; i < this.mSectionsPagerAdapter.getCount(); i++) {
-//            actionBar.addTab(actionBar.newTab().setText(this.mSectionsPagerAdapter.getPageTitle(i)).setTabListener(this));
-//        }
-//
-//        intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(getIntent()), PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
-//
-//        Bundle extras = getIntent().getExtras();
-//        if (extras != null) {
-//            String value = extras.getString("comeFrom");
-//            if (value != null && value.equalsIgnoreCase("tours")) {
-//                mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_TOURS);
-//            } else if (value != null && value.equalsIgnoreCase("treeView")) {
-//                mViewPager.setCurrentItem(AdminCollectionPagerAdapter.PAGE_TREEEVIEW);
-//            }
-//        }
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
