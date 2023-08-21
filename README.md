@@ -56,7 +56,7 @@ Access the latest features:
 
 ### Steps:
 
-* Download the apk file from [this repository](https://github.com/vedantkingh/Located-Voice-CMS/raw/master/app/release/app-release.apk) or the [Google Play Store]().
+* Download the apk file from [this repository](https://github.com/vedantkingh/Located-Voice-CMS/raw/master/app/release/app-release.apk) or the [Google Play Store](https://play.google.com/store/apps/details?id=com.gsoc.vedantsingh.locatedvoicecms&pcampaignid=web_share).
 * To connect to the Liquid Galaxy and the AI Server, tap on menu icon and go to Administration Tools > Settings then fill up the details of your Liquid Galaxy Rig (LG Server IP, LG Server ID, LG Server Password and the number of machines) and the AI Server (AI Server IP and the Port on which the docker is running).
 * Now simply explore the application, send a wide variety of KML Data to the LG and listen to immersive audio via our Cloud as well as your local AI Server. 
 
