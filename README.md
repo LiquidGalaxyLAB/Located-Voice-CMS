@@ -11,6 +11,7 @@
 - **[AI Server Guide](#ai-server-guide)**
 - **[Previous Versions](#previous-versions)**
 - **[Contributing](#contributing)**
+- **[License](#license)**
 
 
 ## About Located Voice CMS
@@ -120,3 +121,9 @@ This GSoC 2023 project contains the following subprojects for each one of them a
 
 Fill up issues, bugs or feature requests in our issue tracker. Please be very descriptive and clear so it is easier to help you.
 If you want to contribute to this project you can open a pull request at time you like. 
+
+## License
+
+This project is licensed under the [MIT license](LICENSE).
+</br>
+Copyright @2023 [Vedant Singh](www.linkedin.com/in/vedant-singh-6870a6254)
