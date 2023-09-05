@@ -719,7 +719,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
         @Override
         public void run() {
             try {
-                int factor = 400 * (6190/6054);
+                int factor = 300 * (6190/6054);
                 Log.d("Set Logos", "SetLogosTask: Background task started");
                 String sentence = "chmod 777 /var/www/html/kml/" + slaveName + ".kml; echo '" +
                         "<kml xmlns=\"http://www.opengis.net/kml/2.2\"\n" +
@@ -736,7 +736,7 @@ public class LGPC extends AppCompatActivity implements ActionBar.TabListener {
                         " <overlayXY x=\"0\" y=\"1\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
                         " <screenXY x=\"0.02\" y=\"0.95\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
                         " <rotationXY x=\"0\" y=\"0\" xunits=\"fraction\" yunits=\"fraction\"/> \n" +
-                        " <size x=\"400\" y=\"" + factor + "\" xunits=\"pixels\" yunits=\"pixels\"/> \n" +
+                        " <size x=\"300\" y=\"" + factor + "\" xunits=\"pixels\" yunits=\"pixels\"/> \n" +
                         "</ScreenOverlay> \n" +
                         " </Folder> \n" +
                         " </Document> \n" +
